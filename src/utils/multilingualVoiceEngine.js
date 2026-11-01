@@ -78,15 +78,31 @@ export function detectLanguage(text) {
   if (!text || typeof text !== "string") return "en";
   const str = text.trim();
 
-  // 1. Script checks (Unicode Blocks)
-  if (/[\u0C00-\u0C7F]/.test(str)) return "te"; // Telugu
-  if (/[\u0900-\u097F]/.test(str)) return "hi"; // Devanagari / Hindi / Marathi
-  if (/[\u0B80-\u0BFF]/.test(str)) return "ta"; // Tamil
-  if (/[\u0C80-\u0CFF]/.test(str)) return "kn"; // Kannada
-  if (/[\u0980-\u09FF]/.test(str)) return "bn"; // Bengali
-  if (/[\u0600-\u06FF]/.test(str)) return "ar"; // Arabic
-  if (/[\u3040-\u30FF]/.test(str)) return "ja"; // Japanese (Hiragana/Katakana)
-  if (/[\u4E00-\u9FFF]/.test(str)) return "zh-CN"; // Chinese CJK
+  // 1. Script checks by dominant character count (avoids false detection on stray characters from previous language)
+  const teluguCount = (str.match(/[\u0C00-\u0C7F]/g) || []).length;
+  const devanagariCount = (str.match(/[\u0900-\u097F]/g) || []).length;
+  const tamilCount = (str.match(/[\u0B80-\u0BFF]/g) || []).length;
+  const kannadaCount = (str.match(/[\u0C80-\u0CFF]/g) || []).length;
+  const bengaliCount = (str.match(/[\u0980-\u09FF]/g) || []).length;
+  const arabicCount = (str.match(/[\u0600-\u06FF]/g) || []).length;
+  const japaneseCount = (str.match(/[\u3040-\u30FF]/g) || []).length;
+  const cjkCount = (str.match(/[\u4E00-\u9FFF]/g) || []).length;
+
+  const scriptCounts = [
+    { code: "te", count: teluguCount },
+    { code: "hi", count: devanagariCount },
+    { code: "ta", count: tamilCount },
+    { code: "kn", count: kannadaCount },
+    { code: "bn", count: bengaliCount },
+    { code: "ar", count: arabicCount },
+    { code: "ja", count: japaneseCount },
+    { code: "zh-CN", count: cjkCount },
+  ];
+
+  scriptCounts.sort((a, b) => b.count - a.count);
+  if (scriptCounts[0].count > 3) {
+    return scriptCounts[0].code;
+  }
 
   // 2. Transliteration / Romanized heuristics
   const lower = str.toLowerCase();
@@ -289,10 +305,31 @@ export function hasNativeVoiceFor(langCode) {
   const clean = langCode.toLowerCase().replace("_", "-");
   const prefix = clean.split("-")[0];
 
+  const langPatterns = {
+    te: ["telugu", "తెలుగు", "te-in", "te_in"],
+    hi: ["hindi", "हिन्दी", "हिंदी", "hi-in", "hi_in"],
+    ta: ["tamil", "தமிழ்", "ta-in", "ta_in"],
+    kn: ["kannada", "ಕನ್ನಡ", "kn-in", "kn_in"],
+    mr: ["marathi", "मराठी", "mr-in", "mr_in"],
+    bn: ["bengali", "বাংলা", "bn-in", "bn_in"],
+    es: ["spanish", "español", "es-es", "es-mx"],
+    fr: ["french", "français", "fr-fr", "fr-ca"],
+    de: ["german", "deutsch", "de-de"],
+    ja: ["japanese", "日本語", "ja-jp"],
+    ar: ["arabic", "العربية", "ar-sa"],
+    zh: ["chinese", "中文", "zh-cn"],
+  };
+
+  const keywords = langPatterns[prefix] || [prefix];
+
   return voices.some((v) => {
     const vLang = v.lang.toLowerCase().replace("_", "-");
     const vName = v.name.toLowerCase();
-    return vLang === clean || vLang.startsWith(prefix) || vName.includes(prefix);
+    return (
+      vLang === clean ||
+      vLang.startsWith(prefix) ||
+      keywords.some((kw) => vLang.includes(kw) || vName.includes(kw) || v.name.includes(kw))
+    );
   });
 }
 
@@ -311,7 +348,24 @@ function findBestVoice(locale) {
   const cleanLocale = locale.replace("_", "-").toLowerCase();
   const prefix = cleanLocale.split("-")[0];
 
-  // 1. Exact locale match (e.g. te-IN, hi-IN, en-IN)
+  const langPatterns = {
+    te: ["telugu", "తెలుగు", "te-in", "te_in"],
+    hi: ["hindi", "हिन्दी", "हिंदी", "hi-in", "hi_in"],
+    ta: ["tamil", "தமிழ்", "ta-in", "ta_in"],
+    kn: ["kannada", "ಕನ್ನಡ", "kn-in", "kn_in"],
+    mr: ["marathi", "मराठी", "mr-in", "mr_in"],
+    bn: ["bengali", "বাংলা", "bn-in", "bn_in"],
+    es: ["spanish", "español", "es-es", "es-mx"],
+    fr: ["french", "français", "fr-fr", "fr-ca"],
+    de: ["german", "deutsch", "de-de"],
+    ja: ["japanese", "日本語", "ja-jp"],
+    ar: ["arabic", "العربية", "ar-sa"],
+    zh: ["chinese", "中文", "zh-cn"],
+  };
+
+  const keywords = langPatterns[prefix] || [prefix];
+
+  // 1. Exact locale match (e.g. te-IN, hi-IN, en-IN, es-ES)
   let voice = voices.find(v => v.lang.replace("_", "-").toLowerCase() === cleanLocale);
   if (voice) return voice;
 
@@ -319,28 +373,22 @@ function findBestVoice(locale) {
   voice = voices.find(v => v.lang.toLowerCase().startsWith(prefix));
   if (voice) return voice;
 
-  // 3. Named language match (e.g. name contains "Telugu", "Hindi", "Tamil")
-  const langNameMap = {
-    te: "telugu",
-    hi: "hindi",
-    ta: "tamil",
-    kn: "kannada",
-    mr: "marathi",
-    bn: "bengali",
-    es: "spanish",
-    fr: "french",
-    de: "german",
-    ja: "japanese",
-    ar: "arabic",
-    zh: "chinese",
-  };
-  const targetName = langNameMap[prefix];
-  if (targetName) {
-    voice = voices.find(v => v.name.toLowerCase().includes(targetName));
-    if (voice) return voice;
+  // 3. Named language match or native script keyword (e.g. "Google हिन्दी", "Microsoft Swara Online Natural Hindi")
+  voice = voices.find(v => {
+    const vLang = v.lang.toLowerCase();
+    const vName = v.name.toLowerCase();
+    return keywords.some(kw => vLang.includes(kw) || vName.includes(kw) || v.name.includes(kw));
+  });
+  if (voice) return voice;
+
+  // 4. CRITICAL: For non-English languages, NEVER fall back to an English voice!
+  // Returning null allows speakWebSpeech to set utterance.lang = locale directly,
+  // prompting the browser's speech synthesis engine to use its natural voice for that locale!
+  if (prefix !== "en") {
+    return null;
   }
 
-  // 4. Indian English voice fallback for Indian languages without desktop TTS (e.g. Telugu/Tamil on Windows)
+  // 5. English fallbacks only when the requested language IS English:
   const indianVoice = voices.find(v => {
     const lang = v.lang.toLowerCase();
     const name = v.name.toLowerCase();
@@ -348,7 +396,6 @@ function findBestVoice(locale) {
   });
   if (indianVoice) return indianVoice;
 
-  // 5. Default natural English voice for English text
   voice = voices.find(v => v.lang.toLowerCase().includes("en-in") || v.lang.toLowerCase().includes("en-us") || v.lang.toLowerCase().includes("en-gb"));
   return voice || voices[0] || null;
 }
@@ -404,34 +451,50 @@ function playGoogleTTSStream(text, langCode, { onStart, onEnd, onError }) {
     chunkIndex++;
 
     const ttsLang = langCode === "auto" ? "en" : langCode.split("-")[0];
-    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${ttsLang}&client=tw-ob&q=${encodeURIComponent(chunk)}`;
+    const proxyUrl = `/api/tts?tl=${encodeURIComponent(ttsLang)}&q=${encodeURIComponent(chunk)}`;
+    const directUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${encodeURIComponent(ttsLang)}&client=tw-ob&q=${encodeURIComponent(chunk)}`;
 
-    const audio = new Audio(audioUrl);
+    const audio = new Audio();
     activeAudio = audio;
 
-    audio.oncanplaythrough = () => {
+    audio.onplay = () => {
       if (!hasStarted) {
         hasStarted = true;
         onStart?.();
       }
-      audio.play().catch((err) => {
-        console.warn("Audio play blocked or interrupted:", err);
-        // Fallback to Web Speech on failure
-        speakWebSpeech(text, langCode, { onStart, onEnd, onError });
-      });
     };
 
     audio.onended = () => {
       playNextChunk();
     };
 
-    audio.onerror = (e) => {
-      console.warn("Google TTS audio stream error, falling back to Web Speech:", e);
-      // Seamless fallback to Web Speech Synthesis
-      speakWebSpeech(text, langCode, { onStart, onEnd, onError });
+    audio.onerror = () => {
+      // Fallback to direct URL if proxy was used and failed
+      if (audio.src && audio.src.includes('/api/tts')) {
+        audio.src = directUrl;
+        audio.play().catch(() => playNextChunk());
+      } else {
+        playNextChunk();
+      }
     };
 
-    audio.load();
+    audio.src = proxyUrl;
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.warn("Audio play rejected, falling back to Web Speech:", err);
+        speakWebSpeech(chunk, ttsLang, {
+          onStart: () => {
+            if (!hasStarted) {
+              hasStarted = true;
+              onStart?.();
+            }
+          },
+          onEnd: () => playNextChunk(),
+          onError: () => playNextChunk(),
+        });
+      });
+    }
   };
 
   playNextChunk();
@@ -526,33 +589,44 @@ function speakWebSpeech(speechText, langCode, { onStart, onEnd, onError }) {
 export function speakText(text, langCode = "en", { onStart, onEnd, onError } = {}) {
   stopSpeaking();
 
-  // Strip Markdown, code snippets, bullets, links, emojis for clean natural speech
+  // Strip Markdown, code snippets, bullets, raw URLs, emails, navigation markers (>>) for clean natural speech
   const speechText = text
-    .replace(/```[\s\S]*?```/g, "")      // remove code blocks
-    .replace(/`([^`]+)`/g, "$1")         // inline code
-    .replace(/\[(.*?)\]\(.*?\)/g, "$1")  // remove markdown links, keep label
-    .replace(/[*_#~>|]/g, "")            // remove formatting markers
-    .replace(/^[-*+]\s+/gm, "")          // remove list bullets
+    .replace(/```[\s\S]*?```/g, "")           // remove code blocks
+    .replace(/`([^`]+)`/g, "$1")              // inline code
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1")       // remove markdown links, keep label
+    .replace(/https?:\/\/\S+/gi, "")          // do NOT read raw URLs aloud
+    .replace(/\(>>\)|>>/g, "")                // remove navigation arrow markers
+    .replace(/[*_#~>|]/g, "")                 // remove formatting markers
+    .replace(/^\s*[-*+•\d.]+\s+/gm, "")       // remove list bullets and numbers
     .replace(/\s+/g, " ")
     .trim();
 
   if (!speechText) return false;
 
-  const detectedLang = langCode && langCode !== "auto" ? langCode : detectLanguage(speechText);
-  const cleanLang = detectedLang.split("-")[0];
+  // Check text script vs requested language code
+  const scriptLang = detectLanguage(speechText);
+  const effectiveLang = (scriptLang && scriptLang !== "en")
+    ? scriptLang
+    : (langCode && langCode !== "auto" ? langCode : "en");
+  const cleanLang = effectiveLang.split("-")[0];
 
-  const hasNonLatinScript = /[^\u0000-\u007F]/.test(speechText);
-  const isNonEnglish = cleanLang !== "en";
+  // For Indian languages (Telugu, Tamil, Kannada, Hindi, Marathi, Bengali) where standard
+  // desktop browsers (like Windows Chrome) lack offline speech synthesis voice packs:
+  const isIndicLang = ["te", "ta", "kn", "hi", "mr", "bn"].includes(cleanLang);
 
-  // If non-English:
-  // If the browser lacks a native TTS voice for this language OR if text has non-Latin script (Telugu, Hindi, Tamil, Kannada, Bengali, Arabic, etc.),
-  // stream authentic high-fidelity audio directly via Google TTS stream!
-  if (isNonEnglish && (!hasNativeVoiceFor(cleanLang) || hasNonLatinScript)) {
+  if (isIndicLang) {
+    // If the browser has an authentic native voice for this language (e.g. Edge Natural Swara for Hindi, or Google Hindi in Chrome),
+    // and it's NOT an English voice:
+    const nativeVoice = findBestVoice(getLanguageLocale(effectiveLang));
+    if (nativeVoice && !nativeVoice.lang.toLowerCase().startsWith("en")) {
+      return speakWebSpeech(speechText, effectiveLang, { onStart, onEnd, onError });
+    }
+    // Otherwise, stream crystal-clear native audio via our high-definition proxy / TTS stream!
     return playGoogleTTSStream(speechText, cleanLang, { onStart, onEnd, onError });
   }
 
-  // Otherwise, use browser SpeechSynthesis
-  return speakWebSpeech(speechText, detectedLang, { onStart, onEnd, onError });
+  // For global languages with native browser voices (Spanish, French, German, Japanese, English):
+  return speakWebSpeech(speechText, effectiveLang, { onStart, onEnd, onError });
 }
 
 /**

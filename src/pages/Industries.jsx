@@ -20,8 +20,16 @@ const Industries = () => {
     return (
         <>
             <SEO
-                title="Industries We Serve | GK Nexergy"
-                description="Technology that understands your industry — from startups and SMBs to education, healthcare, finance and beyond."
+                title="Industries We Serve | Enterprise Software Solutions & Digital Transformation"
+                description="GK Nexergy delivers industry-specific enterprise software solutions, digital transformation services, and business process automation across healthcare, finance, retail, and education."
+                keywords={[
+                    "Enterprise Software Solutions",
+                    "Digital Transformation Services",
+                    "Business Process Automation",
+                    "AI Solutions for Businesses",
+                    "Technology Solutions in India"
+                ]}
+                canonical="/industries"
             />
             <PageHero
                 eyebrow="Industries"
@@ -124,10 +132,10 @@ const Industries = () => {
                         <Link
                             to="/contact"
                             data-testid="industries-cta"
-                            className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 font-display text-sm font-bold text-white transition-colors duration-300 hover:bg-electric hover:text-ink w-full sm:w-auto shadow-md hover:shadow-xl"
+                            className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 sm:px-7 sm:py-3.5 font-display text-sm sm:text-base font-bold text-white transition-colors duration-300 hover:bg-electric hover:text-ink w-auto shadow-md hover:shadow-xl"
                         >
                             Discuss Your Business Challenge
-                            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                            <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:translate-x-1" />
                         </Link>
                     </div>
                 </Reveal>

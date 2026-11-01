@@ -24,19 +24,29 @@ import Pricing from "@/pages/Pricing";
 import Landing from "@/pages/Landing";
 
 const ScrollToTop = () => {
+    useEffect(() => {
+        if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
+            window.history.scrollRestoration = 'manual';
+        }
+    }, []);
     const { pathname, hash } = useLocation();
     useEffect(() => {
-        if (!window.__lenis) {
-            if (hash) {
-                setTimeout(() => {
-                    const element = document.querySelector(hash);
-                    if (element) {
+        if (hash) {
+            setTimeout(() => {
+                const element = document.querySelector(hash);
+                if (element) {
+                    if (window.__lenis) {
+                        window.__lenis.scrollTo(element, { offset: -80 });
+                    } else {
                         element.scrollIntoView({ behavior: "smooth" });
                     }
-                }, 120);
-            } else {
-                window.scrollTo(0, 0);
+                }
+            }, 120);
+        } else {
+            if (window.__lenis) {
+                window.__lenis.scrollTo(0, { immediate: true });
             }
+            window.scrollTo(0, 0);
         }
     }, [pathname, hash]);
     return null;

@@ -177,7 +177,7 @@ const Ecosystem = ({ activeIndex = 0, onSelectNode }) => {
                 >
                     <img
                         src="/images/globe1.gif"
-                        alt="GK Nexergy Logo"
+                        alt="GK Nexergy Technology Ecosystem & AI Solutions"
                         className="ecosystem-center-img"
                     />
                 </motion.div>

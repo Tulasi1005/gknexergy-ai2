@@ -18,8 +18,16 @@ const offerings = [
 const Academy = () => (
     <>
         <SEO
-            title="Nexergy Academy | Industry-Ready Technology Skills"
-            description="Nexergy Academy — industry-relevant learning connected to real-world technology. Beyond technology. Building human capital."
+            title="Nexergy Academy | Industry-Ready Technology Skills & Workforce Training"
+            description="Bridging the technology skills gap with hands-on training in Cyber Security, AI & Digital Marketing, Databases, and foundational software engineering in India."
+            keywords={[
+                "Nexergy Academy",
+                "Technology Solutions in India",
+                "AI Digital Marketing Course",
+                "Cyber Security Training",
+                "Software Skills Hyderabad"
+            ]}
+            canonical="/academy"
         />
         <PageHero
             eyebrow="Nexergy Academy"

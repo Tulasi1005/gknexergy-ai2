@@ -94,6 +94,41 @@ export const NavPagesStack = () => {
   const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   const [openAiKey, setOpenAiKey] = useState(() => localStorage.getItem('gk_openai_key') || '');
 
+  // Lock body scroll and pause Lenis smooth scroll while interactive modals are open
+  useEffect(() => {
+    if (!chatOpen && !translateOpen) return;
+
+    if (window.__lenis) {
+      try {
+        window.__lenis.stop();
+      } catch (err) {}
+    }
+
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyPaddingRight = document.body.style.paddingRight;
+
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.paddingRight = prevBodyPaddingRight;
+
+      if (window.__lenis) {
+        try {
+          window.__lenis.start();
+        } catch (err) {}
+      }
+    };
+  }, [chatOpen, translateOpen]);
+
   // Chatbot State
   const [chatInput, setChatInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -290,7 +325,7 @@ export const NavPagesStack = () => {
     if (scrollTabsRef.current) {
       const activeBtn = scrollTabsRef.current.children[currentIndex];
       if (activeBtn) {
-        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        const parent = scrollTabsRef.current; const targetLeft = activeBtn.offsetLeft - (parent.clientWidth - activeBtn.clientWidth) / 2; parent.scrollTo({ left: targetLeft, behavior: 'smooth' });
       }
     }
   }, [currentIndex]);
@@ -949,7 +984,7 @@ export const NavPagesStack = () => {
                         {/* Visual Thumbnail in the peek space */}
                         <div style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.4)' : '#FFFFFF', backdropFilter: 'blur(8px)', padding: '0.75rem', borderRadius: '0.75rem', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0', boxShadow: isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                           <div style={{ width: 44, height: 44, borderRadius: 10, overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(96,165,250,0.4)' }}>
-                            <img src={card.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={card.image} alt={card.title || "GK Nexergy Solution"} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           </div>
                           <div style={{ minWidth: 0 }}>
                             <span style={{ fontSize: 10, fontWeight: 600, color: '#2563EB', display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
@@ -1148,13 +1183,14 @@ export const NavPagesStack = () => {
       {/* ======================================================== */}
       <AnimatePresence>
         {chatOpen && (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)' }}>
+          <div data-lenis-prevent="true" style={{ position: 'fixed', inset: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)', overscrollBehavior: 'contain' }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.92, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 20 }}
               transition={{ duration: 0.25 }}
-              style={{ width: '100%', maxWidth: 580, height: 640, maxHeight: '92vh', backgroundColor: '#0A1120', border: '1px solid rgba(96,165,250,0.3)', borderRadius: '1.25rem', boxShadow: '0 25px 60px rgba(0,0,0,0.85)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              data-lenis-prevent="true"
+              style={{ width: '100%', maxWidth: 580, height: 640, maxHeight: '92vh', backgroundColor: '#0A1120', border: '1px solid rgba(96,165,250,0.3)', borderRadius: '1.25rem', boxShadow: '0 25px 60px rgba(0,0,0,0.85)', display: 'flex', flexDirection: 'column', overflow: 'hidden', overscrollBehavior: 'contain' }}
             >
               {/* Chat Header */}
               <div style={{ padding: '1rem 1.25rem', backgroundColor: '#0F1A30', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1344,13 +1380,14 @@ export const NavPagesStack = () => {
       {/* ======================================================== */}
       <AnimatePresence>
         {translateOpen && (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)' }}>
+          <div data-lenis-prevent="true" style={{ position: 'fixed', inset: 0, zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)', overscrollBehavior: 'contain' }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.92, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 20 }}
               transition={{ duration: 0.25 }}
-              style={{ width: '100%', maxWidth: 560, backgroundColor: '#0A1120', border: '1px solid rgba(99,102,241,0.4)', borderRadius: '1.25rem', boxShadow: '0 25px 60px rgba(0,0,0,0.85)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+              data-lenis-prevent="true"
+              style={{ width: '100%', maxWidth: 560, backgroundColor: '#0A1120', border: '1px solid rgba(99,102,241,0.4)', borderRadius: '1.25rem', boxShadow: '0 25px 60px rgba(0,0,0,0.85)', display: 'flex', flexDirection: 'column', overflow: 'hidden', overscrollBehavior: 'contain' }}
             >
               {/* Header */}
               <div style={{ padding: '1rem 1.25rem', backgroundColor: '#0F1A30', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

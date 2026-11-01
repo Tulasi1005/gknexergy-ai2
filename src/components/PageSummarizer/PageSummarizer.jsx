@@ -29,11 +29,45 @@ import { MULTILINGUAL_SUMMARIES } from "../../data/summarizerTranslations";
  * Curated high-precision page summaries for all core routes.
  */
 const ROUTE_SUMMARIES = {
+  "/": {
+    title: "GK Nexergy • Enterprise Engineering & Digital Growth Ecosystem",
+    badge: "Enterprise Platform",
+    readTime: "30 sec summary (vs 4 min read)",
+    stats: "Engineering Pods • AI Workflows • Nexergy Academy • Marketing Retainers",
+    targetAudience: "Startups, enterprises, scaling businesses & tech leaders",
+    summary:
+      "GK Nexergy unites full-stack enterprise software engineering, native/cross-platform mobile apps, Generative AI workflows, cloud architecture, Nexergy Academy talent acceleration, and results-driven digital marketing retainers under the philosophy: Train. Build. Transform.",
+    highlights: [
+      "Full-stack web & mobile app engineering with 100% intellectual property ownership and zero vendor lock-in.",
+      "Dedicated autonomous agile pods delivering enterprise-grade code without agency overhead.",
+      "Nexergy Academy bridging industry talent gaps in Cybersecurity, PostgreSQL, Python, and AI.",
+      "Transparent Digital Marketing Packages (Starter, Growth, Premium) with on-site shoots and Meta/Google ads.",
+    ],
+    actionLabel: "Explore",
+    actionRoute: "/home",
+  },
+  "/landing": {
+    title: "GK Nexergy • Enterprise Engineering & Digital Growth Ecosystem",
+    badge: "Enterprise Platform",
+    readTime: "30 sec summary (vs 4 min read)",
+    stats: "Engineering Pods • AI Workflows • Nexergy Academy • Marketing Retainers",
+    targetAudience: "Startups, enterprises, scaling businesses & tech leaders",
+    summary:
+      "GK Nexergy unites full-stack enterprise software engineering, native/cross-platform mobile apps, Generative AI workflows, cloud architecture, Nexergy Academy talent acceleration, and results-driven digital marketing retainers under the philosophy: Train. Build. Transform.",
+    highlights: [
+      "Full-stack web & mobile app engineering with 100% intellectual property ownership and zero vendor lock-in.",
+      "Dedicated autonomous agile pods delivering enterprise-grade code without agency overhead.",
+      "Nexergy Academy bridging industry talent gaps in Cybersecurity, PostgreSQL, Python, and AI.",
+      "Transparent Digital Marketing Packages (Starter, Growth, Premium) with on-site shoots and Meta/Google ads.",
+    ],
+    actionLabel: "Explore",
+    actionRoute: "/home",
+  },
   "/home": {
     title: "GK Nexergy • Enterprise Engineering Ecosystem",
     badge: "Platform Overview",
     readTime: "30 sec summary (vs 4 min read)",
-    stats: "5 Core Solutions • 4 Academy Disciplines • 10-Min Discovery",
+    stats: "5 Core Solutions • 4 Academy Disciplines • 3 Marketing Retainers",
     targetAudience: "Startups, enterprises, scaling businesses & aspiring tech professionals",
     summary:
       "GK Nexergy unites enterprise software engineering, mobile app development, Generative AI workflows, and cloud architecture with hands-on talent incubation at Nexergy Academy under the philosophy: Train. Build. Transform.",
@@ -41,9 +75,9 @@ const ROUTE_SUMMARIES = {
       "Full-stack web & native/cross-platform mobile apps built with 100% client IP ownership.",
       "Dedicated autonomous agile pods delivering enterprise-grade code without agency overhead.",
       "Nexergy Academy bridging industry talent gaps in Cybersecurity, PostgreSQL, Python, and AI.",
-      "Transparent tiered pricing (Starter $1,499/mo, Growth $3,499/mo, Premium $6,999/mo).",
+      "Structured Digital Marketing Retainers (Starter, Growth, Premium) with on-site shoots and ads management.",
     ],
-    actionLabel: "Compare Pricing Plans",
+    actionLabel: "Pricing",
     actionRoute: "/pricing",
   },
   "/about": {
@@ -60,7 +94,7 @@ const ROUTE_SUMMARIES = {
       "Employs autonomous delivery pods with lead architects, full-stack devs, and QA specialists.",
       "Direct consultation access with architectural discovery response within 10 minutes.",
     ],
-    actionLabel: "Start a Conversation",
+    actionLabel: "Contact",
     actionRoute: "/contact",
   },
   "/company": {
@@ -77,7 +111,7 @@ const ROUTE_SUMMARIES = {
       "Employs autonomous delivery pods with lead architects, full-stack devs, and QA specialists.",
       "Direct consultation access with architectural discovery response within 10 minutes.",
     ],
-    actionLabel: "Start a Conversation",
+    actionLabel: "Contact",
     actionRoute: "/contact",
   },
   "/vision": {
@@ -94,7 +128,7 @@ const ROUTE_SUMMARIES = {
       "Upskilling developers for the next frontier of AI, cybersecurity, and distributed cloud.",
       "Architectures engineered to handle scale seamlessly from day one.",
     ],
-    actionLabel: "Why GK Nexergy",
+    actionLabel: "Explore",
     actionRoute: "/why-gk-nexergy",
   },
   "/why-gk-nexergy": {
@@ -111,24 +145,54 @@ const ROUTE_SUMMARIES = {
       "Integrated Academy Pipeline: Immediate access to trained, specialized developer talent.",
       "Free 30-minute architectural consultation and 10-minute discovery response SLA.",
     ],
-    actionLabel: "View Engagement Pricing",
+    actionLabel: "Pricing",
     actionRoute: "/pricing",
   },
   "/pricing": {
-    title: "Pricing Plans & Engagement Tiers",
-    badge: "Transparent Pricing",
+    title: "Digital Marketing Packages & Pricing • GK Nexergy",
+    badge: "Transparent Retainers",
     readTime: "35 sec summary (vs 4 min read)",
-    stats: "Starter ($1,499/mo) • Growth ($3,499/mo) • Premium ($6,999/mo)",
-    targetAudience: "Early-stage founders, scaling businesses, and enterprise CTOs",
+    stats: "Starter • Growth (Most Popular) • Premium • Direct Ad Spend",
+    targetAudience: "Small shops, local services, startups, retail stores, real estate & established brands",
     summary:
-      "Predictable, transparent subscription pods and fixed-scope delivery tiers. All plans include 100% client source code ownership, zero vendor lock-in, and full architectural warranty.",
-    highlights: [
-      "Starter ($1,499/mo or $2,999 MVP): 2–3 week delivery, React/Node stack, AI chatbot, 30-day warranty.",
-      "Growth ($3,499/mo or $6,999 Multi-Sprint): 2–3 person pod, Web & Mobile apps, RAG AI, CI/CD, 60-day warranty.",
-      "Premium ($6,999/mo or Custom): 4–6+ person pod, Lead Architect, 99.99% SLA, 24/7 priority support, CTO advisory.",
-      "Zero hidden fees, weekly sprint demos, and direct Slack/Teams engineer communication.",
+      "Comprehensive, results-driven digital marketing retainers covering social media management, static creatives, reels, on-site professional video shoots, and revenue-generating Meta & Google ads campaigns.",
+    packages: [
+      {
+        name: "Starter",
+        badge: "Small Business",
+        posts: "8 Static / Mo",
+        reels: "2 Reels / Mo",
+        shoots: "On-Demand",
+        ads: "Meta Ads (IG & FB)",
+        bestFor: "Startups & Local Shops",
+      },
+      {
+        name: "Growth",
+        badge: "Most Popular",
+        posts: "12 Static / Mo",
+        reels: "4 Reels / Mo",
+        shoots: "2 Visits / Mo",
+        ads: "Meta Lead Gen & Remarketing",
+        bestFor: "Growing Retail & Services",
+      },
+      {
+        name: "Premium",
+        badge: "Max Growth",
+        posts: "20+ Static / Mo",
+        reels: "8 Reels / Mo",
+        shoots: "4 Visits / Mo",
+        ads: "Meta & Google Ads Suite",
+        bestFor: "Established Brands & Real Estate",
+      },
     ],
-    actionLabel: "Book Discovery Call",
+    highlights: [
+      "Starter Package: 8 static posts/mo (2/wk), 2 reels/mo, Instagram & Facebook management, Meta ads campaign setup, audience targeting, and monthly performance report.",
+      "Growth Package (Most Popular): 12 static posts/mo (3/wk), 4 reels/mo, 2 on-site video shoot visits/mo, Meta ads (lead gen & remarketing), Google Business Profile & WhatsApp Business setup.",
+      "Premium Package: 20+ static posts/mo (5+/wk), 8 reels/mo, 4 on-site video shoot visits/mo, Meta & Google Ads (Search, Display, YouTube), Local SEO & bi-weekly reporting.",
+      "100% Transparent Ad Spend: Clients pay ad budgets directly to Meta and Google (recommended ₹5k–₹5L+/mo benchmarks) with zero agency commission or hidden budget markups.",
+      "Why Work With Us: Result-focused execution, data-driven optimization, professional on-site video production, transparent reporting, and dedicated support.",
+    ],
+    actionLabel: "Contact Us",
     actionRoute: "/contact",
   },
   "/solutions": {
@@ -138,15 +202,147 @@ const ROUTE_SUMMARIES = {
     stats: "6 Specialized Disciplines • Cloud Native • AI Workflows",
     targetAudience: "Companies seeking reliable software, mobile apps, or digital transformation",
     summary:
-      "GK Nexergy delivers end-to-end technology solutions across custom software development, mobile apps, digital transformation, AI & automation, data analytics, and digital growth models.",
+      "GK Nexergy delivers end-to-end technology solutions across custom software development, mobile apps, digital transformation, AI & automation, data analytics, and digital growth retainers.",
     highlights: [
       "Software Engineering: Robust web applications, APIs, and scalable distributed architectures.",
       "Mobile Applications: High-performance iOS and Android apps with native-feel fluid UX.",
       "AI & Automation: Enterprise RAG knowledge engines, automated workflows, and predictive analytics.",
-      "Digital Transformation: Legacy system migration, cloud roadmapping, and operational digitisation.",
+      "Digital Growth: Structured digital marketing retainers (Starter, Growth, Premium) with on-site shoots and ads.",
     ],
-    actionLabel: "Explore Software Development",
+    actionLabel: "Explore",
     actionRoute: "/solutions/software-development",
+  },
+  "/solutions/digital-growth": {
+    title: "Digital Growth & Marketing Packages • GK Nexergy",
+    badge: "Packages & Pricing",
+    readTime: "35 sec summary (vs 4 min read)",
+    stats: "Starter • Growth (Most Popular) • Premium • Transparent Ad Spend",
+    targetAudience: "Small shops, local services, startups, retail stores, real estate & scaling brands",
+    summary:
+      "Accelerate your market presence with structured digital marketing retainers — combining omnichannel social media management, branded creatives, viral reels, on-site video shoots, and high-ROI Meta & Google ads campaigns.",
+    packages: [
+      {
+        name: "Starter",
+        badge: "Small Business",
+        posts: "8 Static / Mo",
+        reels: "2 Reels / Mo",
+        shoots: "On-Demand",
+        ads: "Meta Ads (IG & FB)",
+        bestFor: "Startups & Local Shops",
+      },
+      {
+        name: "Growth",
+        badge: "Most Popular",
+        posts: "12 Static / Mo",
+        reels: "4 Reels / Mo",
+        shoots: "2 Visits / Mo",
+        ads: "Meta Lead Gen & Remarketing",
+        bestFor: "Growing Retail & Services",
+      },
+      {
+        name: "Premium",
+        badge: "Max Growth",
+        posts: "20+ Static / Mo",
+        reels: "8 Reels / Mo",
+        shoots: "4 Visits / Mo",
+        ads: "Meta & Google Ads Suite",
+        bestFor: "Established Brands & Real Estate",
+      },
+    ],
+    highlights: [
+      "Starter Plan: 8 static posts/mo (2/wk), 2 reels/mo, IG & FB management, Meta ads setup, audience targeting, and monthly performance report.",
+      "Growth Plan (Most Popular): 12 static posts/mo (3/wk), 4 reels/mo, 2 on-site video shoot visits/mo, Meta lead generation & remarketing, Google Business & WhatsApp setup.",
+      "Premium Plan: 20+ static posts/mo (5+/wk), 8 reels/mo, 4 on-site video shoot visits/mo, Meta & Google Ads (Search, Display, YouTube), Local SEO & bi-weekly reviews.",
+      "Direct Ad Spend Transparency: Clients pay ad budgets directly to Meta and Google (₹5k–₹5L+/mo benchmarks) with zero agency commission or budget markup.",
+      "Full-Funnel Capabilities: Brand awareness, creative graphic design, on-site video shoots, conversion copywriting, and multi-channel attribution.",
+    ],
+    actionLabel: "View Pricing",
+    actionRoute: "/pricing",
+  },
+  "/solutions/software-development": {
+    title: "Software Engineering & Custom Platforms • GK Nexergy",
+    badge: "Enterprise Practice",
+    readTime: "30 sec summary",
+    stats: "Workflow: Discover → Design → Develop → Deploy → Improve",
+    targetAudience: "Enterprises, product companies, and startups needing bespoke software",
+    summary:
+      "We design and engineer robust web applications, custom enterprise platforms, and microservices architectures built specifically around your business workflows.",
+    highlights: [
+      "Full-stack web applications built with modern frameworks (React, Next.js, Node.js, Python, PostgreSQL).",
+      "100% intellectual property & complete source code transfer with zero vendor lock-in.",
+      "Autonomous agile delivery pods ensuring sprint-by-sprint velocity, clean architecture, and rigorous QA.",
+      "Cloud-native deployment, automated CI/CD pipelines, and enterprise-grade security standards.",
+    ],
+    actionLabel: "Inquire",
+    actionRoute: "/contact",
+  },
+  "/solutions/mobile-development": {
+    title: "Mobile Application Development • GK Nexergy",
+    badge: "Enterprise Practice",
+    readTime: "30 sec summary",
+    stats: "Workflow: Discover → Design → Develop → Deploy → Improve",
+    targetAudience: "Enterprises and consumer brands building high-performance mobile apps",
+    summary:
+      "From customer-facing apps to mission-critical field operations tools, we engineer mobile experiences that are fast, intuitive, and built for real-world reliability.",
+    highlights: [
+      "Native iOS (Swift), Android (Kotlin), and cross-platform (Flutter, React Native) mobile applications.",
+      "Fluid 60fps gesture-driven UX designed around real user behavior and offline resiliency.",
+      "Enterprise API integration, real-time push notifications, biometric auth, and secure offline storage.",
+      "End-to-end release lifecycle: App Store and Play Store compliance, review management, and ongoing maintenance.",
+    ],
+    actionLabel: "Inquire",
+    actionRoute: "/contact",
+  },
+  "/solutions/digital-transformation": {
+    title: "Digital Transformation & Cloud Modernization • GK Nexergy",
+    badge: "Enterprise Practice",
+    readTime: "30 sec summary",
+    stats: "Workflow: Manual → Connected → Automated → Intelligent",
+    targetAudience: "Traditional businesses and enterprises modernizing legacy operations",
+    summary:
+      "We help organizations transition from manual, paper-heavy workflows to modern, cloud-connected operating models at a sustainable, manageable pace.",
+    highlights: [
+      "Systematic modernization of monolithic legacy systems into secure, modular cloud architectures.",
+      "End-to-end workflow digitization eliminating paper bottlenecks and operational latency.",
+      "Deep systems integration bridging legacy databases, ERPs, CRMs, and modern APIs.",
+      "Change enablement roadmaps minimizing operational disruption and accelerating team adoption.",
+    ],
+    actionLabel: "Inquire",
+    actionRoute: "/contact",
+  },
+  "/solutions/ai-automation": {
+    title: "Enterprise AI & Workflow Automation • GK Nexergy",
+    badge: "Enterprise Practice",
+    readTime: "30 sec summary",
+    stats: "Workflow: Data → Model → Automate → Assist → Learn",
+    targetAudience: "Organizations seeking intelligent automation, custom LLMs & predictive workflows",
+    summary:
+      "We apply Artificial Intelligence where it drives measurable ROI — building enterprise RAG knowledge bases, automated decision support, and intelligent business workflows.",
+    highlights: [
+      "Production Generative AI workflows, domain-adapted LLMs, and enterprise RAG retrieval engines.",
+      "Automated document parsing, intelligent customer response bots, and operational task automation.",
+      "Privacy-first, isolated architectures keeping proprietary business data safe and compliant.",
+      "Continuous learning loops and human-in-the-loop oversight to ensure high output fidelity.",
+    ],
+    actionLabel: "Inquire",
+    actionRoute: "/contact",
+  },
+  "/solutions/data-analytics": {
+    title: "Data Engineering & Business Intelligence • GK Nexergy",
+    badge: "Enterprise Practice",
+    readTime: "30 sec summary",
+    stats: "Workflow: Data → Insight → Decision → Action",
+    targetAudience: "Executives and managers seeking clear, real-time visibility into business data",
+    summary:
+      "We turn fragmented business records into actionable executive intelligence — from database performance tuning to interactive BI reporting dashboards.",
+    highlights: [
+      "High-performance enterprise database architecture, schema normalization, and indexing.",
+      "Real-time Business Intelligence (BI) dashboards providing immediate visibility into KPIs.",
+      "Automated ETL data pipelines extracting and harmonizing disparate data sources cleanly.",
+      "Predictive modeling helping leadership forecast market trends, demand, and resource utilization.",
+    ],
+    actionLabel: "Inquire",
+    actionRoute: "/contact",
   },
   "/academy": {
     title: "Nexergy Academy • Practical Tech Acceleration",
@@ -162,11 +358,11 @@ const ROUTE_SUMMARIES = {
       "Direct talent integration into live GK Nexergy enterprise engineering projects.",
       "Dedicated career coaching, resume workshops, and interview preparation.",
     ],
-    actionLabel: "Browse All Courses",
+    actionLabel: "Courses",
     actionRoute: "/academy/courses",
   },
   "/academy/courses": {
-    title: "Academy Course Catalog & Curriculums",
+    title: "Academy Course Catalog & Curriculums • Nexergy Academy",
     badge: "Course Directory",
     readTime: "25 sec summary (vs 3 min read)",
     stats: "Cyber Security • PostgreSQL • Foundation Program • AI Marketing",
@@ -175,15 +371,83 @@ const ROUTE_SUMMARIES = {
       "Browse Nexergy Academy's flagship technical curriculums designed to give you industry-grade skills and a competitive edge in modern tech hiring.",
     highlights: [
       "Cyber Security & Ethical Hacking: Network defense, vulnerability analysis, and pen testing.",
-      "PostgreSQL Mastery: Schema design, query optimization, indexing, and high availability.",
-      "Foundation Program: Python programming, cloud fundamentals, and clean code architecture.",
-      "AI & Digital Marketing: Automated growth engines, AI-assisted content, and analytics.",
+      "Databases In-Depth: Schema design, query optimization, indexing, and enterprise PostgreSQL.",
+      "Foundation Program: Python programming, cloud fundamentals (AWS/Azure), and clean code.",
+      "AI Tools & Digital Marketing: Automated growth engines, AI-assisted content, and analytics.",
     ],
-    actionLabel: "Explore Cyber Security Track",
+    actionLabel: "Explore",
     actionRoute: "/academy/cyber-security",
   },
+  "/academy/cyber-security": {
+    title: "Cyber Security & Ethical Hacking • Nexergy Academy",
+    badge: "Specialized Academy Track",
+    readTime: "30 sec summary",
+    stats: "Category: Security • 100% Practical Labs • Hands-On Attack Surfaces",
+    targetAudience: "Students, graduates, and IT professionals aiming to enter cybersecurity",
+    summary:
+      "Learn to think like an attacker and defend like a seasoned professional through intensive hands-on lab environments, network defense, and ethical hacking methodology.",
+    highlights: [
+      "Hands-on ethical hacking methodology, reconnaissance, and penetration testing.",
+      "Network & system security, firewalls, Wireshark packet analysis, and Nmap scanning.",
+      "Web application vulnerability assessment (OWASP Top 10, SQLi, XSS, CSRF).",
+      "Security tooling, defensive hardening, and incident response preparation.",
+    ],
+    actionLabel: "Enroll",
+    actionRoute: "/contact",
+  },
+  "/academy/ai-digital-marketing": {
+    title: "AI Tools & Digital Marketing • Nexergy Academy",
+    badge: "Specialized Academy Track",
+    readTime: "30 sec summary",
+    stats: "Category: AI & Growth • 100% Practical Labs • Live Campaigns",
+    targetAudience: "Marketers, entrepreneurs, students, and growth professionals",
+    summary:
+      "Master modern AI tools to accelerate content creation, automate campaign workflows, and run high-ROI digital marketing strategies across Meta and Google.",
+    highlights: [
+      "Modern AI tools for high-speed copywriting, visual asset design, and campaign scripting.",
+      "Digital marketing fundamentals, audience targeting, and multi-channel funnel strategy.",
+      "AI-assisted content production, viral short-form video scripting, and prompt engineering.",
+      "Practical campaign execution, A/B testing, and growth analytics interpretation.",
+    ],
+    actionLabel: "Enroll",
+    actionRoute: "/contact",
+  },
+  "/academy/databases": {
+    title: "Databases In-Depth & Enterprise Architecture • Nexergy Academy",
+    badge: "Specialized Academy Track",
+    readTime: "30 sec summary",
+    stats: "Category: Data • 100% Practical Labs • Enterprise PostgreSQL",
+    targetAudience: "Developers, database administrators, and backend engineers",
+    summary:
+      "Master the data foundation every high-scale enterprise application depends on — from data modeling and query optimization to high availability and backup strategies.",
+    highlights: [
+      "Relational database design, normalization, ACID properties, and transaction semantics.",
+      "Advanced SQL querying, complex joins, subqueries, and window functions.",
+      "Query execution planning, indexing strategies (B-Tree, GIN, GiST), and performance tuning.",
+      "High availability, replication, connection pooling, and disaster recovery.",
+    ],
+    actionLabel: "Enroll",
+    actionRoute: "/contact",
+  },
+  "/academy/foundation-program": {
+    title: "Foundation Program (Python, DB, Cloud, AI) • Nexergy Academy",
+    badge: "Specialized Academy Track",
+    readTime: "30 sec summary",
+    stats: "Category: Foundation • 4 Core Tech Pillars • Mentor-Led Labs",
+    targetAudience: "Beginners, career transitioners, and students building strong core tech skills",
+    summary:
+      "A structured 4-pillar learning journey across the foundational technologies of modern software — Python, Databases, Cloud (AWS/Azure), and AI Fundamentals.",
+    highlights: [
+      "Python programming fundamentals, data structures, algorithms, and clean code.",
+      "Enterprise database essentials, relational modeling, and SQL querying.",
+      "Cloud computing fundamentals on AWS/Azure, virtual machines, and deployment basics.",
+      "AI fundamentals, understanding machine learning workflows, and practical applications.",
+    ],
+    actionLabel: "Enroll",
+    actionRoute: "/contact",
+  },
   "/projects": {
-    title: "Delivered Client Projects & Case Studies",
+    title: "Delivered Client Projects & Case Studies • GK Nexergy",
     badge: "Portfolio & Impact",
     readTime: "30 sec summary (vs 3.5 min read)",
     stats: "Production Web Apps • Mobile Platforms • AI Workflows",
@@ -196,7 +460,7 @@ const ROUTE_SUMMARIES = {
       "Production cloud deployments across AWS, Google Cloud, and modern serverless platforms.",
       "Architecture case breakdowns detailing tech stacks, challenges, and solutions.",
     ],
-    actionLabel: "Discuss Your Project Scope",
+    actionLabel: "Contact",
     actionRoute: "/contact",
   },
   "/careers": {
@@ -213,11 +477,11 @@ const ROUTE_SUMMARIES = {
       "Clear advancement tracks with competitive compensation and skill mentorship.",
       "Opportunities across full-stack engineering, React, Node.js, Python, and cloud DevOps.",
     ],
-    actionLabel: "Explore Open Roles & Apply",
+    actionLabel: "Apply",
     actionRoute: "/contact",
   },
   "/industries": {
-    title: "Industries Served • Specialized Solutions",
+    title: "Industries Served & Vertical Solutions • GK Nexergy",
     badge: "Industry Focus",
     readTime: "25 sec summary (vs 3 min read)",
     stats: "Fintech • Healthcare • Logistics • E-Commerce • EdTech",
@@ -230,7 +494,7 @@ const ROUTE_SUMMARIES = {
       "Logistics: Real-time asset tracking, automated routing, and warehouse dispatch systems.",
       "Retail & Commerce: Omnichannel shopping, lightning-fast search, and automated inventory.",
     ],
-    actionLabel: "Schedule Industry Consultation",
+    actionLabel: "Contact",
     actionRoute: "/contact",
   },
   "/contact": {
@@ -247,7 +511,7 @@ const ROUTE_SUMMARIES = {
       "Discovery consultation response within 10 minutes during business hours.",
       "Free initial 30-minute architectural and project feasibility advisory session.",
     ],
-    actionLabel: "Chat on WhatsApp",
+    actionLabel: "WhatsApp",
     actionRoute: "https://wa.me/919704585960",
     isExternal: true,
   },
@@ -282,6 +546,7 @@ export const PageSummarizer = ({
   );
 
   const [copied, setCopied] = useState(false);
+  const [fontScale, setFontScale] = useState(1);
   const isDark = theme === "dark";
 
   // Real-time language synchronization
@@ -307,6 +572,44 @@ export const PageSummarizer = ({
     if (isOpen) {
       setCurrentLang(getCurrentLanguage());
     }
+  }, [isOpen]);
+
+  // Lock body scroll and pause Lenis smooth scroll while modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // 1. Pause Lenis smooth scrolling so wheel/touch gestures cannot scroll background
+    if (window.__lenis) {
+      try {
+        window.__lenis.stop();
+      } catch (err) {}
+    }
+
+    // 2. Lock body and html scroll
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyPaddingRight = document.body.style.paddingRight;
+
+    // Compensate for desktop scrollbar shift to prevent background layout jumping
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.paddingRight = prevBodyPaddingRight;
+
+      if (window.__lenis) {
+        try {
+          window.__lenis.start();
+        } catch (err) {}
+      }
+    };
   }, [isOpen]);
 
   // Derive dynamic summary based on route, solutions slug, or courses slug
@@ -336,7 +639,7 @@ export const PageSummarizer = ({
             "Autonomous agile pod delivery with sprint-based milestones.",
             "Enterprise-grade reliability and security standards.",
           ],
-          actionLabel: solution.cta || "Inquire About This Solution",
+          actionLabel: "Inquire",
           actionRoute: "/contact",
         };
       }
@@ -360,7 +663,7 @@ export const PageSummarizer = ({
             "Production tools and portfolio-grade project building.",
             "Career placement guidance and interview readiness.",
           ],
-          actionLabel: "Inquire / Enroll in Course",
+          actionLabel: "Enroll",
           actionRoute: "/contact",
         };
       }
@@ -382,7 +685,7 @@ export const PageSummarizer = ({
         "Industry-aligned technology stack built for scale.",
         "Fast 10-minute discovery response SLA.",
       ],
-      actionLabel: "Connect With Our Team",
+      actionLabel: "Contact",
       actionRoute: "/contact",
     };
   }, [location.pathname]);
@@ -459,30 +762,44 @@ export const PageSummarizer = ({
     return () => window.removeEventListener("open-page-summarizer", handleTrigger);
   }, []);
 
-  // Keyboard shortcut: Alt + S to toggle Page Summarizer
+  // Keyboard shortcut: Alt + S to toggle Page Summarizer, Escape to close
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.altKey && (e.key === "s" || e.key === "S")) {
         e.preventDefault();
         setIsOpen((prev) => !prev);
+      } else if (e.key === "Escape" && isOpen) {
+        e.preventDefault();
+        setIsOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [isOpen, setIsOpen]);
 
   // Copy summary to clipboard
   const handleCopySummary = useCallback(() => {
     if (!displayData) return;
+    let packagesText = "";
+    if (displayData.packages?.length) {
+      packagesText = "\n\n📦 Packages & Plans:\n" +
+        displayData.packages
+          .map((p) => `• ${p.name} (${p.badge}): ${p.posts} | ${p.reels} | ${p.shoots} | ${p.ads}`)
+          .join("\n");
+    }
+
     const textToCopy = `📌 ${displayData.title}
 Badge: ${displayData.badge}
-Stats: ${displayData.stats}
+Stats: ${displayData.stats}${packagesText}
 
 ⚡ Executive Summary:
 ${displayData.summary}
 
 🔑 Key Takeaways:
 ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
+
+👥 Who this is for:
+${displayData.targetAudience || "Enterprises & growing businesses"}
 
 🌐 Read more at GK Nexergy: ${window.location.href}`;
 
@@ -515,12 +832,21 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setIsOpen(false)}
+              data-lenis-prevent="true"
+              onWheel={(e) => {
+                e.stopPropagation();
+              }}
+              onTouchMove={(e) => {
+                e.stopPropagation();
+              }}
               style={{
                 position: "fixed",
                 inset: 0,
                 backgroundColor: isDark ? "rgba(3, 7, 18, 0.7)" : "rgba(15, 23, 42, 0.4)",
                 backdropFilter: "blur(5px)",
                 zIndex: 99999988,
+                overscrollBehavior: "contain",
+                touchAction: "none",
               }}
             />
 
@@ -531,25 +857,28 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
               exit={{ opacity: 0, scale: 0.94, x: "-50%", y: "-47%" }}
               transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
               data-testid="page-summarizer-modal"
+              data-lenis-prevent="true"
               role="dialog"
               aria-label="GK Nexergy AI Page Summary"
+              onWheel={(e) => e.stopPropagation()}
               style={{
                 position: "fixed",
                 top: "50%",
                 left: "50%",
                 zIndex: 99999989,
-                width: "min(520px, calc(100vw - 32px))",
-                maxHeight: "min(720px, calc(100vh - 60px))",
-                borderRadius: "20px",
+                width: "min(520px, calc(100vw - 16px))",
+                maxHeight: "min(720px, calc(100vh - 30px))",
+                borderRadius: "18px",
                 backgroundColor: isDark ? "#090e18" : "#ffffff",
                 border: isDark ? "1px solid rgba(255, 255, 255, 0.12)" : "1px solid #e2e8f0",
                 boxShadow: isDark
                   ? "0 25px 70px -10px rgba(0, 0, 0, 0.9), 0 0 1px 1px rgba(255, 255, 255, 0.08)"
                   : "0 25px 60px -12px rgba(15, 23, 42, 0.25), 0 0 1px 1px rgba(0, 0, 0, 0.05)",
-                color: isDark ? "#f8fafc" : "#0f172a",
+                color: isDark ? "#f8fafc" : "#090e18",
                 display: "flex",
                 flexDirection: "column",
                 overflow: "hidden",
+                overscrollBehavior: "contain",
                 fontFamily: fontStack,
               }}
             >
@@ -581,7 +910,7 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                       style={{
                         width: "16px",
                         height: "16px",
-                        color: isDark ? "#38bdf8" : "#0284c7",
+                        color: isDark ? "#38bdf8" : "#0369a1", fontWeight: 800,
                       }}
                     />
                   </div>
@@ -589,7 +918,7 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                     <div className="flex items-center gap-2">
                       <span
                         style={{
-                          fontSize: "13.5px",
+                          fontSize: "14.5px",
                           fontWeight: 700,
                           letterSpacing: "-0.01em",
                         }}
@@ -598,12 +927,12 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                       </span>
                       <span
                         style={{
-                          fontSize: "10px",
+                          fontSize: "10.5px",
                           fontWeight: 700,
-                          padding: "2px 6px",
+                          padding: "2px 7px",
                           borderRadius: "6px",
                           backgroundColor: isDark ? "rgba(56, 189, 248, 0.15)" : "#e0f2fe",
-                          color: isDark ? "#38bdf8" : "#0284c7",
+                          color: isDark ? "#38bdf8" : "#0052cc",
                         }}
                       >
                         {displayData.badge}
@@ -626,7 +955,7 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1.5 text-[11px] opacity-60">
+                    <div className="flex items-center gap-1.5 text-[11px]" style={{ color: isDark ? "#94a3b8" : "#334155", fontWeight: 600 }}>
                       <Clock style={{ width: "11px", height: "11px" }} />
                       <span>{displayData.readTime}</span>
                     </div>
@@ -634,7 +963,56 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                 </div>
 
                 {/* Header Action Icons */}
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {/* Text Size Control (A- / A+) */}
+                  <div
+                    className="flex items-center rounded-lg p-0.5 border"
+                    style={{
+                      backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "#f1f5f9",
+                      borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : "#e2e8f0",
+                    }}
+                    title="Adjust text size (A- / A+)"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setFontScale((s) => Math.max(0.85, Number((s - 0.1).toFixed(2))))}
+                      title="Decrease text size"
+                      aria-label="Decrease text size"
+                      className="px-1.5 py-0.5 font-bold cursor-pointer rounded transition-colors hover:bg-black/5 dark:hover:bg-white/10"
+                      style={{
+                        fontSize: "11px",
+                        color: isDark ? "#cbd5e1" : "#090e18",
+                        fontWeight: 800,
+                      }}
+                    >
+                      A-
+                    </button>
+                    <span
+                      style={{
+                        fontSize: "10px",
+                        opacity: 0.35,
+                        padding: "0 1px",
+                        color: isDark ? "#ffffff" : "#000000",
+                      }}
+                    >
+                      |
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setFontScale((s) => Math.min(1.25, Number((s + 0.1).toFixed(2))))}
+                      title="Increase text size"
+                      aria-label="Increase text size"
+                      className="px-1.5 py-0.5 font-bold cursor-pointer rounded transition-colors hover:bg-black/5 dark:hover:bg-white/10"
+                      style={{
+                        fontSize: "12px",
+                        color: isDark ? "#cbd5e1" : "#090e18",
+                        fontWeight: 800,
+                      }}
+                    >
+                      A+
+                    </button>
+                  </div>
+
                   {/* Copy Button */}
                   <button
                     data-testid="summarizer-copy-btn"
@@ -643,7 +1021,7 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                     aria-label="Copy Summary"
                     className="p-1.5 rounded-lg transition-colors cursor-pointer"
                     style={{
-                      color: copied ? "#10b981" : isDark ? "#94a3b8" : "#64748b",
+                      color: copied ? "#10b981" : isDark ? "#cbd5e1" : "#090e18",
                     }}
                   >
                     {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -656,7 +1034,7 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                     aria-label="Close Summary Modal"
                     className="p-1.5 rounded-lg transition-colors cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-800"
                     style={{
-                      color: isDark ? "#94a3b8" : "#64748b",
+                      color: isDark ? "#cbd5e1" : "#090e18",
                     }}
                   >
                     <X className="h-4 w-4" />
@@ -666,9 +1044,14 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
 
               {/* --- SCROLLABLE BODY --- */}
               <div
+                className="page-summarizer-scroll"
+                data-lenis-prevent="true"
                 style={{
                   padding: "16px 18px",
                   overflowY: "auto",
+                  overscrollBehavior: "contain",
+                  WebkitOverflowScrolling: "touch",
+                  touchAction: "pan-y",
                   flex: 1,
                   display: "flex",
                   flexDirection: "column",
@@ -683,9 +1066,9 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                       borderRadius: "10px",
                       backgroundColor: isDark ? "rgba(15, 23, 42, 0.7)" : "#f1f5f9",
                       border: isDark ? "1px solid rgba(255, 255, 255, 0.06)" : "1px solid #e2e8f0",
-                      fontSize: "11px",
-                      fontWeight: 600,
-                      color: isDark ? "#93c5fd" : "#0369a1",
+                      fontSize: `${(12 * fontScale).toFixed(1)}px`,
+                      color: isDark ? "#93c5fd" : "#082f49",
+                      fontWeight: 700,
                       display: "flex",
                       alignItems: "center",
                       gap: "6px",
@@ -700,15 +1083,150 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                 <div>
                   <h3
                     style={{
-                      fontSize: "15px",
+                      fontSize: `${(16.5 * fontScale).toFixed(1)}px`,
                       fontWeight: 800,
-                      letterSpacing: "-0.01em",
-                      lineHeight: "1.3",
+                      letterSpacing: "-0.015em",
+                      lineHeight: "1.35",
+                      color: isDark ? "#ffffff" : "#0f172a",
                     }}
                   >
                     {displayData.title}
                   </h3>
                 </div>
+
+                {/* --- PACKAGES AT A GLANCE STRIP --- */}
+                {displayData.packages && (
+                  <div
+                    style={{
+                      padding: "12px 14px",
+                      borderRadius: "14px",
+                      backgroundColor: isDark ? "rgba(30, 41, 59, 0.45)" : "#f8fafc",
+                      border: isDark ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid #e2e8f0",
+                    }}
+                  >
+                    <div className="flex items-center justify-between mb-2.5">
+                      <div className="flex items-center gap-1.5">
+                        <Sparkles style={{ width: "13px", height: "13px", color: "#2563eb" }} />
+                        <span
+                          style={{
+                            fontSize: "11px",
+                            fontWeight: 800,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            color: isDark ? "#60a5fa" : "#2563eb",
+                          }}
+                        >
+                          TIERED PACKAGES AT A GLANCE
+                        </span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          color: isDark ? "#94a3b8" : "#0f172a",
+                          fontWeight: 800,
+                        }}
+                      >
+                        Direct Ad Spend • Zero Markup
+                      </span>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(3, 1fr)",
+                        gap: "8px",
+                      }}
+                    >
+                      {displayData.packages.map((pkg, idx) => {
+                        const isPopular = pkg.name === "Growth";
+                        return (
+                          <div
+                            key={idx}
+                            style={{
+                              padding: "10px 8px",
+                              borderRadius: "10px",
+                              backgroundColor: isPopular
+                                ? isDark
+                                  ? "rgba(37, 99, 235, 0.18)"
+                                  : "#eff6ff"
+                                : isDark
+                                ? "rgba(15, 23, 42, 0.6)"
+                                : "#ffffff",
+                              border: isPopular
+                                ? isDark
+                                  ? "1.5px solid rgba(59, 130, 246, 0.5)"
+                                  : "1.5px solid #93c5fd"
+                                : isDark
+                                ? "1px solid rgba(255, 255, 255, 0.06)"
+                                : "1px solid #e2e8f0",
+                              textAlign: "center",
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <div>
+                              <div
+                                style={{
+                                  fontSize: `${(13 * fontScale).toFixed(1)}px`,
+                                  fontWeight: 800,
+                                  color: isPopular
+                                    ? isDark
+                                      ? "#93c5fd"
+                                      : "#1d4ed8"
+                                    : isDark
+                                    ? "#ffffff"
+                                    : "#000000",
+                                }}
+                              >
+                                {pkg.name}
+                              </div>
+                              <span
+                                style={{
+                                  display: "inline-block",
+                                  fontSize: "9px",
+                                  fontWeight: 800,
+                                  textTransform: "uppercase",
+                                  padding: "1px 5px",
+                                  borderRadius: "4px",
+                                  marginTop: "2px",
+                                  backgroundColor: isPopular
+                                    ? "#2563eb"
+                                    : isDark
+                                    ? "rgba(255, 255, 255, 0.08)"
+                                    : "#f1f5f9",
+                                  color: isPopular
+                                    ? "#ffffff"
+                                    : isDark
+                                    ? "#94a3b8"
+                                    : "#0f172a",
+                                }}
+                              >
+                                {pkg.badge}
+                              </span>
+                            </div>
+
+                            <div
+                              style={{
+                                marginTop: "6px",
+                                fontSize: `${(10.5 * fontScale).toFixed(1)}px`,
+                                lineHeight: "1.35",
+                                color: isDark ? "#cbd5e1" : "#090e18",
+                                fontWeight: 700,
+                              }}
+                            >
+                              <div style={{ fontWeight: 800 }}>{pkg.posts}</div>
+                              <div>{pkg.reels}</div>
+                              <div style={{ fontWeight: 600, color: isDark ? "#38bdf8" : "#0369a1" }}>
+                                {pkg.shoots}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 {/* Executive Summary Block */}
                 <div
@@ -720,14 +1238,14 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                   }}
                 >
                   <div className="flex items-center gap-1.5 mb-1.5">
-                    <Lightbulb style={{ width: "13px", height: "13px", color: isDark ? "#38bdf8" : "#0284c7" }} />
+                    <Lightbulb style={{ width: "13px", height: "13px", color: isDark ? "#38bdf8" : "#0369a1" }} />
                     <span
                       style={{
                         fontSize: "11px",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.04em",
-                        color: isDark ? "#38bdf8" : "#0284c7",
+                        color: isDark ? "#38bdf8" : "#0369a1",
                       }}
                     >
                       Executive Summary
@@ -735,9 +1253,10 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                   </div>
                   <p
                     style={{
-                      fontSize: "12.5px",
-                      lineHeight: "1.5",
-                      color: isDark ? "#e2e8f0" : "#334155",
+                      fontSize: `${(13.5 * fontScale).toFixed(1)}px`,
+                      lineHeight: "1.58",
+                      color: isDark ? "#f1f5f9" : "#090e18",
+                      fontWeight: 600,
                     }}
                   >
                     {displayData.summary}
@@ -751,10 +1270,10 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                     <span
                       style={{
                         fontSize: "11px",
-                        fontWeight: 700,
+                        fontWeight: 800,
                         textTransform: "uppercase",
                         letterSpacing: "0.04em",
-                        color: isDark ? "#94a3b8" : "#64748b",
+                        color: isDark ? "#cbd5e1" : "#090e18",
                       }}
                     >
                       Key Takeaways
@@ -766,9 +1285,10 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                         key={idx}
                         className="flex items-start gap-2"
                         style={{
-                          fontSize: "12px",
-                          lineHeight: "1.45",
-                          color: isDark ? "#cbd5e1" : "#475569",
+                          fontSize: `${(13 * fontScale).toFixed(1)}px`,
+                          lineHeight: "1.52",
+                          color: isDark ? "#f1f5f9" : "#090e18",
+                          fontWeight: 600,
                         }}
                       >
                         <span
@@ -776,7 +1296,7 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                             width: "5px",
                             height: "5px",
                             borderRadius: "50%",
-                            backgroundColor: isDark ? "#38bdf8" : "#0284c7",
+                            backgroundColor: isDark ? "#38bdf8" : "#2563eb",
                             marginTop: "6px",
                             flexShrink: 0,
                           }}
@@ -791,8 +1311,10 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                 {displayData.targetAudience && (
                   <div
                     style={{
-                      fontSize: "11.5px",
-                      color: isDark ? "#94a3b8" : "#64748b",
+                      fontSize: `${(12 * fontScale).toFixed(1)}px`,
+                      lineHeight: "1.45",
+                      color: isDark ? "#e2e8f0" : "#090e18",
+                      fontWeight: 600,
                       borderTop: isDark ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid #f1f5f9",
                       paddingTop: "10px",
                     }}
@@ -806,28 +1328,34 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
               {/* --- FOOTER ACTION BAR --- */}
               <div
                 style={{
-                  padding: "12px 18px",
+                  padding: "11px 14px",
                   borderTop: isDark ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid #f1f5f9",
                   backgroundColor: isDark ? "#0c1322" : "#f8fafc",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "10px",
+                  gap: "12px",
+                  width: "100%",
+                  boxSizing: "border-box",
                 }}
               >
                 {/* Ask AI Assistant Button */}
                 <button
                   data-testid="summarizer-ask-ai-btn"
                   onClick={handleAskAI}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer hover:scale-105 active:scale-95"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                   style={{
-                    backgroundColor: isDark ? "rgba(56, 189, 248, 0.12)" : "#e0f2fe",
-                    color: isDark ? "#38bdf8" : "#0284c7",
-                    border: isDark ? "1px solid rgba(56, 189, 248, 0.25)" : "1px solid #bae6fd",
+                    minHeight: "42px",
+                    fontSize: `${(13 * fontScale).toFixed(1)}px`,
+                    backgroundColor: isDark ? "rgba(56, 189, 248, 0.12)" : "#f0f7ff",
+                    color: isDark ? "#38bdf8" : "#0369a1",
+                    border: isDark ? "1.5px solid rgba(56, 189, 248, 0.3)" : "1.5px solid #bae6fd",
+                    boxShadow: isDark
+                      ? "0 2px 8px rgba(0, 0, 0, 0.35)"
+                      : "0 2px 6px rgba(2, 132, 199, 0.08)",
                   }}
                 >
-                  <Bot className="h-3.5 w-3.5" />
-                  <span>Ask AI More</span>
+                  <Bot className="h-4 w-4 shrink-0" strokeWidth={2.2} />
+                  <span>Ask</span>
                 </button>
 
                 {/* Primary Page Action Button */}
@@ -837,14 +1365,16 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                       href={displayData.actionRoute}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                       style={{
+                        minHeight: "42px",
+                        fontSize: `${(13 * fontScale).toFixed(1)}px`,
                         background: "linear-gradient(135deg, #0284c7 0%, #2563eb 100%)",
-                        boxShadow: "0 4px 12px rgba(37, 99, 235, 0.3)",
+                        boxShadow: "0 4px 14px rgba(37, 99, 235, 0.35)",
                       }}
                     >
                       <span>{displayData.actionLabel}</span>
-                      <ExternalLink className="h-3 w-3" />
+                      <ExternalLink className="h-4 w-4 shrink-0" strokeWidth={2.2} />
                     </a>
                   ) : (
                     <button
@@ -852,14 +1382,16 @@ ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
                         setIsOpen(false);
                         navigate(displayData.actionRoute);
                       }}
-                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all cursor-pointer hover:scale-105 active:scale-95"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                       style={{
+                        minHeight: "42px",
+                        fontSize: `${(13 * fontScale).toFixed(1)}px`,
                         background: "linear-gradient(135deg, #0284c7 0%, #2563eb 100%)",
-                        boxShadow: "0 4px 12px rgba(37, 99, 235, 0.3)",
+                        boxShadow: "0 4px 14px rgba(37, 99, 235, 0.35)",
                       }}
                     >
                       <span>{displayData.actionLabel}</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
+                      <ArrowRight className="h-4 w-4 shrink-0" strokeWidth={2.2} />
                     </button>
                   )
                 )}

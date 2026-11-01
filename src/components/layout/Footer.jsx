@@ -1,10 +1,20 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Github } from "lucide-react";
 import "./Footer.css";
 import { Users, Briefcase, Globe } from "lucide-react";
 
+const FOOTER_NAV_LINKS = [
+  { label: "Home", to: "/home", isMatch: (p) => p === "/" || p === "/home" || p === "/landing" },
+  { label: "Pricing Plans", to: "/pricing", isMatch: (p) => p.startsWith("/pricing") },
+  { label: "Solutions", to: "/solutions", isMatch: (p) => p.startsWith("/solutions") },
+  { label: "Academy", to: "/academy", isMatch: (p) => p.startsWith("/academy") },
+  { label: "Contact", to: "/contact", isMatch: (p) => p.startsWith("/contact") },
+];
+
 const Footer = ({ theme }) => {
+  const location = useLocation();
+  const currentPath = location?.pathname || "";
   const [isDark, setIsDark] = useState(() => theme === "dark" || document.documentElement.classList.contains("dark"));
 
   useEffect(() => {
@@ -29,7 +39,7 @@ const Footer = ({ theme }) => {
               {/* Dynamic Theme Logo */}
               <img
                 src={isDark ? "/images/gklogo-dark.png" : "/images/gklogo.png"}
-                alt="GK Nexergy Logo"
+                alt="GK Nexergy - Custom Software Development & AI Solutions"
                 className={`footer-logo-img ${isDark ? "dark-only" : "light-only"}`}
               />
             </Link>
@@ -61,33 +71,29 @@ const Footer = ({ theme }) => {
           <div className="footer-contact-list">
             <a
               href="mailto:contact@gknexergy.com"
-              className="footer-contact-item"
+              className="footer-contact-card"
               data-testid="footer-email"
             >
-              <div className="footer-contact-icon">
-                <Mail className="h-4 w-4" />
+              <div className="footer-contact-icon-box">
+                <Mail className="h-4.5 w-4.5" />
               </div>
-              <div>
-                <span style={{ display: "block", fontSize: "11px", color: "var(--footer-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                  Email Inquiry
-                </span>
-                <span>contact@gknexergy.com</span>
+              <div className="footer-contact-info">
+                <span className="footer-contact-label">Email Inquiry</span>
+                <span className="footer-contact-value">contact@gknexergy.com</span>
               </div>
             </a>
 
             <a
               href="tel:+919704585960"
-              className="footer-contact-item"
+              className="footer-contact-card"
               data-testid="footer-phone"
             >
-              <div className="footer-contact-icon">
-                <Phone className="h-4 w-4" />
+              <div className="footer-contact-icon-box">
+                <Phone className="h-4.5 w-4.5" />
               </div>
-              <div>
-                <span style={{ display: "block", fontSize: "11px", color: "var(--footer-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                  Phone Helpline
-                </span>
-                <span>Phone — +919704585960</span>
+              <div className="footer-contact-info">
+                <span className="footer-contact-label">Phone & WhatsApp</span>
+                <span className="footer-contact-value">+91 97045 85960</span>
               </div>
             </a>
           </div>
@@ -102,28 +108,31 @@ const Footer = ({ theme }) => {
 
           <div className="footer-social-icons">
             {[
-              { Icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-              { Icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-              { Icon: Youtube, href: "https://youtube.com", label: "YouTube" },
-              { Icon: Github, href: "https://github.com", label: "GitHub" },
-            ].map(({ Icon, href, label }, i) => (
+              { Icon: Linkedin, href: "https://www.linkedin.com/company/gk-nexergy", label: "LinkedIn", brandClass: "social-linkedin" },
+              { Icon: Twitter, href: "https://twitter.com/gknexergy", label: "X (Twitter)", brandClass: "social-twitter" },
+              { Icon: Youtube, href: "https://youtube.com/@gknexergy", label: "YouTube", brandClass: "social-youtube" },
+              { Icon: Github, href: "https://github.com/gknexergy", label: "GitHub", brandClass: "social-github" },
+            ].map(({ Icon, href, label, brandClass }, i) => (
               <a
-                key={i}
+                key={label}
                 href={href}
                 target="_blank"
                 rel="noreferrer"
                 aria-label={label}
-                title={`${label} — Coming Soon`}
+                title={label}
                 data-testid={`footer-social-${i}`}
-                className="footer-social-btn"
+                className={`footer-social-btn ${brandClass}`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-4.5 w-4.5" />
               </a>
             ))}
           </div>
 
           <div className="footer-launch-pill">
-            <span className="footer-status-dot"></span>
+            <span className="footer-pulse-beacon">
+              <span className="footer-pulse-ring" />
+              <span className="footer-pulse-core" />
+            </span>
             <span>Social media channels launching soon</span>
           </div>
         </div>
@@ -134,12 +143,23 @@ const Footer = ({ theme }) => {
         <p className="footer-copyright">
           © {new Date().getFullYear()} GK Nexergy. All rights reserved.
         </p>
-        <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
-          <Link to="/home" className="hover:text-brand dark:hover:text-white transition-colors">Home</Link>
-          <Link to="/pricing" className="text-brand dark:text-blue-400 font-bold hover:underline transition-colors">Pricing Plans</Link>
-          <Link to="/solutions" className="hover:text-brand dark:hover:text-white transition-colors">Solutions</Link>
-          <Link to="/academy" className="hover:text-brand dark:hover:text-white transition-colors">Academy</Link>
-          <Link to="/contact" className="hover:text-brand dark:hover:text-white transition-colors">Contact</Link>
+        <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
+          {FOOTER_NAV_LINKS.map((link) => {
+            const isActive = link.isMatch(currentPath);
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`transition-colors duration-200 ${
+                  isActive
+                    ? "text-brand dark:text-sky-400 font-bold"
+                    : "text-slate-500 hover:text-brand dark:text-slate-400 dark:hover:text-white"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

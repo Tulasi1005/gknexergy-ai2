@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, GraduationCap, Building2, Code2, Smartphone, BrainCircuit, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Code2, Smartphone, BrainCircuit, Sparkles } from "lucide-react";
 import SEO from "../components/SEO";
 import Ecosystem from "../components/Ecosystem";
 import EditorialMarquee from "../components/Marquee";
@@ -109,8 +109,22 @@ const Home = () => {
     return (
         <>
             <SEO
-                title="GK Nexergy | Technology, Training & Digital Solutions"
-                description="GK Nexergy empowers local talent, builds technology solutions and helps businesses transform for the digital future. Train. Build. Transform."
+                title="GK Nexergy | Custom Software Development & AI Solutions for Businesses"
+                description="Leading software development company in Hyderabad providing AI solutions for businesses, custom software development, digital transformation, and IT consulting services in India."
+                keywords={[
+                    "AI Solutions for Businesses",
+                    "AI Automation Services",
+                    "Custom Software Development",
+                    "Digital Transformation Services",
+                    "Business Process Automation",
+                    "IT Consulting Services",
+                    "Enterprise Software Solutions",
+                    "Data Analytics Solutions",
+                    "Web and Mobile App Development",
+                    "Technology Solutions in India",
+                    "Software Development Company in Hyderabad"
+                ]}
+                canonical="/home"
             />
 
             {/* HERO */}
@@ -154,7 +168,7 @@ const Home = () => {
                     <div className="absolute inset-0 bg-grid-light opacity-25 pointer-events-none" />
                 </div>
 
-                <div className="hero-home-grid relative mx-auto grid w-full max-w-[1760px] items-center gap-12 px-4 pt-28 pb-28 sm:gap-16 sm:px-8 sm:pt-36 sm:pb-36 lg:grid-cols-2 lg:gap-16 xl:gap-24 2xl:gap-32 lg:px-12 xl:px-16 lg:pt-40 lg:pb-44 xl:pt-44 xl:pb-48">
+                <div className="hero-home-grid relative mx-auto grid w-full max-w-[1760px] items-center gap-8 sm:gap-16 px-4 pt-20 pb-16 sm:gap-16 sm:px-8 sm:pt-36 sm:pb-36 lg:grid-cols-2 lg:gap-16 xl:gap-24 2xl:gap-32 lg:px-12 xl:px-16 lg:pt-40 lg:pb-44 xl:pt-44 xl:pb-48">
                     {/* LEFT CORNER: Content Box */}
                     <div className="hero-home-col-text relative z-20 w-full max-w-3xl lg:max-w-[620px] xl:max-w-[680px] 2xl:max-w-[740px] lg:justify-self-start order-1">
                         <div className="hero-text-card lg:mr-auto">
@@ -177,28 +191,28 @@ const Home = () => {
                                 </p>
 
                                 <p className="mt-3 sm:mt-4 max-w-2xl text-sm sm:text-lg lg:text-[1.125rem] font-medium leading-relaxed text-slate-800 dark:text-slate-200">
-                                    We empower local talent, build technology solutions, and help businesses transform for the digital future.
+                                    We empower businesses with custom software development, AI solutions, and digital transformation services — bridging enterprise innovation and real-world technology solutions in India.
                                 </p>
                             </Reveal>
 
                             <Reveal delay={0.4}>
-                                <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
+                                <div className="mt-6 sm:mt-8 flex flex-row flex-wrap items-center gap-3 sm:gap-4 w-auto">
                                     <Link
                                         to="/contact"
                                         data-testid="hero-build-cta"
-                                        className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-brand px-6 py-3.5 sm:px-8 sm:py-4 font-display text-sm sm:text-base font-bold text-white transition-all duration-300 hover:bg-electric hover:text-ink w-full sm:w-auto text-center shadow-lg shadow-brand/25 hover:shadow-electric/30 hover:scale-[1.02]"
+                                        className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 sm:px-7 sm:py-3.5 font-display text-sm sm:text-base font-bold text-white transition-all duration-300 hover:bg-electric hover:text-ink w-auto shrink-0 text-center shadow-md shadow-brand/25 hover:shadow-electric/30 hover:scale-[1.02]"
                                     >
                                         Build With Us
-                                        <ArrowRight className="h-4.5 w-4.5 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                                        <ArrowRight className="h-4 w-4 sm:h-4.5 sm:w-4.5 transition-transform duration-300 group-hover:translate-x-1" />
                                     </Link>
 
                                     <Link
                                         to="/academy"
                                         data-testid="hero-academy-cta"
-                                        className="inline-flex items-center justify-center gap-2.5 rounded-full border border-navy/30 px-6 py-3.5 sm:px-8 sm:py-4 font-display text-sm sm:text-base font-bold text-navy transition-all duration-300 hover:border-brand hover:text-brand dark:border-slate-500/80 dark:text-white dark:hover:border-electric dark:hover:text-electric w-full sm:w-auto text-center bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm hover:scale-[1.02]"
+                                        className="group inline-flex items-center justify-center gap-2 rounded-full border border-navy/30 px-6 py-3 sm:px-7 sm:py-3.5 font-display text-sm sm:text-base font-bold text-navy transition-all duration-300 hover:border-brand hover:text-brand dark:border-slate-500/80 dark:text-white dark:hover:border-electric dark:hover:text-electric w-auto shrink-0 text-center bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm hover:scale-[1.02]"
                                     >
                                         Explore Nexergy Academy
-                                        <ArrowRight className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
+                                        <ArrowRight className="h-4 w-4 sm:h-4.5 sm:w-4.5 transition-transform duration-300 group-hover:translate-x-1" />
                                     </Link>
                                 </div>
                             </Reveal>
@@ -225,13 +239,11 @@ const Home = () => {
             {/* TWO ECOSYSTEMS (WITH CLEAN IMAGES & GENEROUS SPACING) */}
             <section
                 id="our-ecosystems"
-                className="mx-auto max-w-7xl px-4 pt-8 sm:px-8 sm:py-32 scroll-mt-24"
+                className="mx-auto max-w-7xl px-4 pt-6 pb-16 sm:px-8 sm:pt-10 sm:pb-24 scroll-mt-24"
                 data-testid="home-ecosystems"
             >
                 <Reveal>
                     <div className="ecosystems-header">
-
-
                         <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-brand dark:text-electric">
                             Our Ecosystems
                         </h2>
@@ -261,8 +273,6 @@ const Home = () => {
 
                             {/* Card Body */}
                             <div className="flex flex-1 flex-col p-6 sm:p-8">
-
-
                                 <h3 className="font-display text-2xl font-extrabold text-ink group-hover:text-brand dark:text-white dark:group-hover:text-electric transition-colors">
                                     GK Nexergy Solutions
                                 </h3>
@@ -270,8 +280,6 @@ const Home = () => {
                                 <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base flex-1 min-h-[54px]">
                                     End-to-end custom software engineering, cloud platforms, predictive AI automation, and digital transformation tailored to your business realities.
                                 </p>
-
-
 
                                 <div className="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800">
                                     <span className="inline-flex items-center gap-2 font-display text-sm font-bold text-brand transition-colors group-hover:text-electric dark:text-electric">
@@ -302,8 +310,6 @@ const Home = () => {
 
                             {/* Card Body */}
                             <div className="flex flex-1 flex-col p-6 sm:p-8">
-
-
                                 <h3 className="font-display text-2xl font-extrabold text-ink group-hover:text-brand dark:text-white dark:group-hover:text-electric transition-colors">
                                     Nexergy Academy
                                 </h3>
@@ -311,7 +317,6 @@ const Home = () => {
                                 <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base flex-1 min-h-[54px]">
                                     Practical education aligned with active IT industry standards — hands-on labs, mentored apprenticeships, and direct pathways to digital careers.
                                 </p>
-
 
                                 <div className="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800">
                                     <span className="inline-flex items-center gap-2 font-display text-sm font-bold text-brand transition-colors group-hover:text-electric dark:text-electric">

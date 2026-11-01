@@ -9,7 +9,7 @@ const CTABand = ({
     secondary = { label: "Explore Academy", to: "/academy" },
     showStackButton = true,
 }) => (
-    <section className="relative overflow-hidden bg-gradient-to-br from-blue-50/90 via-sky-50/70 to-indigo-50/80 dark:bg-abyss border-y border-blue-200/60 dark:border-slate-850" data-testid="cta-band">
+    <section className="relative overflow-hidden bg-gradient-to-br from-blue-50/90 via-sky-50/70 to-indigo-50/80 dark:bg-abyss dark:bg-none border-y border-blue-200/60 dark:border-slate-850" data-testid="cta-band">
         <div className="pointer-events-none absolute inset-0 bg-grid-light opacity-40 dark:opacity-60" />
         <div className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-blue-400/20 dark:bg-navy blur-3xl" />
         
@@ -31,7 +31,7 @@ const CTABand = ({
                     <Link
                         to={primary.to}
                         data-testid="cta-band-primary"
-                        className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-3.5 font-display text-sm font-bold text-white transition-colors duration-300 hover:bg-electric hover:text-ink text-center shadow-md shadow-brand/20"
+                        className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 sm:px-7 sm:py-3.5 font-display text-sm sm:text-base font-bold text-white transition-colors duration-300 hover:bg-electric hover:text-ink text-center shadow-md shadow-brand/20 w-auto"
                     >
                         {primary.label}
                         <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -41,7 +41,7 @@ const CTABand = ({
                         <Link
                             to={secondary.to}
                             data-testid="cta-band-secondary"
-                            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 dark:border-white/25 px-7 py-3.5 font-display text-sm font-bold text-slate-800 dark:text-white transition-colors duration-300 hover:border-brand hover:text-brand dark:hover:border-electric dark:hover:text-electric bg-white/80 dark:bg-transparent text-center shadow-sm"
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 dark:border-white/25 px-6 py-3 sm:px-7 sm:py-3.5 font-display text-sm sm:text-base font-bold text-slate-800 dark:text-white transition-colors duration-300 hover:border-brand hover:text-brand dark:hover:border-electric dark:hover:text-electric bg-white/80 dark:bg-transparent text-center shadow-sm w-auto"
                         >
                             {secondary.label}
                         </Link>

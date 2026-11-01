@@ -104,8 +104,16 @@ const sections = [
 const About = () => (
   <>
     <SEO
-      title="About GK Nexergy | Software & Digital Transformation"
-      description="Learn how GK Nexergy helps businesses explore software development, process automation, digital marketing and data analytics, alongside practical technology training."
+      title="About GK Nexergy | IT Consulting & Software Development Company in Hyderabad"
+      description="GK Nexergy bridges business and technology through custom software development, AI automation services, digital transformation, and workforce empowerment across India."
+      keywords={[
+        "IT Consulting Services",
+        "Software Development Company in Hyderabad",
+        "Digital Transformation Services",
+        "Custom Software Development",
+        "Technology Solutions in India"
+      ]}
+      canonical="/about"
     />
 
     <PageHero

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "train:chatbot": "node scripts/trainChatbot.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.66.0",

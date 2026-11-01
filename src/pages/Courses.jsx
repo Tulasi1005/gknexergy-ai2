@@ -9,8 +9,16 @@ import { COURSES } from "../data/site";
 const Courses = () => (
     <>
         <SEO
-            title="Courses | Nexergy Academy"
-            description="Learn technology that moves with the industry — Cyber Security, AI Tools & Digital Marketing, Databases In-Depth and the Foundation Program."
+            title="Technology Courses & Professional Certifications | Nexergy Academy"
+            description="Master industry-demanded tech skills: Cyber Security, AI Tools & Digital Marketing, Databases In-Depth, and Foundation Software Engineering programs in India."
+            keywords={[
+                "Technology Courses Hyderabad",
+                "Cyber Security Training",
+                "AI Digital Marketing Course",
+                "Databases Training",
+                "Tech Certifications India"
+            ]}
+            canonical="/academy/courses"
         />
         <PageHero
             eyebrow="Nexergy Academy — Courses"

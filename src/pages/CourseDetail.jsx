@@ -16,11 +16,33 @@ const CourseDetail = () => {
     if (!course) return <Navigate to="/academy/courses" replace />;
     const Icon = course.icon;
 
+    const courseSchema = {
+        "@type": "Course",
+        "@id": `https://gknexergy.com/academy/${course.slug}#course`,
+        "name": course.title,
+        "description": `${course.tagline} ${course.description}`,
+        "provider": {
+            "@type": "Organization",
+            "name": "Nexergy Academy - GK Nexergy",
+            "sameAs": "https://gknexergy.com"
+        }
+    };
+
     return (
         <>
             <SEO
-                title={`${course.title} | Nexergy Academy`}
+                title={`${course.title} Course | Nexergy Academy`}
                 description={`${course.tagline} ${course.description}`}
+                keywords={[
+                    course.title,
+                    course.category,
+                    "Technology Training Hyderabad",
+                    "Software Certification India",
+                    "Nexergy Academy"
+                ]}
+                canonical={`/academy/${course.slug}`}
+                ogImage={course.image}
+                schema={courseSchema}
             />
             <PageHero
                 eyebrow={`Nexergy Academy — ${course.category}`}
@@ -127,7 +149,7 @@ const CourseDetail = () => {
                                 <Link
                                     to="/contact"
                                     data-testid="course-enquire-cta"
-                                    className="group mt-8 flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 font-display text-sm font-bold text-white transition-colors duration-300 hover:bg-electric hover:text-ink"
+                                    className="group mt-6 inline-flex w-auto items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 sm:px-7 sm:py-3.5 font-display text-sm sm:text-base font-bold text-white transition-colors duration-300 hover:bg-electric hover:text-ink"
                                 >
                                     Enquire About This Course
                                     <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />

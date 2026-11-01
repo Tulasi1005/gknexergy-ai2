@@ -614,8 +614,17 @@ export default function Projects() {
   return (
     <>
       <SEO
-        title="Projects & Case Studies | GK Nexergy"
-        description="At GK Nexergy, we transform ideas into practical technology solutions. From business websites and e-commerce platforms to AI-enabled enterprise applications, our projects focus on innovation, usability, scalability and real-world business needs."
+        title="Projects & Case Studies | Enterprise Software & AI Implementations"
+        description="Explore GK Nexergy's real-world software engineering projects, web applications, e-commerce platforms, and AI-enabled enterprise systems built for scalability in India."
+        keywords={[
+          "Enterprise Software Solutions",
+          "Custom Software Development",
+          "AI Solutions for Businesses",
+          "Web and Mobile App Development",
+          "Technology Solutions in India",
+          "Case Studies"
+        ]}
+        canonical="/projects"
       />
       <div className="projects-page-wrapper">
         {/* Ambient Layer */}
@@ -634,23 +643,9 @@ export default function Projects() {
                 data-testid="back-to-stack-link"
                 aria-label="Back"
                 title="Back"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(59, 130, 246, 0.12)',
-                  border: '1px solid rgba(59, 130, 246, 0.3)',
-                  color: '#60a5fa',
-                  textDecoration: 'none',
-                  marginBottom: '14px',
-                  transition: 'all 0.2s ease',
-                }}
-                className="hover:scale-105"
+                className="global-back-to-stack-btn group mb-3.5"
               >
-                <ChevronLeft style={{ width: 18, height: 18 }} />
+                <ChevronLeft className="global-back-to-stack-icon group-hover:-translate-x-0.5" strokeWidth={2.8} />
               </Link>
               <h1 className="spotlight-title">Our Projects</h1>
               <p className="spotlight-desc">

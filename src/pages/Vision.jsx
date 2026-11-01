@@ -19,8 +19,16 @@ const highlights = [
 const Vision = () => (
     <>
         <SEO
-            title="Vision & Mission | GK Nexergy"
-            description="Building a future-ready technology ecosystem — quality technology education, innovation, practical learning and inclusive growth."
+            title="Vision & Mission | GK Nexergy - Technology Solutions in India"
+            description="Building a future-ready technology ecosystem across India through practical innovation, custom software engineering, AI adoption, and human capital development."
+            keywords={[
+                "Technology Solutions in India",
+                "AI Solutions for Businesses",
+                "Digital Transformation Services",
+                "IT Consulting Services",
+                "Software Development Company in Hyderabad"
+            ]}
+            canonical="/vision"
         />
         <PageHero
             eyebrow="Vision & Mission"

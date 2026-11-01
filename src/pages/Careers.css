@@ -355,7 +355,10 @@
     gap: 18px;
   }
   .btn-primary {
-    width: 100%;
+    width: auto;
+    max-width: fit-content;
+    padding: 10px 22px;
+    font-size: 13.5px;
   }
 }
 

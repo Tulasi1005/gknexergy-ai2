@@ -14,11 +14,90 @@ const SolutionDetail = () => {
     if (!solution) return <Navigate to="/solutions" replace />;
     const Icon = solution.icon;
 
+    const solutionKeywords = {
+        "software-development": [
+            "Custom Software Development",
+            "Enterprise Software Solutions",
+            "Software Development Company in Hyderabad",
+            "Web and Mobile App Development",
+            "Technology Solutions in India"
+        ],
+        "mobile-development": [
+            "Web and Mobile App Development",
+            "Custom Software Development",
+            "Mobile Application Engineering",
+            "Android and iOS Development",
+            "Software Development Company in Hyderabad"
+        ],
+        "digital-transformation": [
+            "Digital Transformation Services",
+            "Business Process Automation",
+            "Enterprise Software Solutions",
+            "IT Consulting Services",
+            "Technology Solutions in India"
+        ],
+        "ai-automation": [
+            "AI Solutions for Businesses",
+            "AI Automation Services",
+            "Business Process Automation",
+            "Enterprise AI Solutions",
+            "Software Development Company in Hyderabad"
+        ],
+        "data-analytics": [
+            "Data Analytics Solutions",
+            "AI Solutions for Businesses",
+            "Enterprise Software Solutions",
+            "Business Intelligence India",
+            "IT Consulting Services"
+        ],
+        "digital-growth": [
+            "Digital Growth Services",
+            "Performance Marketing",
+            "Meta and Google Ads",
+            "Technology Solutions in India",
+            "Digital Transformation Services"
+        ]
+    }[solution.slug] || [
+        "Custom Software Development",
+        "AI Solutions for Businesses",
+        "Digital Transformation Services"
+    ];
+
+    const serviceSchema = {
+        "@type": "Service",
+        "@id": `https://gknexergy.com/solutions/${solution.slug}#service`,
+        "name": solution.title,
+        "serviceType": solution.shortTitle || solution.title,
+        "description": solution.description,
+        "provider": {
+            "@id": "https://gknexergy.com/#organization"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": "India"
+        },
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": `${solution.title} Capabilities`,
+            "itemListElement": solution.features.map((feat) => ({
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Service",
+                    "name": feat
+                }
+            }))
+        }
+    };
+
     return (
         <>
             <SEO
-                title={`${solution.title} | GK Nexergy Solutions`}
+                title={`${solution.title} | GK Nexergy - Custom Software & Technology Solutions`}
                 description={`${solution.tagline} ${solution.description}`}
+                keywords={solutionKeywords}
+                canonical={`/solutions/${solution.slug}`}
+                ogImage={solution.image}
+                schema={serviceSchema}
             />
             <PageHero
                 eyebrow="GK Nexergy Solutions"

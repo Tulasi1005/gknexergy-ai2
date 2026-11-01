@@ -14,13 +14,20 @@ import {
   Sparkles,
   Mic,
   MicOff,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { askGKChatbot } from "../../utils/aiKnowledgeEngine";
 import {
   SpeechVoiceRecognizer,
   isSpeechRecognitionSupported,
+  isSpeechSynthesisSupported,
+  speakText,
+  stopSpeaking,
+  detectLanguage,
+  translateText,
 } from "../../utils/multilingualVoiceEngine";
-import { getCurrentLanguage } from "../../utils/translator";
+import { getCurrentLanguage, SUPPORTED_LANGUAGES } from "../../utils/translator";
 
 // Conversation starter pills
 const STARTER_SUGGESTIONS = [
@@ -93,8 +100,10 @@ export const AIChatbot = ({ theme = "light" }) => {
   const [hasNewMessageBelow, setHasNewMessageBelow] = useState(false);
   const [chipsScrollPercent, setChipsScrollPercent] = useState(0);
 
-  // Voice Assistant States (Voice message input only, no TTS/listening option)
+  // Voice Assistant States (Voice message input & readout)
   const [isListening, setIsListening] = useState(false);
+  const [voiceOutputEnabled, setVoiceOutputEnabled] = useState(true);
+  const [currentlySpeakingId, setCurrentlySpeakingId] = useState(null);
   const recognizerRef = useRef(null);
   const speechTranscriptRef = useRef("");
 
@@ -141,6 +150,39 @@ What would you like to know?`;
       },
     ];
   });
+
+  const [currentLang, setCurrentLang] = useState(() => getCurrentLanguage() || "en");
+
+  // Synchronize language reactively whenever global language changes or storage updates
+  useEffect(() => {
+    const handleLangChange = (e) => {
+      const code = e?.detail || getCurrentLanguage() || "en";
+      setCurrentLang(code);
+      if (recognizerRef.current) {
+        recognizerRef.current.setLanguage(code);
+      }
+      stopSpeaking();
+      setCurrentlySpeakingId(null);
+    };
+
+    window.addEventListener("gk-language-changed", handleLangChange);
+    window.addEventListener("storage", handleLangChange);
+    return () => {
+      window.removeEventListener("gk-language-changed", handleLangChange);
+      window.removeEventListener("storage", handleLangChange);
+    };
+  }, []);
+
+  // Update language whenever chatbot opens
+  useEffect(() => {
+    if (isOpen) {
+      const active = getCurrentLanguage() || "en";
+      setCurrentLang(active);
+      if (recognizerRef.current) {
+        recognizerRef.current.setLanguage(active);
+      }
+    }
+  }, [isOpen]);
 
   // Save conversation history to sessionStorage
   useEffect(() => {
@@ -254,6 +296,61 @@ What would you like to know?`;
     isDraggingChipsRef.current = false;
   };
 
+  // Speak a specific message aloud using multilingual voice engine
+  const speakMessage = useCallback(async (msg) => {
+    if (!msg || !msg.text) return;
+    if (currentlySpeakingId === msg.id) {
+      stopSpeaking();
+      setCurrentlySpeakingId(null);
+      return;
+    }
+
+    stopSpeaking();
+
+    // 1. Read visible text from the message element in the DOM (captures live Google Translate on screen)
+    const domEl = document.getElementById(`ai-msg-body-${msg.id}`);
+    const visibleText = domEl?.innerText?.trim() || "";
+    let textToSpeak = visibleText || msg.text || "";
+
+    const activeLanguage = getCurrentLanguage() || currentLang || "en";
+
+    // 2. Detect language: if text has native script (Devanagari/Hindi, Telugu, Tamil, etc.), honor it!
+    const msgScriptLang = detectLanguage(textToSpeak);
+    let targetLang = (msgScriptLang && msgScriptLang !== "en") ? msgScriptLang : activeLanguage;
+
+    // 3. If text is still English but user selected a non-English language, translate it
+    if (targetLang !== "en" && msgScriptLang === "en") {
+      try {
+        const { translatedText } = await translateText(textToSpeak, targetLang, "en");
+        if (translatedText && translatedText.trim()) {
+          textToSpeak = translatedText;
+        }
+      } catch (e) {
+        // fallback to original text
+      }
+    }
+
+    speakText(textToSpeak, targetLang, {
+      onStart: () => {
+        setCurrentlySpeakingId(msg.id);
+      },
+      onEnd: () => {
+        setCurrentlySpeakingId((curr) => (curr === msg.id ? null : curr));
+      },
+      onError: () => {
+        setCurrentlySpeakingId(null);
+      },
+    });
+  }, [currentlySpeakingId, currentLang]);
+
+  const toggleVoiceOutput = useCallback(() => {
+    if (currentlySpeakingId) {
+      stopSpeaking();
+      setCurrentlySpeakingId(null);
+    }
+    setVoiceOutputEnabled((prev) => !prev);
+  }, [currentlySpeakingId]);
+
   // Voice Assistant Speech Recognition (Speech-to-Text for sending voice message)
   const toggleVoiceInput = useCallback(() => {
     if (isListening) {
@@ -265,12 +362,17 @@ What would you like to know?`;
       return;
     }
 
+    if (currentlySpeakingId) {
+      stopSpeaking();
+      setCurrentlySpeakingId(null);
+    }
+
     if (!isSpeechRecognitionSupported()) {
       alert("Voice input is not supported in this browser. Please use Google Chrome, Microsoft Edge, or Safari.");
       return;
     }
 
-    const currentLang = getCurrentLanguage() || "auto";
+    const activeLanguage = getCurrentLanguage() || currentLang || "auto";
 
     if (!recognizerRef.current) {
       recognizerRef.current = new SpeechVoiceRecognizer({
@@ -290,21 +392,25 @@ What would you like to know?`;
           console.warn("Speech recognition error:", err);
           setIsListening(false);
         },
-        selectedLang: currentLang,
+        selectedLang: activeLanguage,
       });
     } else {
-      recognizerRef.current.setLanguage(currentLang);
+      recognizerRef.current.setLanguage(activeLanguage);
     }
 
     speechTranscriptRef.current = "";
     recognizerRef.current.start();
-  }, [isListening]);
+  }, [isListening, currentlySpeakingId, currentLang]);
 
-  // Clean up speech recognition on modal close or unmount
+  // Clean up speech recognition & speech synthesis on modal close or unmount
   useEffect(() => {
-    if (!isOpen && isListening && recognizerRef.current) {
-      recognizerRef.current.stop();
-      setIsListening(false);
+    if (!isOpen) {
+      if (isListening && recognizerRef.current) {
+        recognizerRef.current.stop();
+        setIsListening(false);
+      }
+      stopSpeaking();
+      setCurrentlySpeakingId(null);
     }
   }, [isOpen, isListening]);
 
@@ -313,6 +419,7 @@ What would you like to know?`;
       if (recognizerRef.current) {
         recognizerRef.current.stop();
       }
+      stopSpeaking();
     };
   }, []);
 
@@ -341,6 +448,11 @@ What would you like to know?`;
     const query = (customText !== null ? customText : chatInput).trim();
     if (!query) return;
 
+    if (currentlySpeakingId) {
+      stopSpeaking();
+      setCurrentlySpeakingId(null);
+    }
+
     if (isListening && recognizerRef.current) {
       recognizerRef.current.stop();
       setIsListening(false);
@@ -362,9 +474,11 @@ What would you like to know?`;
     }, 20);
 
     try {
+      const activeLanguage = currentLang || getCurrentLanguage() || "en";
       const response = await askGKChatbot(query, "", {
         activeTopic,
         history: messages,
+        language: activeLanguage,
       });
 
       setIsTyping(false);
@@ -385,21 +499,47 @@ What would you like to know?`;
 
       setMessages((prev) => [...prev, botMsg]);
 
+      // Read response aloud if voice output is enabled
+      if (voiceOutputEnabled) {
+        const speakLang = response.lang || activeLanguage;
+        speakText(response.text, speakLang, {
+          onStart: () => setCurrentlySpeakingId(botMsg.id),
+          onEnd: () => setCurrentlySpeakingId((c) => (c === botMsg.id ? null : c)),
+          onError: () => setCurrentlySpeakingId(null),
+        });
+      }
+
       setTimeout(() => {
         scrollToBottom("smooth");
       }, 50);
     } catch (err) {
       setIsTyping(false);
+      const activeLanguage = currentLang || getCurrentLanguage() || "en";
+      let fallbackText = "I'm here to help! You can ask anything about GK Nexergy software solutions, academy courses, delivered projects, or connect directly with our engineering team.";
+      if (activeLanguage !== "en") {
+        try {
+          const { translatedText } = await translateText(fallbackText, activeLanguage, "en");
+          if (translatedText) fallbackText = translatedText;
+        } catch (e) {}
+      }
       const fallbackMsg = {
         id: `bot-${Date.now()}`,
         sender: "bot",
-        text: "I'm here to help! You can ask anything about GK Nexergy software solutions, academy courses, delivered projects, or connect directly with our engineering team.",
+        text: fallbackText,
         routes: [{ label: "Contact Us", to: "/contact" }],
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, fallbackMsg]);
+
+      if (voiceOutputEnabled) {
+        speakText(fallbackMsg.text, activeLanguage, {
+          onStart: () => setCurrentlySpeakingId(fallbackMsg.id),
+          onEnd: () => setCurrentlySpeakingId((c) => (c === fallbackMsg.id ? null : c)),
+          onError: () => setCurrentlySpeakingId(null),
+        });
+      }
     }
-  }, [chatInput, activeTopic, messages, scrollToBottom]);
+  }, [chatInput, activeTopic, messages, scrollToBottom, voiceOutputEnabled, currentlySpeakingId, isListening, currentLang]);
 
   // Key down event
   const handleKeyDown = (e) => {
@@ -438,6 +578,8 @@ What would you like to know?`;
   }, []);
 
   const handleClearHistory = () => {
+    stopSpeaking();
+    setCurrentlySpeakingId(null);
     sessionStorage.removeItem("gk_chat_classic_v2");
     setActiveTopic("general");
     setMessages([
@@ -481,7 +623,7 @@ What would you like to know?`;
               return !prev;
             });
           }}
-          aria-label={isOpen ? "Close GK Nexergy AI Assistant" : "GK Nexergy AI Assistant"}
+          aria-label={isOpen ? "Close Ask GK" : "Ask GK"}
           className="group relative flex items-center transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95 select-none"
           style={{
             background: isOpen
@@ -503,9 +645,9 @@ What would you like to know?`;
                 : "0 10px 30px rgba(2, 132, 199, 0.15)"
               : "0 12px 28px rgba(14, 165, 233, 0.45), 0 4px 10px rgba(14, 165, 233, 0.2)",
             borderRadius: "9999px",
-            padding: isOpen ? "8px 16px" : "5px 18px 5px 6px",
+            padding: isOpen ? "6px 14px" : "4px 13px 4px 5px",
             fontFamily: fontStack,
-            height: "46px",
+            height: "38px",
           }}
         >
           {isOpen ? (
@@ -562,7 +704,7 @@ What would you like to know?`;
                   whiteSpace: "nowrap",
                 }}
               >
-                GK Nexergy AI
+                Ask GK
               </span>
             </div>
           )}
@@ -582,7 +724,7 @@ What would you like to know?`;
             data-testid="ai-chatbot-window"
             data-lenis-prevent="true"
             role="dialog"
-            aria-label="GK Nexergy AI Assistant"
+            aria-label="Ask GK"
             className="flex flex-col overflow-hidden shadow-2xl select-none"
             style={{
               position: "fixed",
@@ -631,7 +773,7 @@ What would you like to know?`;
                         textOverflow: "ellipsis",
                       }}
                     >
-                      GK Nexergy AI
+                      Ask GK
                     </span>
                     <span
                       style={{
@@ -648,12 +790,60 @@ What would you like to know?`;
                       <span style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: "#10b981" }} />
                       Online
                     </span>
+                    {currentLang !== "en" && (
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "3px",
+                          fontSize: "10.5px",
+                          fontWeight: 600,
+                          padding: "1px 7px",
+                          borderRadius: "9999px",
+                          backgroundColor: isDark ? "rgba(56, 189, 248, 0.15)" : "#e0f2fe",
+                          color: isDark ? "#38bdf8" : "#0284c7",
+                          border: isDark ? "1px solid rgba(56, 189, 248, 0.3)" : "1px solid #bae6fd",
+                          flexShrink: 0,
+                        }}
+                        title={`Active Voice & Chat Language: ${SUPPORTED_LANGUAGES.find((l) => l.code === currentLang)?.label || currentLang}`}
+                      >
+                        <span>{SUPPORTED_LANGUAGES.find((l) => l.code === currentLang)?.flag || "🌐"}</span>
+                        <span>{SUPPORTED_LANGUAGES.find((l) => l.code === currentLang)?.native || currentLang}</span>
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
 
               {/* Header Controls */}
               <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
+
+                {/* Voice Output Toggle */}
+                <button
+                  data-testid="ai-voice-toggle-btn"
+                  onClick={toggleVoiceOutput}
+                  title={voiceOutputEnabled ? "Voice response enabled (click to mute)" : "Voice response muted (click to unmute)"}
+                  aria-label={voiceOutputEnabled ? "Mute voice assistant" : "Unmute voice assistant"}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    color: voiceOutputEnabled
+                      ? (currentlySpeakingId ? "#38bdf8" : isDark ? "#60a5fa" : "#0284c7")
+                      : (isDark ? "#64748b" : "#94a3b8"),
+                    padding: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    borderRadius: "6px",
+                    transition: "color 0.15s ease",
+                  }}
+                >
+                  {voiceOutputEnabled ? (
+                    <Volume2 style={{ width: "16px", height: "16px", strokeWidth: 1.8 }} className={currentlySpeakingId ? "animate-pulse" : ""} />
+                  ) : (
+                    <VolumeX style={{ width: "16px", height: "16px", strokeWidth: 1.8 }} />
+                  )}
+                </button>
 
                 <button
                   data-testid="ai-clear-btn"
@@ -750,7 +940,11 @@ What would you like to know?`;
                         }}
                       >
                         {/* Text Content */}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "10px", whiteSpace: "pre-line" }}>
+                        <div
+                          id={`ai-msg-body-${msg.id}`}
+                          data-testid={`ai-msg-body-${msg.id}`}
+                          style={{ display: "flex", flexDirection: "column", gap: "10px", whiteSpace: "pre-line" }}
+                        >
                           {msg.text.split("\n\n").map((paragraph, pIdx) => {
                             if (paragraph.includes("- ") || paragraph.includes("• ") || paragraph.includes("1. ")) {
                               const lines = paragraph.split("\n");
@@ -830,8 +1024,20 @@ What would you like to know?`;
                         )}
                       </div>
 
-                      {/* Timestamp */}
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "5px", paddingLeft: "4px" }}>
+                      {/* Timestamp & Voice Readout Action */}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "8px",
+                          marginTop: "5px",
+                          paddingLeft: "4px",
+                          paddingRight: "4px",
+                          width: "100%",
+                          maxWidth: "92%",
+                        }}
+                      >
                         <span
                           style={{
                             fontSize: "11px",
@@ -841,6 +1047,48 @@ What would you like to know?`;
                         >
                           {msg.time}
                         </span>
+
+                        {!isUser && (
+                          <button
+                            type="button"
+                            onClick={() => speakMessage(msg)}
+                            data-testid={`ai-speak-btn-${msg.id}`}
+                            title={currentlySpeakingId === msg.id ? "Stop voice readout" : "Listen to response in natural voice"}
+                            aria-label={currentlySpeakingId === msg.id ? "Stop voice readout" : "Listen to response in natural voice"}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "4px",
+                              padding: "2px 8px",
+                              borderRadius: "6px",
+                              fontSize: "11px",
+                              fontWeight: 600,
+                              cursor: "pointer",
+                              border: currentlySpeakingId === msg.id
+                                ? (isDark ? "1px solid #38bdf8" : "1px solid #0284c7")
+                                : (isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid #e2e8f0"),
+                              backgroundColor: currentlySpeakingId === msg.id
+                                ? (isDark ? "rgba(56, 189, 248, 0.2)" : "#e0f2fe")
+                                : (isDark ? "rgba(255,255,255,0.04)" : "#f8fafc"),
+                              color: currentlySpeakingId === msg.id
+                                ? (isDark ? "#38bdf8" : "#0284c7")
+                                : (isDark ? "#94a3b8" : "#64748b"),
+                              transition: "all 0.15s ease",
+                            }}
+                          >
+                            {currentlySpeakingId === msg.id ? (
+                              <>
+                                <VolumeX style={{ width: "12px", height: "12px" }} className="animate-pulse" />
+                                <span>Stop</span>
+                              </>
+                            ) : (
+                              <>
+                                <Volume2 style={{ width: "12px", height: "12px" }} />
+                                <span>Listen</span>
+                              </>
+                            )}
+                          </button>
+                        )}
                       </div>
                     </motion.div>
                   );

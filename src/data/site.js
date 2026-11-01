@@ -137,7 +137,7 @@ export const MEGA_COMPANY = {
         {
             title: "About & Leadership",
             to: "/about",
-            image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80",
+            image: "/images/mega-team.jpg",
             links: [
                 { label: "About Us & Story", to: "/about" },
                 { label: "Vision & Strategic Mission", to: "/vision" },
@@ -147,7 +147,7 @@ export const MEGA_COMPANY = {
             title: "Why GK Nexergy",
             to: "/why-gk-nexergy",
             badge: "SPECIALIST",
-            image: "https://imageio.forbes.com/specials-images/imageserve/6200b0dddcf32d3be937fa84/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds",
+            image: "/images/mega-globe.jpg",
             links: [
                 { label: "What Sets Us Apart", to: "/why-gk-nexergy" },
                 { label: "Client Success & Projects", to: "/projects" },
@@ -156,7 +156,7 @@ export const MEGA_COMPANY = {
         {
             title: "Industries & Reach",
             to: "/industries",
-            image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80",
+            image: "/images/mega-skyscrapers.jpg",
             links: [
                 { label: "Industries We Serve", to: "/industries" },
                 { label: "Interactive Showcase", to: "/landing" },

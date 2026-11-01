@@ -6,6 +6,7 @@
  */
 
 import { SOLUTIONS, COURSES, INDUSTRIES, NAV } from "../data/site.js";
+import CHATBOT_KNOWLEDGE from "../data/chatbotKnowledgeBase.json";
 
 export const FULL_SITE_CORPUS = [
   // 1. COMPANY & IDENTITY
@@ -45,11 +46,11 @@ Core Differentiators:
     route: "/pricing",
     category: "solutions",
     keywords: ["pricing", "price", "plan", "plans", "starter", "growth", "premium", "cost", "fee", "rate", "pod cost", "engagement", "quote", "budget"],
-    content: `**GK Nexergy Pricing Plans & Engagement Tiers**:
-• **Starter Plan (>>)**: $1,499/mo (₹99,000/mo) or $2,999 Fixed Scope. 2–3 weeks rapid MVP delivery. Ideal for startups and MVPs. Includes React/Node web app, PostgreSQL, basic AI chatbot, 30-day warranty, and 100% IP ownership.
-• **Growth Plan (>>)**: $3,499/mo (₹2,49,000/mo) or $6,999 Multi-Sprint. Dedicated 2–3 person agile pod. Most popular for scaling businesses. Includes full-stack web + iOS/Android mobile apps, custom AI/RAG workflows, database optimization, CI/CD, and 60 days priority support.
-• **Premium Plan (>>)**: $6,999/mo (₹4,99,000/mo) or Custom Quote. Dedicated 4–6+ person pod with Lead Architect, Senior Devs, QA & DevOps. Includes enterprise digital transformation, custom autonomous AI reasoning engines, 99.99% uptime SLA, 24/7 priority support, and executive CTO advisory.
-All plans include 100% client source code ownership and zero lock-in.`,
+    content: `**GK Nexergy Digital Marketing Packages & Engagement Tiers**:
+• **Starter Package**: Perfect for small businesses, local shops, and startups. Includes 8 Static Posts / Month (2 posts per week), 2 Reels / Month, Instagram & Facebook management, Meta Ads campaign setup, audience targeting, and monthly performance report.
+• **Growth Package [Most Popular]**: Ideal for growing businesses, retail stores, and service providers. Includes 12 Static Posts / Month (3 posts per week), 4 Reels / Month, 2 On-Site Professional Video Shoot Visits / Month, Meta Ads (lead generation & remarketing), Google Business Profile Optimization, and WhatsApp Business setup.
+• **Premium Package**: Built for established businesses, brands, real estate, and high-growth e-commerce. Includes 20+ Static Posts / Month (5+ posts per week), 8 Reels / Month + YouTube Shorts, 4 On-Site Professional Video Shoot Visits / Month, Meta & Google Ads Suite (Search, Display, YouTube), Local SEO, and bi-weekly strategic reporting.
+• **100% Transparent Ad Spend**: Clients pay ad spend directly to Meta and Google (industry benchmarks: ₹5,000 to ₹5,00,000+/mo). GK Nexergy management fee is separate with zero ad spend markup.`,
   },
   {
     id: "vision-mission",
@@ -180,6 +181,16 @@ Active Openings:
 
 Benefits: Autonomous agile pods, 100% product ownership, competitive compensation, continuous learning allowance. Apply at /careers or contact HR at contact@gknexergy.com.`,
   },
+
+  // 7. CUSTOM FAQS (From chatbotKnowledgeBase.json)
+  ...(CHATBOT_KNOWLEDGE.customFaqs || []).map((faq) => ({
+    id: faq.id,
+    title: `FAQ: ${faq.question}`,
+    route: (faq.routes && faq.routes[0]?.to) || "/about",
+    category: "faq",
+    keywords: [...(faq.intents || []), "faq", "question", "answer"],
+    content: `**${faq.question}**\n\n${faq.responses?.en || ""}`,
+  })),
 ];
 
 /**

@@ -18,8 +18,16 @@ const reasons = [
 const Why = () => (
     <>
         <SEO
-            title="Why GK Nexergy | Experience, Relevance & Real Outcomes"
-            description="Why GK Nexergy — because technology is only valuable when it creates meaningful outcomes."
+            title="Why GK Nexergy | Software Development Company in Hyderabad & IT Consulting"
+            description="Discover why growing businesses trust GK Nexergy for custom software development, IT consulting services, business process automation, and practical technology solutions in India."
+            keywords={[
+                "IT Consulting Services",
+                "Business Process Automation",
+                "Software Development Company in Hyderabad",
+                "Technology Solutions in India",
+                "Custom Software Development"
+            ]}
+            canonical="/why-gk-nexergy"
         />
         <PageHero
             eyebrow="Why GK Nexergy"
@@ -47,7 +55,7 @@ const Why = () => (
                 ))}
             </div>
             <Reveal>
-                <div className="mt-16 rounded-2xl bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-50 border border-blue-200/80 p-8 dark:border-slate-800 dark:bg-card sm:p-12" data-testid="why-statement">
+                <div className="mt-16 rounded-2xl bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-50 border border-blue-200/80 p-8 dark:border-slate-800 dark:bg-card dark:bg-none sm:p-12" data-testid="why-statement">
                     <Quote className="h-7 w-7 text-brand dark:text-electric" strokeWidth={1.5} />
                     <p className="mt-5 max-w-3xl font-display text-xl font-bold leading-snug text-ink dark:text-white sm:text-2xl lg:text-3xl">
                         We don't simply introduce technology. We identify the right technology for the right problem at the right stage of growth.

@@ -9,8 +9,17 @@ import { SOLUTIONS } from "../data/site";
 const Solutions = () => (
     <>
         <SEO
-            title="Technology Solutions | GK Nexergy"
-            description="Technology solutions built around your business — software development, mobile apps, digital transformation, AI & automation, data & analytics and digital growth."
+            title="Technology Solutions & Services | Custom Software, AI & App Development"
+            description="Explore GK Nexergy's end-to-end technology solutions: custom software development, web and mobile app development, AI automation services, and data analytics solutions."
+            keywords={[
+                "Custom Software Development",
+                "Web and Mobile App Development",
+                "AI Automation Services",
+                "Data Analytics Solutions",
+                "Digital Transformation Services",
+                "Software Development Company in Hyderabad"
+            ]}
+            canonical="/solutions"
         />
         <PageHero
             eyebrow="Solutions"

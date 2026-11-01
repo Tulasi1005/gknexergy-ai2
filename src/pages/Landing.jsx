@@ -7,8 +7,17 @@ const Landing = () => {
   return (
     <>
       <SEO
-        title="GK Nexergy | Your IT Innovation Journey"
-        description="Your IT Innovation Journey. Designed in Blueprint. TRAIN • BUILD • TRANSFORM. Discover the Vision."
+        title="GK Nexergy | Enterprise Digital Transformation & AI Solutions"
+        description="Your technology innovation partner in Hyderabad, India. Train, build, and transform with custom software development, AI automation services, and enterprise solutions."
+        keywords={[
+          "AI Solutions for Businesses",
+          "AI Automation Services",
+          "Custom Software Development",
+          "Digital Transformation Services",
+          "Software Development Company in Hyderabad",
+          "Technology Solutions in India"
+        ]}
+        canonical="/"
       />
 
       {/* Interactive Custom Cosmic Cursor */}

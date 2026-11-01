@@ -138,8 +138,17 @@ const Careers = () => {
   return (
     <div className="careers-page-wrapper">
       <SEO
-        title="Careers & Current Openings | GK Nexergy"
-        description="Explore open career opportunities at GK Nexergy across Software Engineering, Testing, Training, Tele Calling, Administration, and Digital Marketing."
+        title="Careers at GK Nexergy | Software & AI Engineering Jobs in Hyderabad"
+        description="Join GK Nexergy's engineering and technology team in Hyderabad. Explore open positions in software engineering, testing, digital marketing, and tech training in India."
+        keywords={[
+          "Software Development Company in Hyderabad",
+          "Software Jobs Hyderabad",
+          "Careers at GK Nexergy",
+          "IT Jobs Hyderabad",
+          "AI Engineering Careers",
+          "Technology Solutions in India"
+        ]}
+        canonical="/careers"
       />
 
       {/* 1. NextGen Forge Style Page Hero */}
@@ -150,22 +159,9 @@ const Careers = () => {
             data-testid="back-to-stack-link"
             aria-label="Back"
             title="Back"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '36px',
-              height: '36px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(59, 130, 246, 0.12)',
-              border: '1px solid rgba(59, 130, 246, 0.3)',
-              color: '#60a5fa',
-              textDecoration: 'none',
-              transition: 'all 0.2s ease',
-            }}
-            className="hover:scale-105"
+            className="global-back-to-stack-btn group"
           >
-            <ChevronLeft style={{ width: 18, height: 18 }} />
+            <ChevronLeft className="global-back-to-stack-icon group-hover:-translate-x-0.5" strokeWidth={2.8} />
           </Link>
           <div className="section-label" style={{ marginBottom: 0 }}>We're Hiring</div>
         </div>
@@ -340,7 +336,7 @@ const Careers = () => {
                     <input
                       type="tel"
                       required
-                      placeholder="+91 98765 43210"
+                      placeholder="e.g. +91 98765 43210"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     />

@@ -4,19 +4,19 @@
  */
 
 export const SUPPORTED_LANGUAGES = [
-  { code: 'en', label: 'English', native: 'English', flag: '🇺🇸' },
-  { code: 'te', label: 'Telugu', native: 'తెలుగు', flag: '🇮🇳' },
-  { code: 'hi', label: 'Hindi', native: 'हिन्दी', flag: '🇮🇳' },
-  { code: 'ta', label: 'Tamil', native: 'தமிழ்', flag: '🇮🇳' },
-  { code: 'kn', label: 'Kannada', native: 'ಕನ್ನಡ', flag: '🇮🇳' },
-  { code: 'mr', label: 'Marathi', native: 'मराठी', flag: '🇮🇳' },
-  { code: 'bn', label: 'Bengali', native: 'বাংলা', flag: '🇮🇳' },
-  { code: 'es', label: 'Spanish', native: 'Español', flag: '🇪🇸' },
-  { code: 'fr', label: 'French', native: 'Français', flag: '🇫🇷' },
-  { code: 'de', label: 'German', native: 'Deutsch', flag: '🇩🇪' },
-  { code: 'ja', label: 'Japanese', native: '日本語', flag: '🇯🇵' },
-  { code: 'ar', label: 'Arabic', native: 'العربية', flag: '🇸🇦' },
-  { code: 'zh-CN', label: 'Chinese', native: '简体中文', flag: '🇨🇳' },
+  { code: 'en', label: 'English', native: 'English', flag: '🇺🇸', name: 'English' },
+  { code: 'te', label: 'Telugu', native: 'తెలుగు', flag: '🇮🇳', name: 'Telugu' },
+  { code: 'hi', label: 'Hindi', native: 'हिन्दी', flag: '🇮🇳', name: 'Hindi' },
+  { code: 'ta', label: 'Tamil', native: 'தமிழ்', flag: '🇮🇳', name: 'Tamil' },
+  { code: 'kn', label: 'Kannada', native: 'ಕನ್ನಡ', flag: '🇮🇳', name: 'Kannada' },
+  { code: 'mr', label: 'Marathi', native: 'मराठी', flag: '🇮🇳', name: 'Marathi' },
+  { code: 'bn', label: 'Bengali', native: 'বাংলা', flag: '🇮🇳', name: 'Bengali' },
+  { code: 'es', label: 'Spanish', native: 'Español', flag: '🇪🇸', name: 'Spanish' },
+  { code: 'fr', label: 'French', native: 'Français', flag: '🇫🇷', name: 'French' },
+  { code: 'de', label: 'German', native: 'Deutsch', flag: '🇩🇪', name: 'German' },
+  { code: 'ja', label: 'Japanese', native: '日本語', flag: '🇯🇵', name: 'Japanese' },
+  { code: 'ar', label: 'Arabic', native: 'العربية', flag: '🇸🇦', name: 'Arabic' },
+  { code: 'zh-CN', label: 'Chinese', native: '简体中文', flag: '🇨🇳', name: 'Chinese' },
 ];
 
 export const getCurrentLanguage = () => {

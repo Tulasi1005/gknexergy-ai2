@@ -32,470 +32,43 @@ Persona:
 - Accurate Company Facts: GK Nexergy delivers Enterprise Solutions (Software, Mobile Apps, AI & Automation, Data Analytics, Digital Growth) and Nexergy Academy (Cyber Security, PostgreSQL, Foundation Program, AI Marketing). Contact: +91 9704585960 | contact@gknexergy.com | Andhra Pradesh, India.
 `;
 
+import CHATBOT_KNOWLEDGE from "../data/chatbotKnowledgeBase.json";
+
 /**
- * Knowledge Topics with Native Telugu, Hindi, and English Handlers
+ * Knowledge Topics dynamically compiled from `src/data/chatbotKnowledgeBase.json`.
+ * 
+ * To modify questions, add new user queries, adjust answers, or train the chatbot:
+ * Simply edit `src/data/chatbotKnowledgeBase.json` and run `npm run train:chatbot`!
  */
 export const CONVERSATIONAL_TOPICS = [
-  // 1. GREETINGS & CASUAL INTROS
-  {
-    id: "greetings",
-    intents: [
-      "hi", "hello", "hey", "good morning", "good afternoon", "good evening", "namaste", "sup", "yo", "hiya", "greetings",
-      "నమస్కారం", "నమస్తే", "హలో", "బాగున్నారా", "ఎలా ఉన్నారు", "శుభోదయం", "శుభ సాయంత్రం", "namaskaram", "namaste", "ela unnavu", "ela unnaru", "नमस्ते", "வணக்கம்", "ಹಲೋ"
-    ],
+  ...(CHATBOT_KNOWLEDGE.topics || []).map((t) => ({
+    id: t.id,
+    intents: t.intents || [],
     handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "greetings",
-          text: "నమస్కారం! 👋\n\nనేను **GK Nexergy AI అసిస్టెంట్‌ని**.\n\nమా ఎంటర్‌ప్రైజ్ టెక్నాలజీ సొల్యూషన్స్, అకాడమీ కోర్సులు, ప్రాజెక్ట్‌లు లేదా కంపెనీ గురించిన సమాచారం తెలుసుకోవడానికి నేను మీకు సహాయం చేయగలను.\n\nమీరు దేని గురించి తెలుసుకోవాలనుకుంటున్నారు?",
-          routes: [],
-          lang: "te",
-        };
-      }
-      if (isHindi) {
-        return {
-          topic: "greetings",
-          text: "नमस्ते! 👋\n\nमैं **GK Nexergy AI सहायक** हूँ।\n\nमैं हमारे सॉफ्टवेयर सॉल्यूशंस, एकेडमी कोर्सेज, प्रोजेक्ट्स या कंपनी की जानकारी में आपकी मदद कर सकता हूँ।\n\nआज आप किस बारे में जानना चाहते हैं?",
-          routes: [],
-          lang: "hi",
-        };
-      }
+      const lang = isTelugu ? "te" : isHindi ? "hi" : "en";
+      const text = (t.responses && (t.responses[lang] || t.responses["en"])) || "";
       return {
-        topic: "greetings",
-        text: "Hi there! 👋\n\nI'm the **GK Nexergy AI assistant**.\n\nI can help you explore our technology solutions, academy courses, client projects, or answer any questions about the company.\n\nWhat are you curious about today?",
-        routes: [],
-        lang: "en",
+        topic: t.id,
+        text,
+        routes: t.routes || [],
+        lang,
       };
     },
-  },
-
-  // 2. COMPANY OVERVIEW / WHAT DO YOU DO
-  {
-    id: "company",
-    intents: [
-      "what is gk nexergy", "what does gk nexergy do", "what do you do", "about gk nexergy", "about the company", "tell me about gk nexergy", "company", "who are you", "what is this", "overview", "story", "vision", "mission",
-      "మీరు ఏం చేస్తారు", "మీరు ఏమి చేస్తారు", "కంపెనీ గురించి చెప్పు", "gk nexergy అంటే ఏమిటి", "కంపెనీ వివరాలు", "మీ సర్వీసులు ఏమిటి", "కంపెనీ ఏమి చేస్తుంది", "meeru em chestaru", "company gurinchi cheppu", "company details", "कंपनी क्या करती है", "कंपनी के बारे में बताओ"
-    ],
+  })),
+  ...(CHATBOT_KNOWLEDGE.customFaqs || []).map((f) => ({
+    id: f.id,
+    intents: f.intents || [],
     handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "company",
-          text: "GK Nexergy వ్యాపారాల కోసం ఆధునిక సాఫ్ట్‌వేర్, మొబైల్ యాప్‌లు మరియు AI సొల్యూషన్స్‌ను నిర్మిస్తుంది, అలాగే Nexergy Academy ద్వారా తదుపరి తరం ఇంజనీర్లకు ప్రొఫెషనల్ శిక్షణ ఇస్తుంది.\n\nమేము **ఆంధ్రప్రదేశ్, భారతదేశం** కేంద్రంగా పనిచేస్తూ, 100% క్లయింట్ కోడ్ యాజమాన్యంతో ప్రాజెక్ట్‌లను డెలివరీ చేస్తున్నాము.\n\nమీరు మీ వ్యాపారం కోసం సాఫ్ట్‌వేర్ నిర్మించాలనుకుంటున్నారా లేదా మా అకాడమీ ట్రైనింగ్ ప్రోగ్రామ్‌లపై ఆసక్తి ఉందా?",
-          routes: [
-            { label: "సొల్యూషన్స్ చూడండి", to: "/solutions" },
-            { label: "Nexergy Academy", to: "/academy" },
-          ],
-          lang: "te",
-        };
-      }
-      if (isHindi) {
-        return {
-          topic: "company",
-          text: "GK Nexergy व्यवसायों के लिए आधुनिक सॉफ्टवेयर, मोबाइल ऐप्स और AI समाधान बनाती है, साथ ही Nexergy Academy के माध्यम से छात्रों को इंजीनियरिंग ट्रेनिंग देती है।\n\nहम **भारत** से संचालित होते हैं।\n\nक्या आप अपनी कंपनी के लिए सॉफ्टवेयर बनवाना चाहते हैं या एकेडमी कोर्सेज में रुचि रखते हैं?",
-          routes: [
-            { label: "समाधान देखें", to: "/solutions" },
-            { label: "Nexergy Academy", to: "/academy" },
-          ],
-          lang: "hi",
-        };
-      }
+      const lang = isTelugu ? "te" : isHindi ? "hi" : "en";
+      const text = (f.responses && (f.responses[lang] || f.responses["en"])) || "";
       return {
-        topic: "company",
-        text: "GK Nexergy helps businesses build modern technology and AI solutions, while also training the next generation of engineers through Nexergy Academy.\n\nWe operate from **India**, delivering custom software, mobile apps, AI automation, and cloud systems with 100% client code ownership.\n\nAre you looking to build a tech solution for your business, or interested in our academy training programs?",
-        routes: [
-          { label: "Explore Solutions", to: "/solutions" },
-          { label: "Nexergy Academy", to: "/academy" },
-        ],
-        lang: "en",
+        topic: f.id,
+        text,
+        routes: f.routes || [],
+        lang,
       };
     },
-  },
-
-  // 3. AI & AUTOMATION
-  {
-    id: "solutions-ai",
-    intents: [
-      "ai", "artificial intelligence", "automation", "automate", "generative ai", "llm", "chatbots", "copilot", "smart workflows", "agent", "agents", "machine learning", "rag",
-      "ఏఐ", "ఆర్టిఫిషియల్ ఇంటెలిజెన్స్", "ఆటోమేషన్", "చాట్‌బాట్", "రోబోటిక్స్", "ai సొల్యూషన్స్", "ai tools", "ai services"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "solutions-ai",
-          text: "GK Nexergy వ్యాపారాల కోసం ప్రాక్టికల్ AI మరియు ఆటోమేషన్ సొల్యూషన్స్‌ను రూపొందిస్తుంది:\n\n• **ఇంటెలిజెంట్ ఏజెంట్లు & చాట్‌బాట్లు**: 24/7 కస్టమర్ అసిస్టెంట్లు మరియు అంతర్గత నాలెడ్జ్ బాట్లు.\n• **డాక్యుమెంట్ ఇంటెలిజెన్స్**: ఆటోమేటెడ్ PDF ఇన్వాయిస్ ప్రాసెసింగ్ మరియు డేటా వెలికితీత.\n• **వర్క్‌ఫ్లో ఆటోమేషన్**: పునరావృత మాన్యువల్ డేటా ఎంట్రీని తొలగించడం.\n\nమీ నిర్దిష్ట బిజినెస్‌కు AI ఎలా ఉపయోగపడుతుందో తెలుసుకోవాలనుకుంటున్నారా?",
-          routes: [{ label: "AI & ఆటోమేషన్ చూడండి", to: "/solutions/ai-automation" }],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "solutions-ai",
-        text: "GK Nexergy builds practical AI and automation solutions to help businesses eliminate repetitive manual work, streamline operations, and build smarter digital products.\n\nWe work with custom Generative AI copilots, intelligent document processing, predictive models, and autonomous workflow bots.\n\nWould you like to see how this can apply to your specific industry?",
-        routes: [{ label: "Explore AI & Automation", to: "/solutions/ai-automation" }],
-        lang: "en",
-      };
-    },
-  },
-
-  // 4. SOFTWARE & WEB DEVELOPMENT
-  {
-    id: "solutions-software",
-    intents: [
-      "software", "software development", "web development", "web app", "custom software", "react", "next.js", "node", "backend", "frontend", "full stack", "api", "microservices", "saas",
-      "సాఫ్ట్‌వేర్", "సాఫ్ట్‌వేర్ డెవలప్‌మెంట్", "వెబ్‌సైట్", "వెబ్ డెవలప్‌మెంట్", "రియాక్ట్", "పైథాన్", "సాఫ్ట్‌వేర్ కావాలి", "వెబ్‌సైట్ తయారీ", "software kavali", "website cheyali"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "solutions-software",
-          text: "మేము React, Next.js, Node.js, Python మరియు PostgreSQL ఉపయోగించి ఆధునిక వెబ్ అప్లికేషన్‌లు, స్కేలబుల్ SaaS ప్లాట్‌ఫారమ్‌లు మరియు ఎంటర్‌ప్రైజ్ సాఫ్ట్‌వేర్‌లను నిర్మిస్తాము.\n\nప్రతి ప్రాజెక్ట్ విశాఖపట్నంలోని మా డెడికేటెడ్ ఇంజనీరింగ్ పాడ్స్ ద్వారా 100% IP కోడ్ యాజమాన్యంతో డెలివరీ చేయబడుతుంది.\n\nమీ వద్ద ఏదైనా సాఫ్ట్‌వేర్ ప్రాజెక్ట్ లేదా ఐడియా ఉందా?",
-          routes: [
-            { label: "సాఫ్ట్‌వేర్ సొల్యూషన్స్", to: "/solutions/software-development" },
-            { label: "ప్రాజెక్ట్‌లు చూడండి", to: "/projects" },
-          ],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "solutions-software",
-        text: "We engineer modern web applications, scalable SaaS platforms, and enterprise backend microservices using React, Next.js, Node.js, Python, and PostgreSQL.\n\nEvery project is delivered by dedicated agile pods with full CI/CD automation and 100% IP ownership for you.\n\nDo you have a specific software project or architecture you'd like to discuss?",
-        routes: [
-          { label: "Software Solutions", to: "/solutions/software-development" },
-          { label: "View Projects", to: "/projects" },
-        ],
-        lang: "en",
-      };
-    },
-  },
-
-  // 5. MOBILE APP DEVELOPMENT
-  {
-    id: "solutions-mobile",
-    intents: [
-      "mobile", "mobile app", "app development", "ios", "android", "react native", "flutter", "swift", "kotlin", "smartphone", "iphone app",
-      "మొబైల్ యాప్", "మొబైల్ యాప్స్", "ఆండ్రాయిడ్ యాప్", "ఐఓఎస్ యాప్", "యాప్స్ తయారీ", "మొబైల్ అప్లికేషన్", "mobile app kavali"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "solutions-mobile",
-          text: "మేము React Native, Flutter, Swift మరియు Kotlin ఉపయోగించి iOS మరియు Android కోసం హై-పెర్ఫార్మెన్స్ మొబైల్ యాప్‌లను నిర్మిస్తాము.\n\nమా యాప్‌లు స్మూత్ 60fps UI, ఆఫ్‌లైన్ డేటా సింక్, బయోమెట్రిక్ సెక్యూరిటీ మరియు ప్లే స్టోర్ / యాప్ స్టోర్ పబ్లిషింగ్‌ను కలిగి ఉంటాయి.\n\nమీరు iOS లేదా Android మొబైల్ యాప్‌ను నిర్మించాలనుకుంటున్నారా?",
-          routes: [{ label: "మొబైల్ యాప్ సొల్యూషన్స్", to: "/solutions/mobile-development" }],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "solutions-mobile",
-        text: "We build native and cross-platform mobile apps for iOS and Android using React Native, Flutter, Swift, and Kotlin.\n\nOur apps feature smooth 60fps UI, offline-first data caching, biometric authentication, and seamless App Store / Google Play publishing.\n\nAre you looking to build an iOS, Android, or cross-platform application?",
-        routes: [{ label: "Mobile App Solutions", to: "/solutions/mobile-development" }],
-        lang: "en",
-      };
-    },
-  },
-
-  // 6. DATA & ANALYTICS
-  {
-    id: "solutions-data",
-    intents: [
-      "data", "analytics", "database", "postgres", "sql", "bi", "reporting", "digital transformation", "modernization", "digital growth", "seo", "marketing",
-      "డేటా", "డేటాబేస్", "అనలిటిక్స్", "డిజిటల్ గ్రోత్", "మార్కెటింగ్", "data analytics"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "solutions-data",
-          text: "మేము లెగసీ సిస్టమ్‌లను ఆధునిక క్లౌడ్ ఆర్కిటెక్చర్‌లుగా మార్చడం, ఎంటర్‌ప్రైజ్ డేటాబేస్‌లను ఆప్టిమైజ్ చేయడం మరియు రియల్-టైమ్ బిజినెస్ అనలిటిక్స్ డ్యాష్‌బోర్డ్‌లను రూపొందించడంలో కంపెనీలకు సహాయం చేస్తాము.\n\nమీరు డేటా & అనలిటిక్స్ లేదా డిజిటల్ ట్రాన్స్‌ఫర్మేషన్ సొల్యూషన్స్ గురించి తెలుసుకోవాలనుకుంటున్నారా?",
-          routes: [
-            { label: "డేటా & అనలిటిక్స్", to: "/solutions/data-analytics" },
-            { label: "డిజిటల్ ట్రాన్స్‌ఫర్మేషన్", to: "/solutions/digital-transformation" },
-          ],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "solutions-data",
-        text: "We help companies modernize legacy systems into modern cloud architectures, optimize enterprise databases, and build real-time business analytics dashboards.\n\nWe also provide digital growth engineering — combining SEO, conversion strategy, and AI-driven growth tools.\n\nWould you like to explore our Data & Analytics or Digital Transformation solutions?",
-        routes: [
-          { label: "Data & Analytics", to: "/solutions/data-analytics" },
-          { label: "Digital Transformation", to: "/solutions/digital-transformation" },
-        ],
-        lang: "en",
-      };
-    },
-  },
-
-  // 7. ALL SOLUTIONS GENERAL
-  {
-    id: "solutions-general",
-    intents: [
-      "solutions", "services", "what services", "what solutions", "what can you build", "capabilities", "tech stack",
-      "సర్వీసులు", "పరిష్కారాలు", "సొల్యూషన్స్", "మీ సర్వీసులు ఏమిటి", "ఏం చేస్తారు", "services em unnayi"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "solutions-general",
-          text: "మేము ఐదు ప్రధాన రంగాలలో ఎండ్-టు-ఎండ్ ఇంజనీరింగ్ సేవలను అందిస్తున్నాము:\n\n1. **సాఫ్ట్‌వేర్ & వెబ్ అప్లికేషన్లు** (వెబ్ & క్లౌడ్ ప్లాట్‌ఫారమ్‌లు)\n2. **మొబైల్ యాప్‌లు** (iOS & Android యాప్‌లు)\n3. **AI & ప్రాసెస్ ఆటోమేషన్** (ఇంటెలిజెంట్ అసిస్టెంట్లు, డాక్యుమెంట్ ప్రాసెసింగ్)\n4. **డేటా & అనలిటిక్స్** (ఎంటర్‌ప్రైజ్ డేటాబేస్‌లు, బిజినెస్ ఇంటెలిజెన్స్)\n5. **డిజిటల్ గ్రోత్ & ట్రాన్స్‌ఫర్మేషన్**\n\nవీటిలో ఏ విభాగం గురించి మరింత తెలుసుకోవాలనుకుంటున్నారు?",
-          routes: [{ label: "అన్ని సొల్యూషన్స్", to: "/solutions" }],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "solutions-general",
-        text: "We offer end-to-end technology engineering across five core domains:\n\n1. **Software & Web Applications** (Custom Web & Cloud Platforms)\n2. **Mobile Apps** (Native iOS & Android Applications)\n3. **AI & Process Automation** (Intelligent AI Assistants, Smart Document Processing)\n4. **Data & Analytics** (Enterprise Database Architecture, Business Analytics)\n5. **Digital Growth & Transformation**\n\nWhich of these areas interests you most?",
-        routes: [{ label: "Browse Solutions", to: "/solutions" }],
-        lang: "en",
-      };
-    },
-  },
-
-  // 8. NEXERGY ACADEMY (Overview & Courses)
-  {
-    id: "academy",
-    intents: [
-      "academy", "courses", "course", "training", "learn", "study", "bootcamp", "student", "syllabus", "admission", "batches", "classes",
-      "కోర్సులు", "కోర్సు", "నేర్చుకోవాలి", "ట్రైనింగ్", "అకాడమీ", "తరగతులు", "క్లాసెస్", "సిలబస్", "అడ్మిషన్లు", "కోర్సులు ఏమున్నాయి", "ఏ కోర్సులు ఉన్నాయి", "ట్రైనింగ్ వివరాలు", "courses em unnayi", "courses cheppu"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "academy",
-          text: "Nexergy Academy అనేది విశాఖపట్నంలో మా ఇంజనీరింగ్ టాలెంట్ యాక్సిలరేషన్ ఎకోసిస్టమ్. మేము లైవ్ ప్రాజెక్ట్‌లతో కూడిన మెంటార్-లెడ్ కోర్సులను అందిస్తున్నాము:\n\n• **సైబర్ సెక్యూరిటీ & ఎథికల్ హ్యాకింగ్** (16 వారాలు, ప్రాక్టికల్ CTF ల్యాబ్‌లు)\n• **ఎంటర్‌ప్రైజ్ డేటాబేస్ మాస్టరీ** (డేటా మోడలింగ్ & క్వెరీ పర్ఫార్మెన్స్)\n• **ఫౌండేషన్ ప్రోగ్రామ్** (పైథాన్, డేటాబేస్‌లు, క్లౌడ్ & AI బిగినర్స్ కోసం)\n• **AI టూల్స్ & డిజిటల్ మార్కెటింగ్**\n\nమీరు ఏ కోర్సు వివరాలు తెలుసుకోవాలనుకుంటున్నారు?",
-          routes: [
-            { label: "అన్ని కోర్సులు చూడండి", to: "/academy/courses" },
-            { label: "ఫౌండేషన్ ప్రోగ్రామ్", to: "/academy/foundation-program" },
-          ],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "academy",
-        text: "Nexergy Academy is our talent acceleration ecosystem. We offer hands-on, mentor-led programs designed by working engineers:\n\n• **Cyber Security & Ethical Hacking** (16 weeks, hands-on CTF labs)\n• **Enterprise Database Mastery** (Data modelling & query performance)\n• **Foundation Program** (Python, Databases, Cloud & AI for beginners)\n• **AI Tools & Digital Marketing**\n\nWhich program would you like to explore?",
-        routes: [
-          { label: "Explore All Courses", to: "/academy/courses" },
-          { label: "Foundation Program", to: "/academy/foundation-program" },
-        ],
-        lang: "en",
-      };
-    },
-  },
-
-  // 9. CYBER SECURITY COURSE
-  {
-    id: "academy-cyber",
-    intents: [
-      "cyber security", "ethical hacking", "hacking", "security course", "pentest", "penetration testing", "wireshark", "burp suite", "metasploit", "infosec", "kali linux",
-      "సైబర్ సెక్యూరిటీ", "ఎథికల్ హ్యాకింగ్", "హ్యాకింగ్", "హ్యాకింగ్ కోర్స్", "సైబర్ సెక్యూరిటీ కోర్స్", "సెక్యూరిటీ ట్రైనింగ్"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "academy-cyber",
-          text: "మా **సైబర్ సెక్యూరిటీ & ఎథికల్ హ్యాకింగ్** ప్రోగ్రామ్ 16 వారాల ఇంటెన్సివ్ బూట్‌క్యాంప్. ఇందులో రియల్ అటాక్ & డిఫెన్స్ మెథడాలజీలను ప్రాక్టికల్‌గా నేర్పిస్తాము.\n\nసిస్టమ్ సెక్యూరిటీ, నెట్‌వర్క్ ప్రొటెక్షన్, వెబ్ అప్లికేషన్ సెక్యూరిటీ మరియు లైవ్ ల్యాబ్‌లలో శిక్షణ ఉంటుంది.\n\nసిలబస్ లేదా రాబోయే బ్యాచ్ తేదీలు చూడాలనుకుంటున్నారా?",
-          routes: [{ label: "సైబర్ సెక్యూరిటీ కోర్స్", to: "/academy/cyber-security" }],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "academy-cyber",
-        text: "Our **Cyber Security & Ethical Hacking** program is a 16-week intensive bootcamp where you learn real attack & defense methodologies.\n\nYou'll get hands-on experience with system defense, network security, web application security, and practical hands-on labs.\n\nWould you like details on the curriculum or upcoming batch schedule?",
-        routes: [{ label: "Cyber Security Course", to: "/academy/cyber-security" }],
-        lang: "en",
-      };
-    },
-  },
-
-  // 10. POSTGRESQL COURSE
-  {
-    id: "academy-postgres",
-    intents: [
-      "postgresql", "postgres", "sql course", "database course", "query optimization", "indexing", "dba",
-      "పోస్ట్‌గ్రెస్‌", "డేటాబేస్ కోర్స్", "sql కోర్స్", "postgres కోర్స్"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "academy-postgres",
-          text: "మా **ఎంటర్‌ప్రైజ్ డేటాబేస్ మాస్టరీ** ప్రోగ్రామ్ స్కేలబుల్ డేటాబేస్ ఆర్కిటెక్చర్‌పై సమగ్ర శిక్షణ అందిస్తుంది.\n\nఇందులో డేటా మోడలింగ్, క్వెరీ పర్ఫార్మెన్స్ ఆప్టిమైజేషన్, స్కీమా డిజైన్ మరియు హై-అవైలబిలిటీ డేటా సిస్టమ్స్ ఉంటాయి.\n\nకోర్సు సిలబస్ చూడాలనుకుంటున్నారా?",
-          routes: [{ label: "డేటాబేస్ ప్రోగ్రామ్", to: "/academy/postgresql-mastery" }],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "academy-postgres",
-        text: "Our **Enterprise Database Mastery** program provides comprehensive training in scalable database architecture.\n\nIt covers data modelling, query performance optimization, schema design, high-availability data systems, and enterprise data security.\n\nWould you like to see the course syllabus?",
-        routes: [{ label: "Database Program", to: "/academy/postgresql-mastery" }],
-        lang: "en",
-      };
-    },
-  },
-
-  // 10b. PRICING PLANS & TIERS (STARTER, GROWTH, PREMIUM)
-  {
-    id: "pricing-plans",
-    intents: [
-      "pricing plan", "pricing plans", "plans", "pricing", "starter", "growth", "premium", "plan details", "pod cost", "software pricing", "how much does software cost",
-      "ప్లాన్స్", "ధరలు", "ప్రైసింగ్", "స్టార్టర్", "గ్రోత్", "ప్రీమియం", "ప్లాన్ వివరాలు"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "pricing-plans",
-          text: "GK Nexergy 3 పారదర్శక నిశ్చితార్థ ప్రణాళికలను అందిస్తుంది:\n\n1. **Starter (>>)**: $1,499/నెల (₹99,000/నెల) — 2-3 వారాల రాపిడ్ MVP స్ప్రింట్, రియాక్ట్/నోడ్ యాప్, బేసిక్ AI, 100% IP యాజమాన్యం.\n2. **Growth (>>)** [అత్యంత ప్రజాదరణ]: $3,499/నెల (₹2,49,000/నెల) — డెడికేటెడ్ 2-3 ఇంజనీర్ల పోడ్, వెబ్ + మొబైల్ (iOS/Android), కస్టమ్ AI/RAG వర్క్‌ఫ్లోలు, 60 రోజుల సపోర్ట్.\n3. **Premium (>>)**: $6,999/నెల (₹4,99,000/నెల) — 4-6+ ఫుల్ ఎంటర్‌ప్రైజ్ పోడ్, కస్టమ్ AI రీజనింగ్ ఇంజిన్‌లు, 99.99% SLA, 24/7 ఎంటర్‌ప్రైజ్ సపోర్ట్.\n\nమీరు వివరాలు చూడాలనుకుంటున్నారా?",
-          routes: [
-            { label: "💳 ప్రైసింగ్ ప్లాన్స్ చూడండి", to: "/pricing" },
-            { label: "ఉచిత కన్సల్టేషన్ బుక్ చేయండి", to: "/contact" },
-          ],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "pricing-plans",
-        text: "GK Nexergy offers **3 transparent engineering engagement tiers** with 100% IP ownership:\n\n• **Starter (>>)**: $1,499/mo (₹99,000/mo) or $2,999 Fixed Scope — 2–3 weeks rapid MVP deployment for startups.\n• **Growth (>>)** [Most Popular]: $3,499/mo (₹2,49,000/mo) — Dedicated 2–3 engineer agile pod for web + iOS/Android apps, custom AI/RAG workflows & cloud architecture.\n• **Premium (>>)**: $6,999/mo (₹4,99,000/mo) — Dedicated 4–6+ agile pod, enterprise AI reasoning engines, 99.99% uptime SLA & executive CTO advisory.\n\nWould you like to explore our full pricing comparison?",
-        routes: [
-          { label: "💳 View Pricing Plans", to: "/pricing" },
-          { label: "Schedule 30-Min Discovery", to: "/contact" },
-        ],
-        lang: "en",
-      };
-    },
-  },
-
-  // 11. ACADEMY FEES & ADMISSIONS
-  {
-    id: "academy-fees",
-    intents: [
-      "fee", "fees", "cost", "price", "pricing", "how much", "batch", "schedule", "placement", "certificate", "duration",
-      "ఫీజు", "ఫీజులు", "ఖర్చు", "ధర", "ఫీజు ఎంత", "ఫీజు వివరాలు", "బ్యాచ్ ఎప్పుడు", "సర్టిఫికెట్", "ప్లేస్‌మెంట్", "డ్యూరేషన్ ఎంత", "కోర్స్ ఫీజు ఎంత", "fee entha", "fees details"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "academy-fees",
-          text: "మా అకాడమీ ప్రోగ్రామ్‌లు 1-ఆన్-1 ఇంజనీరింగ్ మెంటార్‌షిప్ మరియు GK Nexergy పాడ్స్‌లో డైరెక్ట్ ప్లేస్‌మెంట్ అవకాశాలతో **8 నుండి 16 వారాలు** నడుస్తాయి.\n\nఫీజులు కోర్సును బట్టి అందుబాటులో ఉంటాయి మరియు సులభమైన వాయిదాల (EMI) సదుపాయం ఉంది.\n\nతదుపరి బ్యాచ్ తేదీలు మరియు ఖచ్చితమైన ఫీజు వివరాల కోసం అడ్మిషన్ల టీమ్‌తో WhatsAppలో మాట్లాడాలనుకుంటున్నారా?",
-          routes: [
-            { label: "💬 WhatsAppలో మాట్లాడండి", to: "https://wa.me/919704585960?text=Hi%2C%20I%20would%20like%20to%20know%20the%20fee%20structure%20and%20next%20batch%20dates.", external: true },
-            { label: "అడ్మిషన్లను సంప్రదించండి", to: "/contact" },
-          ],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "academy-fees",
-        text: "Our academy programs run for **8 to 16 weeks** in hybrid and online formats with 1-on-1 engineering mentorship and direct placement opportunities into GK Nexergy pods.\n\nFees are competitive and vary by course with flexible payment options available.\n\nWould you like to connect with admissions on WhatsApp to get the exact fee schedule for the next cohort?",
-        routes: [
-          { label: "💬 Chat on WhatsApp", to: "https://wa.me/919704585960?text=Hi%2C%20I%20would%20like%20to%20know%20the%20fee%20structure%20and%20next%20batch%20dates.", external: true },
-          { label: "Contact Admissions", to: "/contact" },
-        ],
-        lang: "en",
-      };
-    },
-  },
-
-  // 12. DELIVERED PROJECTS & CASE STUDIES
-  {
-    id: "projects",
-    intents: [
-      "project", "projects", "case study", "case studies", "portfolio", "clients", "work", "examples", "hospital", "real estate", "ecommerce",
-      "ప్రాజెక్ట్‌లు", "ప్రాజెక్ట్స్", "కేస్ స్టడీస్", "క్లయింట్లు", "మీ ప్రాజెక్ట్‌లు ఏమిటి", "చేసిన ప్రాజెక్టులు", "projects cheppu"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "projects",
-          text: "మేము డెలివరీ చేసిన ప్రముఖ ఎంటర్‌ప్రైజ్ ప్లాట్‌ఫారమ్‌లు:\n\n• **AI హాస్పిటల్ మేనేజ్‌మెంట్**: క్లినికల్ వెయిటింగ్ సమయాన్ని 40% తగ్గించిన HIPAA-కంప్లైంట్ EHR.\n• **AI రియల్ ఎస్టేట్ డిస్కవరీ**: ఆటోమేటెడ్ ప్రాపర్టీ వాల్యుయేషన్ మరియు 3.2x లీడ్ కన్వర్షన్.\n• **NutriBest ఇ-కామర్స్**: 99.98% అప్‌టైమ్‌తో హై-స్పీడ్ గ్లోబల్ స్టోర్.\n\nమా పూర్తి కేస్ స్టడీలను చూడాలనుకుంటున్నారా?",
-          routes: [{ label: "కేస్ స్టడీస్ చూడండి", to: "/projects" }],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "projects",
-        text: "We've delivered several notable enterprise platforms, including:\n\n• **AI Hospital Management Platform**: Reduced clinical triage and patient wait times by 40% with HIPAA-compliant EHR.\n• **AI Real Estate Discovery**: Automated property valuation and spatial analytics with 3.2x lead conversion.\n• **NutriBest E-Commerce**: High-throughput global store with 99.98% flash-sale uptime.\n\nWould you like to look at our detailed case studies?",
-        routes: [{ label: "View Case Studies", to: "/projects" }],
-        lang: "en",
-      };
-    },
-  },
-
-  // 13. CAREERS & HIRING
-  {
-    id: "careers",
-    intents: [
-      "career", "careers", "job", "jobs", "hiring", "work with us", "openings", "apply", "internship", "internships", "developer job",
-      "ఉద్యోగాలు", "జాబ్స్", "హైరింగ్", "కెరీర్స్", "ఖాళీలు", "జాబ్ అప్లై", "jobs unnaya"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "careers",
-          text: "మేము టాలెంటెడ్ ఇంజనీర్ల కోసం చూస్తున్నాము!\n\nప్రస్తుత ఉద్యోగ అవకాశాలు:\n• Full-Stack Developers (React & Node.js / Python)\n• AI & Machine Learning Engineers\n• PostgreSQL Database Engineers\n• Cyber Security Analysts\n\nమా అటానమస్ పాడ్స్‌లో డైరెక్ట్ ప్రొడక్ట్ ఓనర్‌షిప్‌తో పనిచేయడానికి ఆసక్తి ఉందా?",
-          routes: [{ label: "కెరీర్స్ చూడండి & అప్లై చేయండి", to: "/careers" }],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "careers",
-        text: "We're always looking for talented engineers to join our autonomous pods!\n\nCurrent active roles include:\n• Full-Stack Developers (React & Node.js / Python)\n• AI & Machine Learning Engineers\n• PostgreSQL Database Engineers\n• Cyber Security Analysts\n\nWe offer direct product ownership in autonomous pods with transparent growth paths.",
-        routes: [{ label: "View Careers & Apply", to: "/careers" }],
-        lang: "en",
-      };
-    },
-  },
-
-  // 14. CONTACT & LIVE REACH
-  {
-    id: "contact",
-    intents: [
-      "contact", "phone", "call", "whatsapp", "email", "reach", "location", "address", "office", "talk to human", "book call", "consultation",
-      "సంప్రదించండి", "ఫోన్ నెంబర్", "ఫోన్", "వాట్సాప్", "ఈమెయిల్", "ఆఫీస్ ఎక్కడ", "కాంటాక్ట్ నెంబర్", "మాట్లాడాలి", "contact details", "phone number"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "contact",
-          text: "మీరు మా ఇంజనీరింగ్ బృందాన్ని ఎప్పుడైనా నేరుగా సంప్రదించవచ్చు:\n\n• **డైరెక్ట్ ఫోన్**: [+91 9704585960](tel:+919704585960)\n• **WhatsApp**: [మాతో WhatsAppలో మాట్లాడండి](https://wa.me/919704585960?text=Hi%20GK%20Nexergy)\n• **ఈమెయిల్**: [contact@gknexergy.com](mailto:contact@gknexergy.com)\n• **ఆఫీస్**: ఆంధ్రప్రదేశ్, భారతదేశం\n• **పనివేళలు**: సోమ – శని: ఉదయం 9:00 – రాత్రి 7:00 IST\n\nవిచారణలకు **10 నిమిషాల్లో** ప్రతిస్పందన లభిస్తుంది.",
-          routes: [
-            { label: "💬 WhatsAppలో మాట్లాడండి", to: "https://wa.me/919704585960?text=Hi%20GK%20Nexergy", external: true },
-            { label: "కన్సల్టేషన్ బుక్ చేయండి", to: "/contact" },
-          ],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "contact",
-        text: "You can reach our team directly at any time:\n\n• **Direct Phone**: [+91 9704585960](tel:+919704585960)\n• **WhatsApp**: [Chat with us directly](https://wa.me/919704585960?text=Hi%20GK%20Nexergy)\n• **Email**: [contact@gknexergy.com](mailto:contact@gknexergy.com)\n• **Office**: Andhra Pradesh, India\n• **Hours**: Mon – Sat: 9:00 AM – 7:00 PM IST\n\nInquiries receive an engineering response within **10 minutes**.",
-        routes: [
-          { label: "💬 Chat on WhatsApp", to: "https://wa.me/919704585960?text=Hi%20GK%20Nexergy", external: true },
-          { label: "Book Consultation", to: "/contact" },
-        ],
-        lang: "en",
-      };
-    },
-  },
-
-  // 15. WHY GK NEXERGY / ADVANTAGES
-  {
-    id: "why-us",
-    intents: [
-      "why gk", "why choose", "why nexergy", "differentiators", "advantage", "ip ownership", "why should i hire", "guarantee",
-      "ఎందుకు gk nexergy", "ఎందుకు ఎంచుకోవాలి", "లాభాలు ఏమిటి", "enduku gk nexergy"
-    ],
-    handler: (query, context, isTelugu, isHindi) => {
-      if (isTelugu) {
-        return {
-          topic: "why-us",
-          text: "క్లయింట్లు GK Nexergy ని ఎంచుకోవడానికి ప్రధాన కారణాలు:\n\n1. **100% IP & కోడ్ యాజమాన్యం**: మీరు మొదటి రోజు నుండే ప్రతి కోడ్ లైన్ మరియు డేటాబేస్ స్కీమాను పూర్తిగా కలిగి ఉంటారు.\n2. **అటానమస్ ఎజైల్ పాడ్స్**: డెడికేటెడ్ ఇంజనీరింగ్ బృందాలు వేగంగా డెలివరీ చేస్తాయి.\n3. **టాలెంట్ నాణ్యత**: Nexergy Academy ద్వారా నిరంతరం శిక్షణ పొందిన ఉత్తమ ఇంజనీరింగ్ బెంచ్.\n\nమీరు 30 నిమిషాల ఉచిత కాల్‌ను షెడ్యూల్ చేయాలనుకుంటున్నారా?",
-          routes: [{ label: "కన్సల్టేషన్ కాల్ బుక్ చేయండి", to: "/contact" }],
-          lang: "te",
-        };
-      }
-      return {
-        topic: "why-us",
-        text: "Clients partner with GK Nexergy for three core reasons:\n\n1. **100% IP & Code Ownership**: You own every line of code and database schema from day one.\n2. **Autonomous Agile Pods**: Dedicated full-stack teams that build fast without agency bureaucracy.\n3. **Talent Quality**: Direct integration with Nexergy Academy gives us a strong, continuously trained engineering bench.\n\nWould you like to schedule a quick 30-minute discovery call?",
-        routes: [{ label: "Book Discovery Call", to: "/contact" }],
-        lang: "en",
-      };
-    },
-  },
+  })),
 ];
 
 /**
@@ -700,12 +273,12 @@ export async function askGKChatbot(queryText, customApiKey = "", context = {}) {
   const trimmed = queryText.trim();
   if (!trimmed) return null;
 
-  // Strict language detection
+  // Strict language detection & honor site language preference
   const detectedLang = detectLanguage(trimmed);
   const requestedLang = (context?.language && context.language !== "auto") ? context.language : detectedLang;
-  const isTelugu = requestedLang === "te" || detectedLang === "te";
-  const isHindi = requestedLang === "hi" || detectedLang === "hi";
-  const finalLang = isTelugu ? "te" : isHindi ? "hi" : "en";
+  const finalLang = (requestedLang && requestedLang !== "auto") ? requestedLang : (detectedLang || "en");
+  const isTelugu = finalLang === "te";
+  const isHindi = finalLang === "hi";
 
   // 1. Direct navigation check
   const navIntent = detectNavigationIntent(trimmed);
@@ -715,6 +288,13 @@ export async function askGKChatbot(queryText, customApiKey = "", context = {}) {
       : isHindi
       ? `आपको सीधे **${navIntent.label}** पेज पर ले जा रहे हैं...`
       : `Taking you directly to **${navIntent.label}**...`;
+
+    if (finalLang !== "en" && !isTelugu && !isHindi) {
+      try {
+        const { translatedText } = await translateText(navText, finalLang, "en");
+        if (translatedText) navText = translatedText;
+      } catch (e) {}
+    }
 
     return {
       topic: "nav",
@@ -803,21 +383,28 @@ export async function askGKChatbot(queryText, customApiKey = "", context = {}) {
 
   let finalResponseText = localMatch.text;
 
-  // If user spoke in Telugu/Hindi, ensure text is in Telugu/Hindi
-  if (isTelugu && !/[\u0C00-\u0C7F]/.test(finalResponseText)) {
-    try {
-      const { translatedText } = await translateText(finalResponseText, "te", "en");
-      if (translatedText && translatedText.trim()) {
-        finalResponseText = translatedText;
+  // If user requested a non-English language, translate response to target language
+  if (finalLang !== "en") {
+    const hasTeluguScript = /[\u0C00-\u0C7F]/.test(finalResponseText);
+    const hasHindiScript = /[\u0900-\u097F]/.test(finalResponseText);
+    const hasTamilScript = /[\u0B80-\u0BFF]/.test(finalResponseText);
+    const hasKannadaScript = /[\u0C80-\u0CFF]/.test(finalResponseText);
+    const alreadyInTargetScript =
+      (finalLang === "te" && hasTeluguScript) ||
+      (finalLang === "hi" && hasHindiScript) ||
+      (finalLang === "ta" && hasTamilScript) ||
+      (finalLang === "kn" && hasKannadaScript);
+
+    if (!alreadyInTargetScript) {
+      try {
+        const { translatedText } = await translateText(finalResponseText, finalLang, "en");
+        if (translatedText && translatedText.trim()) {
+          finalResponseText = translatedText;
+        }
+      } catch (e) {
+        console.warn("Translation failed, keeping original:", e);
       }
-    } catch (e) {}
-  } else if (isHindi && !/[\u0900-\u097F]/.test(finalResponseText)) {
-    try {
-      const { translatedText } = await translateText(finalResponseText, "hi", "en");
-      if (translatedText && translatedText.trim()) {
-        finalResponseText = translatedText;
-      }
-    } catch (e) {}
+    }
   }
 
   return {
