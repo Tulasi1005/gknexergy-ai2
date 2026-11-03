@@ -1626,3 +1626,43 @@
 }
 
 
+
+/* =========================================================
+   Ultra-Compact & Small Screen Responsive System (280px - 360px)
+   ========================================================= */
+@media (max-width: 360px) {
+  .pricing-plans-section {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+  .pricing-segmented-bar {
+    padding: 3px !important;
+    gap: 2px !important;
+    border-radius: 0.65rem !important;
+  }
+  .pricing-segment-tab {
+    padding: 0.45rem 0.3rem !important;
+    font-size: 0.74rem !important;
+    min-height: 38px !important;
+  }
+  .pricing-segment-tab .tab-arrow-icon {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  .matrix-card-wrap {
+    padding: 0.95rem 0.55rem !important;
+    border-radius: 1rem !important;
+  }
+  .matrix-title {
+    font-size: 1.25rem !important;
+  }
+  .pkg-single-container {
+    padding: 0 0.4rem !important;
+  }
+  .pkg-body {
+    padding: 0.75rem 0.5rem !important;
+  }
+  .pkg-feature-card {
+    padding: 0.55rem 0.5rem !important;
+  }
+}

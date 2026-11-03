@@ -874,3 +874,101 @@
     text-decoration: underline;
 }
 
+
+/* =========================================================
+   Ultra-Compact & Small Screen Responsive System (280px - 540px)
+   ========================================================= */
+@media (max-width: 540px) {
+    .et-tabs-bar {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+    }
+    .et-tab-btn {
+        padding: 8px 6px !important;
+        min-height: 44px !important;
+    }
+    .et-tab-label {
+        font-size: 11px !important;
+    }
+    .et-tab-num {
+        font-size: 11.5px !important;
+    }
+    .et-pipeline-strip {
+        padding: 12px 10px !important;
+    }
+    .et-node-box {
+        width: 30px !important;
+        height: 30px !important;
+    }
+    .et-node-box.selected {
+        width: 36px !important;
+        height: 36px !important;
+    }
+    .et-node-label {
+        font-size: 9.5px !important;
+    }
+    .et-detail-card {
+        padding: 14px 10px !important;
+    }
+    .et-detail-title {
+        font-size: 17px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .et-tabs-bar {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 5px !important;
+    }
+    .et-tab-btn {
+        padding: 6px 4px !important;
+        min-height: 40px !important;
+    }
+    .et-tab-label {
+        font-size: 9.5px !important;
+    }
+    .et-tab-num {
+        font-size: 10px !important;
+    }
+    .et-pipeline-strip {
+        padding: 10px 6px !important;
+    }
+    .et-node-box {
+        width: 25px !important;
+        height: 25px !important;
+    }
+    .et-node-box.selected {
+        width: 30px !important;
+        height: 30px !important;
+    }
+    .et-node-box svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+    .et-node-label {
+        font-size: 7.5px !important;
+    }
+    .et-track-line-bg,
+    .et-track-line-active {
+        top: 15px !important;
+        left: 16px !important;
+        right: 16px !important;
+    }
+    .et-detail-card {
+        padding: 10px 6px !important;
+    }
+    .et-detail-title {
+        font-size: 14px !important;
+    }
+    .et-detail-desc {
+        font-size: 11.5px !important;
+    }
+    .et-detail-icon-box {
+        width: 34px !important;
+        height: 34px !important;
+    }
+    .et-detail-icon-box svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+}

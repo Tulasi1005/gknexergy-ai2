@@ -544,3 +544,61 @@
     padding-top: 20px;
   }
 }
+
+/* =========================================================
+   Ultra-Compact & Small Screen Responsive System (280px - 360px)
+   ========================================================= */
+@media (max-width: 360px) {
+  .footer-container {
+    padding: 28px 10px 16px !important;
+  }
+  .footer-grid {
+    gap: 22px !important;
+  }
+  .footer-logo-img {
+    height: 32px !important;
+  }
+  .footer-tagline-item {
+    font-size: 13px !important;
+    gap: 8px !important;
+  }
+  .tagline-icon {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .footer-contact-card {
+    padding: 9px 9px !important;
+    gap: 8px !important;
+    border-radius: 10px !important;
+  }
+  .footer-contact-icon-box {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .footer-contact-value {
+    font-size: 11.5px !important;
+    word-break: break-all !important;
+  }
+  .footer-social-icons {
+    gap: 6px !important;
+  }
+  .footer-social-btn {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 9px !important;
+  }
+  .footer-bottom-bar {
+    margin-top: 22px !important;
+    padding-top: 14px !important;
+    gap: 10px !important;
+  }
+  .footer-copyright {
+    font-size: 11px !important;
+  }
+  .footer-legal-nav {
+    gap: 10px !important;
+  }
+  .footer-legal-link {
+    font-size: 11px !important;
+  }
+}
