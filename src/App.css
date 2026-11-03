@@ -3996,3 +3996,55 @@ html.dark .global-back-to-stack-btn:hover {
   stroke-width: 2.8 !important;
   transition: transform 0.2s ease !important;
 }
+
+/* =========================================================
+   Public Read-Only Copy-Deterrent Protection Styles
+   ========================================================= */
+body,
+.brand-protection,
+.pro-card,
+h1, h2, h3, h4, h5, h6,
+nav,
+footer {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Form inputs, textareas, contenteditables, and explicitly allowed elements */
+input,
+textarea,
+select,
+[contenteditable="true"],
+.allow-select,
+[data-allow-copy="true"],
+code,
+pre {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Image and media dragging deterrent */
+img,
+svg,
+picture,
+video {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* Maintain clickable element accessibility */
+button,
+a,
+input,
+textarea,
+select,
+summary {
+  pointer-events: auto;
+}

@@ -777,33 +777,58 @@ export const PageSummarizer = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, setIsOpen]);
 
+// Fallback clipboard copy for legacy browsers or insecure contexts
+const fallbackCopyText = (text) => {
+  try {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "-9999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
+  } catch (e) {
+    // ignore
+  }
+};
+
   // Copy summary to clipboard
   const handleCopySummary = useCallback(() => {
     if (!displayData) return;
     let packagesText = "";
     if (displayData.packages?.length) {
-      packagesText = "\n\n📦 Packages & Plans:\n" +
+      packagesText = "\n\nPackages & Plans:\n" +
         displayData.packages
           .map((p) => `• ${p.name} (${p.badge}): ${p.posts} | ${p.reels} | ${p.shoots} | ${p.ads}`)
           .join("\n");
     }
 
-    const textToCopy = `📌 ${displayData.title}
+    const textToCopy = `${displayData.title}
 Badge: ${displayData.badge}
 Stats: ${displayData.stats}${packagesText}
 
-⚡ Executive Summary:
+Executive Summary:
 ${displayData.summary}
 
-🔑 Key Takeaways:
+Key Takeaways:
 ${displayData.highlights?.map((h) => `• ${h}`).join("\n")}
 
-👥 Who this is for:
+Who this is for:
 ${displayData.targetAudience || "Enterprises & growing businesses"}
 
-🌐 Read more at GK Nexergy: ${window.location.href}`;
+Read more at GK Nexergy: ${typeof window !== "undefined" ? window.location.href : "https://gknexergy.com"}`;
 
-    navigator.clipboard?.writeText(textToCopy);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textToCopy).catch(() => {
+        fallbackCopyText(textToCopy);
+      });
+    } else {
+      fallbackCopyText(textToCopy);
+    }
+
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
   }, [displayData]);

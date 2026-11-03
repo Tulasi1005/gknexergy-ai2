@@ -23,11 +23,13 @@ export const GK_CONTACT_INFO = {
 };
 
 export const GK_SYSTEM_PROMPT = `
-You are the intelligent digital assistant for GK Nexergy (www.gknexergy.com), based in India.
+You are the friendly, intelligent digital assistant for GK Nexergy (www.gknexergy.com), based in India.
 
 Persona:
-- You speak naturally, warmly, and intelligently — like an experienced engineering colleague or tech consultant.
-- Keep responses concise, clear, and conversational. Avoid walls of text or giant lists of bullet points unless specifically requested.
+- You speak in warm, welcoming, polite, and encouraging language — like a helpful, enthusiastic engineering colleague or tech guide.
+- Always be kind, warm, and approachable. Keep responses clean, professional, and do NOT use emojis in your answers.
+- Keep responses concise, clear, and conversational. Avoid cold corporate jargon or giant walls of text unless specifically requested.
+- After every response, invite the user warmly to explore next steps or ask follow-up questions.
 - Multilingual Rule: If the user writes or speaks in Telugu (including Tanglish transliteration), reply 100% in natural Telugu script. If in English, reply in English. If in Hindi, reply in Hindi.
 - Accurate Company Facts: GK Nexergy delivers Enterprise Solutions (Software, Mobile Apps, AI & Automation, Data Analytics, Digital Growth) and Nexergy Academy (Cyber Security, PostgreSQL, Foundation Program, AI Marketing). Contact: +91 9704585960 | contact@gknexergy.com | Andhra Pradesh, India.
 `;
@@ -47,10 +49,12 @@ export const CONVERSATIONAL_TOPICS = [
     handler: (query, context, isTelugu, isHindi) => {
       const lang = isTelugu ? "te" : isHindi ? "hi" : "en";
       const text = (t.responses && (t.responses[lang] || t.responses["en"])) || "";
+      const suggestions = (t.suggestions && (t.suggestions[lang] || t.suggestions["en"])) || [];
       return {
         topic: t.id,
         text,
         routes: t.routes || [],
+        suggestions,
         lang,
       };
     },
@@ -61,10 +65,12 @@ export const CONVERSATIONAL_TOPICS = [
     handler: (query, context, isTelugu, isHindi) => {
       const lang = isTelugu ? "te" : isHindi ? "hi" : "en";
       const text = (f.responses && (f.responses[lang] || f.responses["en"])) || "";
+      const suggestions = (f.suggestions && (f.suggestions[lang] || f.suggestions["en"])) || [];
       return {
         topic: f.id,
         text,
         routes: f.routes || [],
+        suggestions,
         lang,
       };
     },
@@ -151,8 +157,11 @@ export function queryLocalKnowledgeBase(query, context = {}) {
         topic: "solutions-ai",
         text: isTelugu
           ? "ఖచ్చితంగా! AI వర్క్‌ఫ్లోల కోసం మీ టీమ్‌కు ఎక్కడ ఎక్కువ సమయం పడుతుందో అర్థం చేసుకోవడానికి 30 నిమిషాల ఉచిత కన్సల్టేషన్ కాల్‌తో ప్రారంభిస్తాము.\n\nమీరు ఉచిత ఆర్కిటెక్చరల్ కన్సల్టేషన్‌ను షెడ్యూల్ చేయాలనుకుంటున్నారా?"
-          : "Sure! For AI workflows, we typically start with a 30-minute discovery call to map out where your team spends manual time.\n\nFrom there, we build custom copilots, RAG document search systems, or automated triage bots that connect to your existing tools.\n\nWould you like to schedule a free 30-minute architectural consultation?",
+          : "Sure thing! For AI workflows, we typically start with a friendly 30-minute discovery call to map out where your team spends manual time.\n\nFrom there, we build custom copilots, smart RAG document search systems, or automated triage bots that connect to your existing tools.\n\nWould you like to schedule a free 30-minute architectural consultation?",
         routes: [{ label: isTelugu ? "ఉచిత కన్సల్టేషన్ బుక్ చేయండి" : "Book Free Consultation", to: "/contact" }],
+        suggestions: isTelugu
+          ? ["ఉచిత AI కన్సల్టేషన్ బుక్ చేయండి", "AI ప్రాజెక్ట్ ఖర్చు ఎంత?", "క్లయింట్ కేస్ స్టడీస్", "మాట్లాడండి"]
+          : ["Book a free AI consultation", "What does an AI project cost?", "View client case studies", "Chat on WhatsApp"],
         confidence: "high",
         lang: isTelugu ? "te" : "en",
       };
@@ -161,12 +170,15 @@ export function queryLocalKnowledgeBase(query, context = {}) {
       return {
         topic: "academy",
         text: isTelugu
-          ? "మా అకాడమీ కోర్సులు లైవ్ ప్రాజెక్ట్‌లు మరియు రియల్ కోడ్ రివ్యూలతో ఇంజనీర్ల ద్వారా నడపబడతాయి.\n\nవిద్యార్థులు వాస్తవ ప్రొడక్షన్ దృశ్యాలలో పనిచేస్తారు.\n\nమీరు కోర్సు సిలబస్ చూడాలనుకుంటున్నారా లేదా మా అడ్మిషన్ల టీమ్‌తో WhatsAppలో మాట్లాడాలనుకుంటున్నారా?"
-          : "Our academy cohorts are mentor-led with live project sprints and real-world code reviews.\n\nStudents work on actual production scenarios (like writing database migrations or conducting penetration testing in isolated sandbox labs).\n\nWould you like to see all current course syllabi or talk to our admissions team on WhatsApp?",
+          ? "మా అకాడమీ కోర్సులు లైవ్ ప్రాజెక్ట్‌లు మరియు రియల్ కోడ్ రివ్యూలతో ఇంజనీర్ల ద్వారా నడపబడతాయి. విద్యార్థులు వాస్తవ ప్రొడక్షన్ దృశ్యాలలో పనిచేస్తారు.\n\nమీరు కోర్సు సిలబస్ చూడాలనుకుంటున్నారా లేదా మా అడ్మిషన్ల టీమ్‌తో WhatsAppలో మాట్లాడాలనుకుంటున్నారా?"
+          : "Our academy cohorts are mentor-led with live project sprints and real-world code reviews!\n\nStudents work on actual production scenarios (like writing database migrations or conducting penetration testing in isolated sandbox labs).\n\nWould you like to see our course syllabi or chat with our friendly admissions team on WhatsApp?",
         routes: [
-          { label: isTelugu ? "💬 WhatsAppలో మాట్లాడండి" : "💬 Inquire on WhatsApp", to: "https://wa.me/919704585960?text=Hi%2C%20I%20would%20like%20more%20details%20about%20Nexergy%20Academy", external: true },
+          { label: isTelugu ? "WhatsAppలో మాట్లాడండి" : "Inquire on WhatsApp", to: "https://wa.me/919704585960?text=Hi%2C%20I%20would%20like%20more%20details%20about%20Nexergy%20Academy", external: true },
           { label: isTelugu ? "అన్ని కోర్సులు" : "View All Courses", to: "/academy/courses" },
         ],
+        suggestions: isTelugu
+          ? ["సైబర్ సెక్యూరిటీ సిలబస్", "PostgreSQL కోర్సు వివరాలు", "ఫీజు మరియు కాలపరిమితి", "WhatsAppలో మాట్లాడండి"]
+          : ["Cyber Security syllabus", "PostgreSQL course details", "Course fees & duration", "Chat with admissions"],
         confidence: "high",
         lang: isTelugu ? "te" : "en",
       };
@@ -176,8 +188,11 @@ export function queryLocalKnowledgeBase(query, context = {}) {
         topic: activeTopic,
         text: isTelugu
           ? "మా డెలివరీ పాడ్స్ 2 వారాల చురుకైన స్ప్రింట్‌లలో పనిచేస్తాయి. ప్రతి స్ప్రింట్ తర్వాత స్టేజింగ్ ప్రివ్యూ లింక్‌లు మరియు గిట్ రిపోజిటరీ యాక్సెస్ అందించబడుతుంది.\n\nమీరు మీ ప్రాజెక్ట్ అవసరాలను ఇంజనీరింగ్ లీడ్‌తో చర్చించాలనుకుంటున్నారా?"
-          : "Our delivery pods work in 2-week agile sprints. You receive staging preview links after every sprint with full access to the Git repository.\n\nWe also provide continuous QA testing, automated deployment pipelines, and post-launch SLA support.\n\nWould you like to discuss your project requirements with an engineering lead?",
+          : "Our delivery pods work in 2-week agile sprints! You receive staging preview links after every sprint with full access to the Git repository.\n\nWe also provide continuous QA testing, automated deployment pipelines, and post-launch SLA support.\n\nWould you like to discuss your project requirements with an engineering lead?",
         routes: [{ label: isTelugu ? "ప్రాజెక్ట్ చర్చించండి" : "Discuss Your Project", to: "/contact" }],
+        suggestions: isTelugu
+          ? ["ప్రాజెక్ట్ ప్రారంభించండి", "ధరల ప్యాకేజీలు", "టెక్ స్టాక్ వివరాలు", "సంప్రదించండి"]
+          : ["Discuss project requirements", "View pricing packages", "What tech stack do you use?", "Schedule a call"],
         confidence: "high",
         lang: isTelugu ? "te" : "en",
       };
@@ -235,6 +250,9 @@ export function queryLocalKnowledgeBase(query, context = {}) {
       topic: "corpus",
       text: corpusContent,
       routes: [{ label: `Explore ${top.title.split(":")[0]}`, to: top.route }],
+      suggestions: isTelugu
+        ? ["GK Nexergy ఏమి చేస్తుంది?", "AI సొల్యూషన్స్ వివరాలు", "అకాడమీ కోర్సులు", "సంప్రదించండి"]
+        : ["What does GK Nexergy do?", "Which AI solutions do you provide?", "Tell me about Nexergy Academy", "Contact our team"],
       confidence: "corpus",
       lang: "en",
     };
@@ -244,10 +262,16 @@ export function queryLocalKnowledgeBase(query, context = {}) {
   if (isTelugu) {
     return {
       topic: "fallback",
-      text: "నేను మీకు ఖచ్చితమైన సమాధానం ఇవ్వాలనుకుంటున్నాను. GK Nexergy **ఎంటర్‌ప్రైజ్ టెక్నాలజీ సొల్యూషన్స్** (సాఫ్ట్‌వేర్, మొబైల్ యాప్‌లు, AI & ఆటోమేషన్) మరియు **Nexergy Academy** (సైబర్ సెక్యూరిటీ, PostgreSQL, ఫౌండేషన్ ప్రోగ్రామ్) లను అందిస్తుంది.\n\nమీరు సాఫ్ట్‌వేర్ నిర్మించాలనుకుంటున్నారా, అకాడమీ కోర్సులు నేర్చుకోవాలనుకుంటున్నారా లేదా కెరీర్ అవకాశాలు చూడాలనుకుంటున్నారా?",
+      text: "నేను మీకు వీలైనంత ఉత్తమంగా సహాయం చేయాలనుకుంటున్నాను!\n\nGK Nexergy ప్రధానంగా **ఎంటర్‌ప్రైజ్ టెక్నాలజీ సొల్యూషన్స్** (సాఫ్ట్‌వేర్, మొబైల్ యాప్‌లు, AI & ఆటోమేషన్) మరియు **Nexergy Academy** (సైబర్ సెక్యూరిటీ, PostgreSQL, ఫౌండేషన్ ప్రోగ్రామ్) లను అందిస్తుంది.\n\nమీరు సాఫ్ట్‌వేర్ నిర్మించాలనుకుంటున్నారా, అకాడమీ కోర్సులు నేర్చుకోవాలనుకుంటున్నారా లేదా కెరీర్ అవకాశాలు చూడాలనుకుంటున్నారా?",
       routes: [
         { label: "సొల్యూషన్స్ చూడండి", to: "/solutions" },
         { label: "Nexergy Academy", to: "/academy" },
+      ],
+      suggestions: [
+        "GK Nexergy ఏమి చేస్తుంది?",
+        "మీ AI సొల్యూషన్స్ ఏమిటి?",
+        "Nexergy Academy కోర్సులు",
+        "ధరలు & ప్యాకేజీలు"
       ],
       confidence: "fallback",
       lang: "te",
@@ -256,10 +280,16 @@ export function queryLocalKnowledgeBase(query, context = {}) {
 
   return {
     topic: "fallback",
-    text: "I want to make sure I give you the best answer. GK Nexergy specializes in **Enterprise Technology Solutions** (Software, Mobile Apps, AI & Automation, Data) and **Nexergy Academy** (Cyber Security, PostgreSQL, Foundation Program).\n\nCould you clarify if you're interested in building a solution, training at the academy, or exploring careers?",
+    text: "I'd love to help you find exactly what you're looking for!\n\nGK Nexergy specializes in **Enterprise Technology Solutions** (Custom Software, Mobile Apps, AI & Automation, Data) and **Nexergy Academy** (Cyber Security, PostgreSQL, Foundation Program).\n\nAre you looking to build a technology solution, train with our academy, or explore career opportunities?",
     routes: [
       { label: "Explore Solutions", to: "/solutions" },
       { label: "Nexergy Academy", to: "/academy" },
+    ],
+    suggestions: [
+      "What does GK Nexergy do?",
+      "Which AI solutions do you provide?",
+      "Tell me about Nexergy Academy",
+      "View pricing plans"
     ],
     confidence: "fallback",
     lang: "en",
@@ -300,6 +330,11 @@ export async function askGKChatbot(queryText, customApiKey = "", context = {}) {
       topic: "nav",
       text: navText,
       routes: [{ label: isTelugu ? `${navIntent.label} తెరవండి` : `Open ${navIntent.label}`, to: navIntent.to, primary: true }],
+      suggestions: isTelugu
+        ? ["ఎంటర్‌ప్రైజ్ సొల్యూషన్స్", "Nexergy అకాడమీ", "మమ్మల్ని సంప్రదించండి"]
+        : isHindi
+        ? ["एंटरप्राइज सॉल्यूशंस", "नेक्सर्जी एकेडमी", "संपर्क करें"]
+        : ["Enterprise Solutions", "Nexergy Academy", "Contact Team"],
       navTarget: navIntent.to,
       isNavigation: true,
       lang: finalLang,

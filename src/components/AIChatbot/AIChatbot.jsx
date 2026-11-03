@@ -16,6 +16,7 @@ import {
   MicOff,
   Volume2,
   VolumeX,
+  Globe,
 } from "lucide-react";
 import { askGKChatbot } from "../../utils/aiKnowledgeEngine";
 import {
@@ -29,7 +30,7 @@ import {
 } from "../../utils/multilingualVoiceEngine";
 import { getCurrentLanguage, SUPPORTED_LANGUAGES } from "../../utils/translator";
 
-// Conversation starter pills
+// Conversation starter pills (Multilingual)
 const STARTER_SUGGESTIONS = [
   "What does GK Nexergy do?",
   "Which AI solutions do you provide?",
@@ -37,6 +38,28 @@ const STARTER_SUGGESTIONS = [
   "Talk about a project",
   "How can I contact the team?",
 ];
+
+const STARTER_SUGGESTIONS_TE = [
+  "GK Nexergy ఏమి చేస్తుంది?",
+  "మీ AI సొల్యూషన్స్ ఏమిటి?",
+  "Nexergy Academy కోర్సులు",
+  "ప్రాజెక్ట్ ప్రారంభించండి",
+  "టీమ్‌ను ఎలా సంప్రదించాలి?",
+];
+
+const STARTER_SUGGESTIONS_HI = [
+  "GK Nexergy क्या करता है?",
+  "आप कौन से AI समाधान प्रदान करते हैं?",
+  "नेक्सर्जी एकेडमी के कोर्स",
+  "प्रोजेक्ट के बारे में बात करें",
+  "टीम से कैसे संपर्क करें?",
+];
+
+const getStarterSuggestionsForLang = (lang) => {
+  if (lang === "te") return STARTER_SUGGESTIONS_TE;
+  if (lang === "hi") return STARTER_SUGGESTIONS_HI;
+  return STARTER_SUGGESTIONS;
+};
 
 // GK Nexergy Official Logo Avatar Mark
 const AIAvatarMark = ({ size = 36, isResponding = false }) => (
@@ -120,38 +143,75 @@ export const AIChatbot = ({ theme = "light" }) => {
   const chipsHasDraggedRef = useRef(false);
   const isDark = theme === "dark";
 
-  // Exact welcome text from the user reference
-  const initialWelcomeText = `Hi 👋
-I'm the **GK Nexergy AI assistant**.
+  // Warm, friendly welcome messages (Multilingual - No emojis)
+  const getWelcomeText = (lang) => {
+    if (lang === "te") {
+      return `నమస్కారం! GK Nexergy కి స్వాగతం!
+నేను మీ **స్నేహపూర్వక AI గైడ్**ని.
 
-I can help you explore our enterprise solutions, academy courses, client projects, careers, or answer any questions about the company.
+మా ఎంటర్‌ప్రైజ్ సాఫ్ట్‌వేర్ సొల్యూషన్స్, కస్టమ్ AI ఆటోమేషన్ లేదా Nexergy Academy ట్రైనింగ్ ప్రోగ్రామ్‌ల గురించి తెలుసుకోవడానికి నేను మీకు సహాయం చేయగలను.
 
-What would you like to know?`;
+మీరు ఈరోజు దేని గురించి తెలుసుకోవాలనుకుంటున్నారు?`;
+    }
+    if (lang === "hi") {
+      return `नमस्ते! GK Nexergy में आपका स्वागत है!
+मैं आपका **AI सहायक** हूँ।
+
+हमारे एंटरप्राइज सॉफ्टवेयर, AI ऑटोमेशन, या Nexergy Academy ट्रेनिंग के बारे में जानने के लिए मैं आपकी पूरी मदद करूँगा।
+
+आज आप क्या जानना चाहते हैं?`;
+    }
+    return `Hello! Welcome to GK Nexergy!
+I'm your **friendly AI guide**.
+
+Whether you're curious about our enterprise software, custom AI automation, or high-impact Nexergy Academy training — I'm here to help you every step of the way.
+
+What would you like to explore today?`;
+  };
+
+  const initialWelcomeText = getWelcomeText("en");
+
+  const [currentLang, setCurrentLang] = useState(() => getCurrentLanguage() || "en");
 
   const [messages, setMessages] = useState(() => {
     const saved = sessionStorage.getItem("gk_chat_classic_v2");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].text?.includes("GK Nexergy AI assistant")) {
+        if (Array.isArray(parsed) && parsed.length > 0 && (parsed[0].text?.includes("GK Nexergy") || parsed[0].text?.includes("స్వాగతం"))) {
           return parsed;
         }
       } catch (e) {
         // ignore
       }
     }
+    const initialLang = getCurrentLanguage() || "en";
     return [
       {
         id: "welcome-1",
         sender: "bot",
-        text: initialWelcomeText,
+        text: getWelcomeText(initialLang),
         time: "Just now",
         routes: [],
+        suggestions: getStarterSuggestionsForLang(initialLang),
       },
     ];
   });
 
-  const [currentLang, setCurrentLang] = useState(() => getCurrentLanguage() || "en");
+  const [currentSuggestions, setCurrentSuggestions] = useState(() => {
+    const saved = sessionStorage.getItem("gk_chat_classic_v2");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const lastBotMsg = [...parsed].reverse().find((m) => m.sender === "bot" && m.suggestions && m.suggestions.length > 0);
+          if (lastBotMsg) return lastBotMsg.suggestions;
+        }
+      } catch (e) {}
+    }
+    const initialLang = getCurrentLanguage() || "en";
+    return getStarterSuggestionsForLang(initialLang);
+  });
 
   // Synchronize language reactively whenever global language changes or storage updates
   useEffect(() => {
@@ -163,6 +223,23 @@ What would you like to know?`;
       }
       stopSpeaking();
       setCurrentlySpeakingId(null);
+      setMessages((prev) => {
+        if (prev.length === 1 && prev[0].id.startsWith("welcome")) {
+          const starters = getStarterSuggestionsForLang(code);
+          setCurrentSuggestions(starters);
+          return [
+            {
+              id: prev[0].id,
+              sender: "bot",
+              text: getWelcomeText(code),
+              time: "Just now",
+              routes: [],
+              suggestions: starters,
+            },
+          ];
+        }
+        return prev;
+      });
     };
 
     window.addEventListener("gk-language-changed", handleLangChange);
@@ -172,6 +249,14 @@ What would you like to know?`;
       window.removeEventListener("storage", handleLangChange);
     };
   }, []);
+
+  // Reset chips scroll to beginning when suggestions update
+  useEffect(() => {
+    if (chipsContainerRef.current) {
+      chipsContainerRef.current.scrollTo({ left: 0, behavior: "smooth" });
+      setChipsScrollPercent(0);
+    }
+  }, [currentSuggestions]);
 
   // Update language whenever chatbot opens
   useEffect(() => {
@@ -488,16 +573,23 @@ What would you like to know?`;
         setActiveTopic(response.topic);
       }
 
+      const activeLang = response.lang || activeLanguage;
+      const responseSuggestions = (response.suggestions && response.suggestions.length > 0)
+        ? response.suggestions
+        : getStarterSuggestionsForLang(activeLang);
+
       const botMsg = {
         id: `bot-${Date.now()}`,
         sender: "bot",
         text: response.text,
         routes: response.routes || [],
+        suggestions: responseSuggestions,
         source: response.source,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
 
       setMessages((prev) => [...prev, botMsg]);
+      setCurrentSuggestions(responseSuggestions);
 
       // Read response aloud if voice output is enabled
       if (voiceOutputEnabled) {
@@ -522,14 +614,17 @@ What would you like to know?`;
           if (translatedText) fallbackText = translatedText;
         } catch (e) {}
       }
+      const fallbackSuggestions = getStarterSuggestionsForLang(activeLanguage);
       const fallbackMsg = {
         id: `bot-${Date.now()}`,
         sender: "bot",
         text: fallbackText,
         routes: [{ label: "Contact Us", to: "/contact" }],
+        suggestions: fallbackSuggestions,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, fallbackMsg]);
+      setCurrentSuggestions(fallbackSuggestions);
 
       if (voiceOutputEnabled) {
         speakText(fallbackMsg.text, activeLanguage, {
@@ -582,13 +677,16 @@ What would you like to know?`;
     setCurrentlySpeakingId(null);
     sessionStorage.removeItem("gk_chat_classic_v2");
     setActiveTopic("general");
+    const starters = getStarterSuggestionsForLang(currentLang);
+    setCurrentSuggestions(starters);
     setMessages([
       {
         id: `welcome-${Date.now()}`,
         sender: "bot",
-        text: initialWelcomeText,
+        text: getWelcomeText(currentLang),
         time: "Just now",
         routes: [],
+        suggestions: starters,
       },
     ]);
   };
@@ -807,7 +905,7 @@ What would you like to know?`;
                         }}
                         title={`Active Voice & Chat Language: ${SUPPORTED_LANGUAGES.find((l) => l.code === currentLang)?.label || currentLang}`}
                       >
-                        <span>{SUPPORTED_LANGUAGES.find((l) => l.code === currentLang)?.flag || "🌐"}</span>
+                        <Globe style={{ width: "12px", height: "12px", opacity: 0.85 }} />
                         <span>{SUPPORTED_LANGUAGES.find((l) => l.code === currentLang)?.native || currentLang}</span>
                       </span>
                     )}
@@ -1022,6 +1120,72 @@ What would you like to know?`;
                             ))}
                           </div>
                         )}
+
+                        {/* Dynamic Contextual Suggestion Pills */}
+                        {msg.suggestions && msg.suggestions.length > 0 && (
+                          <div
+                            style={{
+                              marginTop: "10px",
+                              paddingTop: "8px",
+                              borderTop: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.06)",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "5px",
+                                marginBottom: "6px",
+                                fontSize: "11px",
+                                fontWeight: 600,
+                                color: isDark ? "#94a3b8" : "#64748b",
+                              }}
+                            >
+                              <Sparkles style={{ width: "12px", height: "12px", color: isDark ? "#38bdf8" : "#0284c7" }} />
+                              <span>
+                                {currentLang === "te"
+                                  ? "సూచించబడిన ప్రశ్నలు:"
+                                  : currentLang === "hi"
+                                  ? "सुझाए गए प्रश्न:"
+                                  : "Suggested questions:"}
+                              </span>
+                            </div>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                              {msg.suggestions.map((sug, sIdx) => (
+                                <button
+                                  key={sIdx}
+                                  onClick={() => handleSend(sug)}
+                                  style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "4px",
+                                    padding: "5px 10px",
+                                    borderRadius: "8px",
+                                    fontSize: "11.5px",
+                                    fontWeight: 500,
+                                    cursor: "pointer",
+                                    border: isDark ? "1px solid #2a3d5e" : "1px solid #bae6fd",
+                                    backgroundColor: isDark ? "#162238" : "#f0f9ff",
+                                    color: isDark ? "#93c5fd" : "#0284c7",
+                                    transition: "all 0.15s ease",
+                                    textAlign: "left",
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = isDark ? "#1e3a8a" : "#e0f2fe";
+                                    e.currentTarget.style.borderColor = isDark ? "#60a5fa" : "#0284c7";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = isDark ? "#162238" : "#f0f9ff";
+                                    e.currentTarget.style.borderColor = isDark ? "#2a3d5e" : "#bae6fd";
+                                  }}
+                                >
+                                  <span>{sug}</span>
+                                  <ChevronRight style={{ width: "12px", height: "12px", opacity: 0.7 }} />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                       {/* Timestamp & Voice Readout Action */}
@@ -1155,8 +1319,8 @@ What would you like to know?`;
               </AnimatePresence>
             </div>
 
-            {/* --- STARTER SUGGESTION CHIPS (Exact reference layout with interactive responsive slider) --- */}
-            {messages.length <= 2 && !isTyping && (
+            {/* --- CONTEXTUAL SUGGESTION CHIPS SLIDER (Updated after every question) --- */}
+            {!isTyping && currentSuggestions && currentSuggestions.length > 0 && (
               <div style={{ padding: "6px 12px 10px 12px", flexShrink: 0 }}>
                 <div
                   ref={chipsContainerRef}
@@ -1185,7 +1349,7 @@ What would you like to know?`;
                   }}
                   className="no-scrollbar"
                 >
-                  {STARTER_SUGGESTIONS.map((suggestion, idx) => (
+                  {currentSuggestions.map((suggestion, idx) => (
                     <button
                       key={idx}
                       onClick={() => {

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Phone,
   Mail,
@@ -19,12 +19,26 @@ import SEO from "../components/SEO";
 import "./Contact.css";
 
 const Contact = () => {
+  const [searchParams] = useSearchParams();
+  const planParam = searchParams.get("plan");
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    message: "",
+    message: planParam
+      ? `Hi GK Nexergy team, I am interested in getting started with the ${planParam.charAt(0).toUpperCase() + planParam.slice(1)} Plan. Please share the next steps.`
+      : "",
   });
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (planParam) {
+      setFormData((prev) => ({
+        ...prev,
+        message: prev.message || `Hi GK Nexergy team, I am interested in getting started with the ${planParam.charAt(0).toUpperCase() + planParam.slice(1)} Plan. Please share the next steps.`,
+      }));
+    }
+  }, [planParam]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,7 +56,8 @@ const Contact = () => {
     }
     setError("");
 
-    const text = `*New Inquiry from Website*\n\n*Name:* ${formData.name.trim()}\n*Email:* ${formData.email.trim()}\n*Message:* ${formData.message.trim()}`;
+    const planDetail = planParam ? `\n*Selected Plan:* ${planParam.toUpperCase()} PLAN` : "";
+    const text = `*New Inquiry from Website*${planDetail}\n\n*Name:* ${formData.name.trim()}\n*Email:* ${formData.email.trim()}\n*Message:* ${formData.message.trim()}`;
     const whatsappUrl = `https://wa.me/919704585960?text=${encodeURIComponent(text)}`;
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
@@ -234,6 +249,13 @@ const Contact = () => {
                 </div>
               </div>
             </div>
+
+            {planParam && (
+              <div style={{ marginBottom: "1rem", display: "inline-flex", alignItems: "center", gap: "6px", padding: "4px 12px", borderRadius: "9999px", backgroundColor: "rgba(37,99,235,0.1)", border: "1px solid rgba(37,99,235,0.3)", color: "#2563eb", fontSize: "0.8125rem", fontWeight: 700 }}>
+                <span>Selected Tier:</span>
+                <span style={{ textTransform: "capitalize", color: "#1d4ed8" }}>{planParam} Plan</span>
+              </div>
+            )}
 
             <div className="form-group">
               <label htmlFor="contact-message">

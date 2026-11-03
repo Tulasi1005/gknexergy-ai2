@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Lenis from "lenis";
+import { useReadOnlyProtection } from "@/utils/readOnlyProtection";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AIChatbot from "@/components/AIChatbot/AIChatbot";
@@ -185,6 +186,7 @@ const Shell = ({ theme, onToggleTheme }) => {
 };
 
 function App() {
+    useReadOnlyProtection();
     const [theme, setTheme] = useState(() => localStorage.getItem("gk-theme") || "light");
 
     useEffect(() => {

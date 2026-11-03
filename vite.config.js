@@ -53,6 +53,10 @@ export default defineConfig({
     open: false,
   },
   build: {
+    sourcemap: false,
+    minify: 'esbuild',
+    target: 'es2020',
+    cssMinify: true,
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
@@ -63,5 +67,9 @@ export default defineConfig({
         },
       },
     },
+  },
+  esbuild: {
+    drop: process.env.NODE_ENV === 'production' || process.env.VITE_KEEP_LOGS !== 'true' ? ['console', 'debugger'] : [],
+    legalComments: 'none',
   },
 });

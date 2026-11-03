@@ -117,7 +117,7 @@ const Footer = ({ theme }) => {
                 key={label}
                 href={href}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label={label}
                 title={label}
                 data-testid={`footer-social-${i}`}
