@@ -2662,6 +2662,9 @@ iframe[id^=":"] {
 /* Screens under 640px (Mobile and Phablet) */
 @media (max-width: 639px) {
     .navbar-logo {
+        height: 30px !important;
+        max-height: 32px !important;
+        max-width: 140px !important;
         height: 38px !important;
         max-height: 40px !important;
         max-width: 175px !important;
@@ -2675,6 +2678,9 @@ iframe[id^=":"] {
 /* Screens under 480px (Compact Mobile) */
 @media (max-width: 480px) {
     .navbar-logo {
+        height: 27px !important;
+        max-height: 28px !important;
+        max-width: 125px !important;
         height: 34px !important;
         max-height: 36px !important;
         max-width: 156px !important;
@@ -2685,6 +2691,7 @@ iframe[id^=":"] {
     }
 }
 
+/* Screens under 360px (Ultra-Compact) */
 /* Screens under 360px (Ultra-Compact - 280px to 360px) */
 @media (max-width: 360px) {
     .navbar-logo-card {
@@ -2692,6 +2699,8 @@ iframe[id^=":"] {
         border-radius: 0 !important;
     }
     .navbar-logo {
+        height: 24px !important;
+        max-width: 110px !important;
         height: 30px !important;
         max-height: 32px !important;
         width: auto !important;
@@ -3902,6 +3911,8 @@ iframe[id^=":"] {
         padding-right: 8px !important;
     }
     .navbar-logo {
+        height: 22px !important;
+        max-width: 86px !important;
         height: 30px !important;
         max-height: 32px !important;
         width: auto !important;
@@ -4432,53 +4443,327 @@ html.dark .global-back-to-stack-btn:hover {
 }
 
 /* =========================================================
-   Public Read-Only Copy-Deterrent Protection Styles
+   Public Read-Only Copy-Deterrent & Anti-Capture Protection Styles
    ========================================================= */
-body,
-.brand-protection,
-.pro-card,
-h1, h2, h3, h4, h5, h6,
-nav,
-footer {
+
+/* 1. Global Anti-Copy & Text Selection Lockdown */
+*,
+*::before,
+*::after {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -webkit-touch-callout: none !important;
 }
 
-/* Form inputs, textareas, contenteditables, and explicitly allowed elements */
+/* 2. Preserve 100% Usability on Form Inputs & Editable Fields */
 input,
 textarea,
 select,
 [contenteditable="true"],
 .allow-select,
-[data-allow-copy="true"],
-code,
-pre {
+[data-allow-copy="true"] {
   -webkit-user-select: text !important;
   -moz-user-select: text !important;
   -ms-user-select: text !important;
   user-select: text !important;
+  -webkit-touch-callout: default !important;
 }
 
-/* Image and media dragging deterrent */
+/* 3. Universal Anti-Download & Drag Prevention for Images & Media */
 img,
 svg,
 picture,
-video {
-  -webkit-user-drag: none;
-  -khtml-user-drag: none;
-  -moz-user-drag: none;
-  -o-user-drag: none;
-  user-drag: none;
+video,
+canvas {
+  -webkit-user-drag: none !important;
+  -khtml-user-drag: none !important;
+  -moz-user-drag: none !important;
+  -o-user-drag: none !important;
+  user-drag: none !important;
+  -webkit-touch-callout: none !important;
+  pointer-events: none; /* Disables direct right-click or drag on the raw image element */
 }
 
-/* Maintain clickable element accessibility */
-button,
+/* 4. Preserve Pointer Events on Clickable Parents & Interactive Controls */
 a,
+button,
 input,
 textarea,
 select,
-summary {
-  pointer-events: auto;
+label,
+summary,
+[role="button"],
+.navbar-logo-card,
+.pro-card,
+.footer-logo-card,
+.whatsapp-btn,
+[data-testid="summarizer-copy-btn"] {
+  pointer-events: auto !important;
+}
+
+/* 5. Anti-Capture Frosted Privacy Curtain (when external screen grabbers steal window focus) */
+#gk-anti-snipping-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 9999998;
+  background-color: rgba(15, 23, 42, 0.88);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='140'%3E%3Ctext x='15' y='70' fill='rgba(239,68,68,0.72)' font-size='12.5' font-family='sans-serif' font-weight='800' letter-spacing='1.5' transform='rotate(-18 180 70)'%3E%E2%9A%A0%EF%B8%8F SCREENSHOT IS DISABLED%3C/text%3E%3C/svg%3E");
+  background-repeat: repeat;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.15s;
+}
+
+body.gk-window-unfocused #gk-anti-snipping-curtain {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+body.gk-window-unfocused #root {
+  filter: blur(14px);
+  transition: filter 0.15s ease;
+}
+
+.snipping-curtain-card {
+  background: rgba(15, 23, 42, 0.98);
+  border: 1.5px solid rgba(239, 68, 68, 0.6);
+  border-radius: 20px;
+  padding: 32px 36px;
+  max-width: 480px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(239, 68, 68, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.warning-curtain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+.snipping-curtain-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.snipping-curtain-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.snipping-curtain-action {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-top: 6px;
+}
+
+/* 6. Fullscreen Anti-Screenshot Flash Shield */
+#gk-screenshot-shield {
+  position: fixed;
+  inset: 0;
+  z-index: 100000000;
+  background-color: #020617;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='140'%3E%3Ctext x='15' y='70' fill='rgba(239,68,68,0.72)' font-size='12.5' font-family='sans-serif' font-weight='800' letter-spacing='1.5' transform='rotate(-18 180 70)'%3E%E2%9A%A0%EF%B8%8F SCREENSHOT IS DISABLED%3C/text%3E%3C/svg%3E");
+  background-repeat: repeat;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+#gk-screenshot-shield.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.screenshot-shield-content {
+  max-width: 480px;
+  background: rgba(15, 23, 42, 0.98);
+  border: 1.5px solid #ef4444;
+  box-shadow: 0 25px 60px rgba(239, 68, 68, 0.4);
+  border-radius: 20px;
+  padding: 36px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.screenshot-shield-icon {
+  width: 54px;
+  height: 54px;
+  color: #ef4444;
+  filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.6));
+}
+
+.screenshot-shield-title {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.screenshot-shield-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.screenshot-shield-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 9999px;
+  margin-top: 4px;
+}
+
+.screenshot-shield-chip {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* 7. Floating Security Toast Badge */
+#gk-protection-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  z-index: 99999999;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #ffffff;
+  padding: 11px 24px;
+  border-radius: 9999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 20px rgba(239, 68, 68, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
+}
+
+#gk-protection-toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+#gk-protection-toast svg,
+.protection-toast-icon {
+  width: 19px;
+  height: 19px;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+/* 8. Strict @media print Lockout (Prevents Print and Save-as-PDF) */
+@media print {
+  *,
+  *::before,
+  *::after {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  html,
+  body {
+    display: block !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    overflow: hidden !important;
+  }
+  body::before {
+    content: "GK NEXERGY — PROTECTED INTELLECTUAL PROPERTY\A\A This website and all associated materials are protected by copyright and intellectual property laws.\A\A Printing, saving as PDF, and digital reproduction are strictly prohibited.\A\A Official Website: https://gknexergy.com";
+    white-space: pre-wrap !important;
+    display: flex !important;
+    visibility: visible !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 18pt !important;
+    font-weight: 700 !important;
+    line-height: 1.6 !important;
+    color: #1e3a8a !important;
+    padding: 60pt 30pt !important;
+    margin: 80pt auto !important;
+    max-width: 520pt !important;
+    border: 3pt solid #2563eb !important;
+    border-radius: 12pt !important;
+    box-shadow: 0 10pt 25pt rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+/* 9. Permanent Intellectual Property Watermark Shield (Deters Screen Capture & Photo Leakage) */
+#gk-security-watermark {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.65;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='200'%3E%3Ctext x='20' y='100' fill='rgba(37,99,235,0.04)' font-size='12' font-family='sans-serif' font-weight='800' letter-spacing='2' transform='rotate(-28 160 100)'%3EGK NEXERGY • PROTECTED%3C/text%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+.dark #gk-security-watermark,
+[data-theme="dark"] #gk-security-watermark,
+html.dark #gk-security-watermark {
+  opacity: 0.85;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='200'%3E%3Ctext x='20' y='100' fill='rgba(96,165,250,0.06)' font-size='12' font-family='sans-serif' font-weight='800' letter-spacing='2' transform='rotate(-28 160 100)'%3EGK NEXERGY • PROTECTED%3C/text%3E%3C/svg%3E");
 }
