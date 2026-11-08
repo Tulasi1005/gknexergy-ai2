@@ -55,7 +55,7 @@ export function setActiveUsers(count) {
   const safeCount = Math.max(1, count);
   try {
     sessionStorage.setItem(ACTIVE_STORAGE_KEY, String(safeCount));
-  } catch {}
+  } catch { }
 
   window.dispatchEvent(
     new CustomEvent("gk_active_users_updated", { detail: safeCount })
@@ -69,7 +69,7 @@ export function setActiveUsers(count) {
  * Subscribes to live active users count updates.
  */
 export function subscribeActiveUsers(callback) {
-  if (typeof window === "undefined") return () => {};
+  if (typeof window === "undefined") return () => { };
 
   const handleUpdate = (e) => {
     if (e.detail && typeof e.detail === "number") {
@@ -147,11 +147,11 @@ export async function sendHeartbeat() {
  */
 export function initVisitorClickTracking() {
   if (typeof document === "undefined" || typeof window === "undefined") {
-    return () => {};
+    return () => { };
   }
 
   if (isInitialized) {
-    return () => {};
+    return () => { };
   }
   isInitialized = true;
 
@@ -192,11 +192,11 @@ export function initVisitorClickTracking() {
         if (channel) {
           try {
             channel.postMessage({ type: "ping", id: sessionId });
-          } catch {}
+          } catch { }
         }
       }, 10000);
     }
-  } catch {}
+  } catch { }
 
   // 2. Initial Server Heartbeat & recurring 10-second heartbeat to Hostinger
   sendHeartbeat();
@@ -216,7 +216,7 @@ export function initVisitorClickTracking() {
     if (channel) {
       try {
         channel.postMessage({ type: "leave", id: sessionId });
-      } catch {}
+      } catch { }
     }
     if (navigator.sendBeacon) {
       navigator.sendBeacon(`${API_ENDPOINT}?action=leave&session_id=${sessionId}`);
@@ -240,7 +240,7 @@ export function initVisitorClickTracking() {
     if (channel) {
       try {
         channel.close();
-      } catch {}
+      } catch { }
     }
   };
 }

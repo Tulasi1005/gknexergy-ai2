@@ -3,11 +3,11 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import { useReadOnlyProtection } from "@/utils/readOnlyProtection";
+import { initVisitorClickTracking } from "@/utils/visitorTracker";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AIChatbot from "@/components/AIChatbot/AIChatbot";
 import PageSummarizer from "@/components/PageSummarizer/PageSummarizer";
-import VisitorCounter from "@/components/common/VisitorCounter";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Vision from "@/pages/Vision";
@@ -140,6 +140,13 @@ const Shell = ({ theme, onToggleTheme }) => {
 
     useSmoothScroll();
 
+    useEffect(() => {
+        const stopTracking = initVisitorClickTracking();
+        return () => {
+            stopTracking();
+        };
+    }, []);
+
     return (
         <div className="flex min-h-screen flex-col">
             <ScrollToTop />
@@ -182,7 +189,6 @@ const Shell = ({ theme, onToggleTheme }) => {
                     onOpen={() => setIsSummarizerOpen(true)}
                 />
             )}
-            <VisitorCounter theme={theme} />
         </div>
     );
 };

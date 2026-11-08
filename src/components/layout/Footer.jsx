@@ -6,6 +6,7 @@ import { Users, Briefcase, Globe } from "lucide-react";
 import {
   getActiveUsers,
   subscribeActiveUsers,
+  initVisitorClickTracking,
 } from "@/utils/visitorTracker";
 
 const FOOTER_NAV_LINKS = [
@@ -23,10 +24,13 @@ const Footer = ({ theme }) => {
   const [activeUsers, setActiveUsers] = useState(() => getActiveUsers());
 
   useEffect(() => {
+    setActiveUsers(getActiveUsers());
+    const stopTracking = initVisitorClickTracking();
     const unsubActive = subscribeActiveUsers((updatedActive) => {
       setActiveUsers(updatedActive);
     });
     return () => {
+      stopTracking();
       unsubActive();
     };
   }, []);
@@ -159,10 +163,30 @@ const Footer = ({ theme }) => {
             © {new Date().getFullYear()} GK Nexergy. All rights reserved.
           </p>
           <span className="hidden sm:inline-block text-slate-300 dark:text-slate-700">•</span>
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <Users className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span>Live Visitors: <strong className="text-slate-700 dark:text-slate-200 tabular-nums">{activeUsers}</strong> online</span>
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold backdrop-blur-sm transition-colors duration-200"
+            style={{
+              background: isDark ? "rgba(16, 185, 129, 0.12)" : "rgba(16, 185, 129, 0.08)",
+              border: isDark ? "1px solid rgba(52, 211, 153, 0.25)" : "1px solid rgba(16, 185, 129, 0.2)",
+              color: isDark ? "#34d399" : "#047857",
+            }}
+            title={`${activeUsers} active visitor${activeUsers === 1 ? "" : "s"} on website right now`}
+          >
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            <Users className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <span>
+              Live Visitors:{" "}
+              <strong
+                className="font-bold tabular-nums text-emerald-800 dark:text-emerald-200"
+                data-testid="visitor-count-number"
+              >
+                {activeUsers}
+              </strong>{" "}
+              online
+            </span>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
