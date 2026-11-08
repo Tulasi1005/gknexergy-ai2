@@ -187,6 +187,8 @@ const Footer = ({ theme }) => {
 
           {/* Active Users */}
           <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+            <Users className="h-3.5 w-3.5 text-brand dark:text-sky-400 shrink-0" />
+            
             <strong data-testid="footer-active-users" className="tabular-nums font-bold">
               {activeUsers}
             </strong>
@@ -195,19 +197,7 @@ const Footer = ({ theme }) => {
             </span>
           </span>
 
-          {/* Separator */}
-          <span className="text-slate-300 dark:text-slate-700 select-none">•</span>
-
-          {/* Total Visitors */}
-          <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300">
-            <Users className="h-3.5 w-3.5 text-brand dark:text-sky-400 shrink-0" />
-            <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-              Visitors:
-            </span>
-            <strong data-testid="footer-visitor-count" className="tabular-nums font-bold text-slate-900 dark:text-white">
-              {visitorCount.toLocaleString("en-US")}
-            </strong>
-          </span>
+         
         </div>
 
         {/* Right: Navigation Links */}
