@@ -1,47 +1,51 @@
 /**
- * Real-Time Live Active Visitors Tracking Utility for GK Nexergy
+ * Real-Time Visitor & Active User Tracking Utility for GK Nexergy
  * 
- * Rules:
- * 1. Opening the website increases the count (+1).
- * 2. Closing the tab/website decreases the count (-1).
- * 3. Clicking on links/buttons/cards inside the website DOES NOT increase the count.
- * 4. High-frequency 3.5s multi-device heartbeat synchronization for Hostinger and local network.
- * 5. Instant 0ms cross-tab synchronization via BroadcastChannel.
- * 6. Instant leave notification on tab close via sendBeacon.
+ * Capabilities:
+ * 1. Live Active Users Online tracking via heartbeat and BroadcastChannel.
+ * 2. Instant cross-tab and cross-device synchronization on Hostinger.
+ * 3. Genuine link click counting with double-click support (+2).
+ * 4. Automatic tab cleanup on tab close via sendBeacon.
+ * 5. Resilient offline and local storage fallbacks.
  */
 
+const STORAGE_KEY = "gk_visitor_count";
 const ACTIVE_STORAGE_KEY = "gk_active_users_count";
-const SESSION_STORAGE_KEY = "gk_device_session_id";
-
-// Primary and fallback endpoints
-let resolvedEndpoint = "/api/counter.php";
-const CANDIDATE_ENDPOINTS = [
-  "/api/counter.php",
-  "/public/api/counter.php",
-  "/api/counter"
-];
-
-let tabSessionId = null;
+const API_ENDPOINT = "/api/counter.php";
 
 /**
- * Returns a unique, stable session ID for the current browser tab.
- * Stored in sessionStorage so page refreshes maintain the same session identity.
+ * Returns or generates a unique session ID for the current browser session.
  */
 export function getSessionId() {
   if (typeof window === "undefined") return "gk_srv";
 
   try {
-    let stored = sessionStorage.getItem(SESSION_STORAGE_KEY);
-    if (!stored) {
-      stored = "gk_" + Math.random().toString(36).substring(2, 10) + "_" + Date.now();
-      sessionStorage.setItem(SESSION_STORAGE_KEY, stored);
+    let id = sessionStorage.getItem("gk_visitor_session_id");
+    if (!id) {
+      id = "gk_" + Math.random().toString(36).substring(2, 9) + "_" + Date.now();
+      sessionStorage.setItem("gk_visitor_session_id", id);
+    }
+    return id;
+  } catch {
+    return "gk_anon_" + Date.now();
+  }
+}
+
+/**
+ * Gets the current visitor total interactions from storage.
+ */
+export function getVisitorCount() {
+  if (typeof window === "undefined") return 1;
+
+  try {
+    let stored = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
+    if (isNaN(stored) || stored >= 10000 || stored < 1) {
+      stored = 1;
+      localStorage.setItem(STORAGE_KEY, "1");
     }
     return stored;
   } catch {
-    if (!tabSessionId) {
-      tabSessionId = "gk_" + Math.random().toString(36).substring(2, 10) + "_" + Date.now();
-    }
-    return tabSessionId;
+    return 1;
   }
 }
 
@@ -60,34 +64,132 @@ export function getActiveUsers() {
 }
 
 /**
- * Backwards compatibility alias for components expecting getVisitorCount.
- */
-export function getVisitorCount() {
-  return getActiveUsers();
-}
-
-/**
  * Updates active user count and notifies all subscribers.
  */
-export function setActiveUsers(count) {
+function setActiveUsers(count) {
   const safeCount = Math.max(1, count);
   try {
     sessionStorage.setItem(ACTIVE_STORAGE_KEY, String(safeCount));
-  } catch { }
+  } catch {}
 
   window.dispatchEvent(
     new CustomEvent("gk_active_users_updated", { detail: safeCount })
   );
-  window.dispatchEvent(
-    new CustomEvent("gk_visitor_count_updated", { detail: safeCount })
-  );
+}
+
+/**
+ * Increments total visitor click count.
+ * Double clicks increment twice (+2).
+ */
+export function incrementVisitorCount(amount = 1) {
+  if (typeof window === "undefined") return 1;
+
+  try {
+    const current = getVisitorCount();
+    const next = current + amount;
+    localStorage.setItem(STORAGE_KEY, String(next));
+
+    window.dispatchEvent(
+      new CustomEvent("gk_visitor_count_updated", { detail: next })
+    );
+
+    const sessionId = getSessionId();
+    fetch(`${API_ENDPOINT}?action=click&amount=${amount}&session_id=${sessionId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) {
+          if (typeof data.count === "number") {
+            const currentLocal = getVisitorCount();
+            const resolved = Math.max(currentLocal, data.count);
+            if (resolved !== currentLocal) {
+              localStorage.setItem(STORAGE_KEY, String(resolved));
+              window.dispatchEvent(
+                new CustomEvent("gk_visitor_count_updated", { detail: resolved })
+              );
+            }
+          }
+          if (typeof data.active_users === "number") {
+            setActiveUsers(data.active_users);
+          }
+        }
+      })
+      .catch(() => {});
+
+    return next;
+  } catch {
+    return 1;
+  }
+}
+
+/**
+ * Sends heartbeat ping to Hostinger backend to refresh active status.
+ */
+export async function sendHeartbeat() {
+  if (typeof window === "undefined") return;
+
+  const sessionId = getSessionId();
+  try {
+    const res = await fetch(`${API_ENDPOINT}?action=heartbeat&session_id=${sessionId}`, {
+      cache: "no-store"
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data) {
+        if (typeof data.active_users === "number") {
+          setActiveUsers(data.active_users);
+        }
+        if (typeof data.count === "number") {
+          const currentLocal = getVisitorCount();
+          const resolved = Math.max(currentLocal, data.count);
+          if (resolved !== currentLocal) {
+            localStorage.setItem(STORAGE_KEY, String(resolved));
+            window.dispatchEvent(
+              new CustomEvent("gk_visitor_count_updated", { detail: resolved })
+            );
+          }
+        }
+      }
+    }
+  } catch {}
+}
+
+/**
+ * Subscribes to total visitor interaction count changes.
+ */
+export function subscribeVisitorCount(callback) {
+  if (typeof window === "undefined") return () => {};
+
+  const handleUpdate = (e) => {
+    if (e.detail && typeof e.detail === "number") {
+      callback(e.detail);
+    } else {
+      callback(getVisitorCount());
+    }
+  };
+
+  const handleStorage = (e) => {
+    if (e.key === STORAGE_KEY) {
+      callback(getVisitorCount());
+    }
+  };
+
+  window.addEventListener("gk_visitor_count_updated", handleUpdate);
+  window.addEventListener("storage", handleStorage);
+
+  return () => {
+    window.removeEventListener("gk_visitor_count_updated", handleUpdate);
+    window.removeEventListener("storage", handleStorage);
+  };
 }
 
 /**
  * Subscribes to live active users count updates.
  */
 export function subscribeActiveUsers(callback) {
-  if (typeof window === "undefined") return () => { };
+  if (typeof window === "undefined") return () => {};
 
   const handleUpdate = (e) => {
     if (e.detail && typeof e.detail === "number") {
@@ -105,91 +207,19 @@ export function subscribeActiveUsers(callback) {
 }
 
 /**
- * Backwards compatibility alias for components expecting subscribeVisitorCount.
- */
-export function subscribeVisitorCount(callback) {
-  return subscribeActiveUsers(callback);
-}
-
-/**
- * Explicitly disabled: Clicking inside the website does NOT increase the count.
- * Returns current active count without incrementing.
- */
-export function incrementVisitorCount() {
-  return getActiveUsers();
-}
-
-/**
- * Shared state for the tracker singleton.
- */
-let isInitialized = false;
-const knownTabs = new Set();
-let channel = null;
-let heartbeatInterval = null;
-
-/**
- * Sends heartbeat ping to Hostinger backend to refresh active status and fetch global multi-device count.
- */
-export async function sendHeartbeat() {
-  if (typeof window === "undefined") return;
-
-  const sessionId = getSessionId();
-
-  // Try the resolved endpoint first, with automatic fallback
-  const endpointsToTry = [
-    resolvedEndpoint,
-    ...CANDIDATE_ENDPOINTS.filter((e) => e !== resolvedEndpoint)
-  ];
-
-  for (const endpoint of endpointsToTry) {
-    try {
-      const res = await fetch(`${endpoint}?action=heartbeat&session_id=${sessionId}`, {
-        cache: "no-store",
-        headers: { Accept: "application/json" }
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data && typeof data.active_users === "number") {
-          resolvedEndpoint = endpoint;
-          const localCount = knownTabs.size > 0 ? knownTabs.size : 1;
-          const resolved = Math.max(localCount, data.active_users);
-          setActiveUsers(resolved);
-          return;
-        }
-      }
-    } catch {
-      // Continue to next endpoint if this one fails
-    }
-  }
-
-  // Fallback if network is unreachable
-  if (knownTabs.size > 0) {
-    setActiveUsers(knownTabs.size);
-  }
-}
-
-/**
- * Initializes active visitor tracking:
- * - Increases count on open.
- * - Decreases count on tab close.
- * - Multi-device synchronization every 3.5 seconds.
- * - NO click increments.
+ * Initializes active user tracking, heartbeat loop, tab coordination, and click tracking.
  */
 export function initVisitorClickTracking() {
   if (typeof document === "undefined" || typeof window === "undefined") {
-    return () => { };
+    return () => {};
   }
-
-  if (isInitialized) {
-    return () => { };
-  }
-  isInitialized = true;
 
   const sessionId = getSessionId();
-  knownTabs.add(sessionId);
 
-  // 1. Instant Cross-Tab Communication via BroadcastChannel (0ms delay)
+  // 1. Local Cross-Tab Coordination via BroadcastChannel
+  let channel = null;
+  const knownTabs = new Set([sessionId]);
+
   try {
     if (typeof BroadcastChannel !== "undefined") {
       channel = new BroadcastChannel("gk_live_users_channel");
@@ -211,50 +241,61 @@ export function initVisitorClickTracking() {
         }
       };
 
+      // Announce arrival to other tabs
       channel.postMessage({ type: "join", id: sessionId });
       setActiveUsers(knownTabs.size);
     }
-  } catch { }
+  } catch {}
 
-  // 2. High-Frequency Multi-Device Heartbeat (Every 3.5s)
+  // 2. Initial Heartbeat & Recurring Heartbeat (every 20s)
   sendHeartbeat();
-  heartbeatInterval = setInterval(sendHeartbeat, 3500);
+  const heartbeatInterval = setInterval(sendHeartbeat, 20000);
 
-  // 3. Immediately refresh when user switches tabs or focuses the window
-  const handleVisibility = () => {
-    if (document.visibilityState === "visible") {
-      sendHeartbeat();
-    }
-  };
-  document.addEventListener("visibilitychange", handleVisibility);
-  window.addEventListener("focus", sendHeartbeat);
-
-  // 4. Tab Close / Page Leave Handler: Decreases count immediately across all devices
+  // 3. Tab Close / Page Unload Handler
   const handleUnload = () => {
     if (channel) {
       try {
         channel.postMessage({ type: "leave", id: sessionId });
-      } catch { }
+      } catch {}
     }
     if (navigator.sendBeacon) {
-      navigator.sendBeacon(`${resolvedEndpoint}?action=leave&session_id=${sessionId}`);
+      navigator.sendBeacon(`${API_ENDPOINT}?action=leave&session_id=${sessionId}`);
     }
   };
 
   window.addEventListener("beforeunload", handleUnload);
   window.addEventListener("pagehide", handleUnload);
 
+  // 4. Global Click Listener for Links, Buttons, Cards, and Badge
+  const handleGlobalClick = (e) => {
+    const isTextInput = e.target.closest(
+      "input:not([type='button']):not([type='submit']), textarea, select, [contenteditable='true']"
+    );
+    if (isTextInput) return;
+
+    const isClickable = e.target.closest(
+      "a, [role='link'], button, [role='button'], aside[aria-label*='Visitor'], .navbar-logo-card, .mega-nav-item, .nav-link, .nav-deck-tab, .pro-card, [data-testid], [data-nav-link], .cursor-pointer"
+    );
+
+    if (isClickable) {
+      incrementVisitorCount(1);
+    }
+  };
+
+  document.addEventListener("click", handleGlobalClick, {
+    capture: true,
+    passive: true,
+  });
+
   return () => {
-    isInitialized = false;
     clearInterval(heartbeatInterval);
-    document.removeEventListener("visibilitychange", handleVisibility);
-    window.removeEventListener("focus", sendHeartbeat);
     window.removeEventListener("beforeunload", handleUnload);
     window.removeEventListener("pagehide", handleUnload);
+    document.removeEventListener("click", handleGlobalClick, { capture: true });
     if (channel) {
       try {
         channel.close();
-      } catch { }
+      } catch {}
     }
   };
 }

@@ -1,18 +1,9 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import CosmicCursor from "../components/CosmicCursor";
 import { motion } from "framer-motion";
-import { Users } from "lucide-react";
-import { getActiveUsers, subscribeActiveUsers } from "@/utils/visitorTracker";
 
 const Landing = () => {
-  const [activeUsers, setActiveUsers] = useState(() => getActiveUsers());
-
-  useEffect(() => {
-    const unsub = subscribeActiveUsers((count) => setActiveUsers(count));
-    return () => unsub();
-  }, []);
   return (
     <>
       <SEO
@@ -160,28 +151,8 @@ const Landing = () => {
         </main>
 
         {/* Bottom Minimal Copyright Bar */}
-        <footer className="relative z-10 mx-auto w-full max-w-7xl flex flex-col sm:flex-row items-center justify-between text-[11px] sm:text-xs text-slate-500 py-1 gap-2">
+        <footer className="relative z-10 mx-auto w-full max-w-7xl text-center text-[11px] sm:text-xs text-slate-500 py-1">
           <p>© {new Date().getFullYear()} GK Nexergy. All rights reserved.</p>
-          <div
-            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40"
-            title={`${activeUsers} active visitor${activeUsers === 1 ? "" : "s"} online now`}
-          >
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            </span>
-            <Users className="h-3 w-3 text-emerald-400" />
-            <span>
-              Live Visitors:{" "}
-              <strong
-                className="font-bold tabular-nums text-emerald-300"
-                data-testid="visitor-count-number"
-              >
-                {activeUsers}
-              </strong>{" "}
-              online
-            </span>
-          </div>
         </footer>
       </div>
     </>

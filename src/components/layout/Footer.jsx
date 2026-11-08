@@ -4,9 +4,10 @@ import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Github } from "lucide-
 import "./Footer.css";
 import { Users, Briefcase, Globe } from "lucide-react";
 import {
+  getVisitorCount,
   getActiveUsers,
+  subscribeVisitorCount,
   subscribeActiveUsers,
-  initVisitorClickTracking,
 } from "@/utils/visitorTracker";
 
 const FOOTER_NAV_LINKS = [
@@ -21,16 +22,18 @@ const Footer = ({ theme }) => {
   const location = useLocation();
   const currentPath = location?.pathname || "";
   const [isDark, setIsDark] = useState(() => theme === "dark" || document.documentElement.classList.contains("dark"));
+  const [visitorCount, setVisitorCount] = useState(() => getVisitorCount());
   const [activeUsers, setActiveUsers] = useState(() => getActiveUsers());
 
   useEffect(() => {
-    setActiveUsers(getActiveUsers());
-    const stopTracking = initVisitorClickTracking();
+    const unsubCount = subscribeVisitorCount((updatedCount) => {
+      setVisitorCount(updatedCount);
+    });
     const unsubActive = subscribeActiveUsers((updatedActive) => {
       setActiveUsers(updatedActive);
     });
     return () => {
-      stopTracking();
+      unsubCount();
       unsubActive();
     };
   }, []);
@@ -157,39 +160,58 @@ const Footer = ({ theme }) => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="footer-bottom-bar flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <p className="footer-copyright">
-            © {new Date().getFullYear()} GK Nexergy. All rights reserved.
-          </p>
-          <span className="hidden sm:inline-block text-slate-300 dark:text-slate-700">•</span>
-          <div
-            className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold backdrop-blur-sm transition-colors duration-200"
-            style={{
-              background: isDark ? "rgba(16, 185, 129, 0.12)" : "rgba(16, 185, 129, 0.08)",
-              border: isDark ? "1px solid rgba(52, 211, 153, 0.25)" : "1px solid rgba(16, 185, 129, 0.2)",
-              color: isDark ? "#34d399" : "#047857",
-            }}
-            title={`${activeUsers} active visitor${activeUsers === 1 ? "" : "s"} on website right now`}
-          >
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+      <div className="footer-bottom-bar flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Left: Copyright */}
+        <p className="footer-copyright order-2 md:order-1 text-center md:text-left">
+          © {new Date().getFullYear()} GK Nexergy. All rights reserved.
+        </p>
+
+        {/* Center: Live Real-Time Active Users & Visitor Count */}
+        <div
+          className="order-1 md:order-2 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md transition-all duration-300 shadow-sm"
+          style={{
+            background: isDark
+              ? "rgba(15, 23, 42, 0.75)"
+              : "rgba(241, 245, 249, 0.95)",
+            border: isDark
+              ? "1px solid rgba(56, 189, 248, 0.25)"
+              : "1px solid rgba(203, 213, 225, 0.8)",
+          }}
+          title={`${activeUsers} active user${activeUsers === 1 ? "" : "s"} online now • ${visitorCount.toLocaleString("en-US")} total visits`}
+        >
+          {/* Pulsing Live Traffic Status Beacon */}
+          <span className="relative flex h-2 w-2 shrink-0">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+          </span>
+
+          {/* Active Users */}
+          <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+            <strong data-testid="footer-active-users" className="tabular-nums font-bold">
+              {activeUsers}
+            </strong>
+            <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              Active Online
             </span>
-            <Users className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
-            <span>
-              Live Visitors:{" "}
-              <strong
-                className="font-bold tabular-nums text-emerald-800 dark:text-emerald-200"
-                data-testid="visitor-count-number"
-              >
-                {activeUsers}
-              </strong>{" "}
-              online
+          </span>
+
+          {/* Separator */}
+          <span className="text-slate-300 dark:text-slate-700 select-none">•</span>
+
+          {/* Total Visitors */}
+          <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300">
+            <Users className="h-3.5 w-3.5 text-brand dark:text-sky-400 shrink-0" />
+            <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              Visitors:
             </span>
-          </div>
+            <strong data-testid="footer-visitor-count" className="tabular-nums font-bold text-slate-900 dark:text-white">
+              {visitorCount.toLocaleString("en-US")}
+            </strong>
+          </span>
         </div>
-        <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
+
+        {/* Right: Navigation Links */}
+        <div className="order-3 flex flex-wrap items-center justify-center md:justify-end gap-4 text-xs font-semibold">
           {FOOTER_NAV_LINKS.map((link) => {
             const isActive = link.isMatch(currentPath);
             return (

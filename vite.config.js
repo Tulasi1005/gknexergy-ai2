@@ -41,67 +41,8 @@ function ttsProxyPlugin() {
   };
 }
 
-function counterDevPlugin() {
-  const activeSessions = new Map();
-  const ACTIVE_WINDOW_MS = 25000;
-
-  function prune() {
-    const now = Date.now();
-    for (const [id, lastSeen] of activeSessions.entries()) {
-      if (now - lastSeen > ACTIVE_WINDOW_MS) {
-        activeSessions.delete(id);
-      }
-    }
-  }
-
-  function handle(req, res) {
-    prune();
-    const url = new URL(req.url, 'http://localhost');
-    const action = url.searchParams.get('action') || '';
-    const sessionId = (url.searchParams.get('session_id') || '').replace(/[^a-zA-Z0-9_-]/g, '');
-
-    if (action === 'leave' && sessionId) {
-      activeSessions.delete(sessionId);
-    } else if (sessionId) {
-      activeSessions.set(sessionId, Date.now());
-    }
-
-    const activeCount = Math.max(1, activeSessions.size);
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.statusCode = 200;
-    res.end(JSON.stringify({
-      success: true,
-      active_users: activeCount
-    }));
-  }
-
-  return {
-    name: 'counter-dev-plugin',
-    configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (req.url && (req.url.startsWith('/api/counter') || req.url.startsWith('/public/api/counter'))) {
-          handle(req, res);
-        } else {
-          next();
-        }
-      });
-    },
-    configurePreviewServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (req.url && (req.url.startsWith('/api/counter') || req.url.startsWith('/public/api/counter'))) {
-          handle(req, res);
-        } else {
-          next();
-        }
-      });
-    }
-  };
-}
-
 export default defineConfig({
-  plugins: [react(), ttsProxyPlugin(), counterDevPlugin()],
+  plugins: [react(), ttsProxyPlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

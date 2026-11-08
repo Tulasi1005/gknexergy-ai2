@@ -491,11 +491,10 @@
   width: 100%;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .footer-bottom-bar {
     flex-direction: row;
-    text-align: center;
-    justify-content: center;
+    justify-content: space-between;
   }
 }
 
