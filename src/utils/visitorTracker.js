@@ -1,28 +1,45 @@
 /**
- * Real-Time Visitor & Link Click Tracking Utility for GK Nexergy
+ * Real-Time Visitor & Active User Tracking Utility for GK Nexergy
  * 
- * Works seamlessly both on Hostinger live production (via /api/counter.php)
- * and local development (localStorage fallback).
- * 
- * Requirements:
- * 1. Synchronizes global visitor counts across all users worldwide on Hostinger.
- * 2. Instant zero-latency UI update via optimistic local broadcast.
- * 3. Every link click increments the counter; double clicks increment twice (+2).
- * 4. Robust offline and local development fallback.
+ * Capabilities:
+ * 1. Live Active Users Online tracking via heartbeat and BroadcastChannel.
+ * 2. Instant cross-tab and cross-device synchronization on Hostinger.
+ * 3. Genuine link click counting with double-click support (+2).
+ * 4. Automatic tab cleanup on tab close via sendBeacon.
+ * 5. Resilient offline and local storage fallbacks.
  */
 
 const STORAGE_KEY = "gk_visitor_count";
+const ACTIVE_STORAGE_KEY = "gk_active_users_count";
 const API_ENDPOINT = "/api/counter.php";
 
 /**
- * Gets the current visitor count from storage.
+ * Returns or generates a unique session ID for the current browser session.
+ */
+export function getSessionId() {
+  if (typeof window === "undefined") return "gk_srv";
+
+  try {
+    let id = sessionStorage.getItem("gk_visitor_session_id");
+    if (!id) {
+      id = "gk_" + Math.random().toString(36).substring(2, 9) + "_" + Date.now();
+      sessionStorage.setItem("gk_visitor_session_id", id);
+    }
+    return id;
+  } catch {
+    return "gk_anon_" + Date.now();
+  }
+}
+
+/**
+ * Gets the current visitor total interactions from storage.
  */
 export function getVisitorCount() {
   if (typeof window === "undefined") return 1;
 
   try {
     let stored = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
-    if (isNaN(stored) || stored > 1000 || stored < 1) {
+    if (isNaN(stored) || stored >= 10000 || stored < 1) {
       stored = 1;
       localStorage.setItem(STORAGE_KEY, "1");
     }
@@ -33,31 +50,36 @@ export function getVisitorCount() {
 }
 
 /**
- * Syncs with Hostinger backend counter on page load.
+ * Gets the current count of active users online (minimum 1).
  */
-export async function syncWithGlobalCounter() {
-  if (typeof window === "undefined") return;
+export function getActiveUsers() {
+  if (typeof window === "undefined") return 1;
 
   try {
-    const res = await fetch(API_ENDPOINT, { cache: "no-store" });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && typeof data.count === "number" && data.count >= 1) {
-        localStorage.setItem(STORAGE_KEY, String(data.count));
-        window.dispatchEvent(
-          new CustomEvent("gk_visitor_count_updated", { detail: data.count })
-        );
-      }
-    }
+    let val = parseInt(sessionStorage.getItem(ACTIVE_STORAGE_KEY) || "1", 10);
+    return isNaN(val) || val < 1 ? 1 : val;
   } catch {
-    // Graceful fallback during local dev or offline
+    return 1;
   }
 }
 
 /**
- * Increments the real click count.
- * 1. Instantly updates local UI so there is zero lag.
- * 2. Asynchronously notifies Hostinger /api/counter.php to update global live count.
+ * Updates active user count and notifies all subscribers.
+ */
+function setActiveUsers(count) {
+  const safeCount = Math.max(1, count);
+  try {
+    sessionStorage.setItem(ACTIVE_STORAGE_KEY, String(safeCount));
+  } catch {}
+
+  window.dispatchEvent(
+    new CustomEvent("gk_active_users_updated", { detail: safeCount })
+  );
+}
+
+/**
+ * Increments total visitor click count.
+ * Double clicks increment twice (+2).
  */
 export function incrementVisitorCount(amount = 1) {
   if (typeof window === "undefined") return 1;
@@ -71,20 +93,30 @@ export function incrementVisitorCount(amount = 1) {
       new CustomEvent("gk_visitor_count_updated", { detail: next })
     );
 
-    // Asynchronously update Hostinger global count in background
-    fetch(`${API_ENDPOINT}?action=click&amount=${amount}`, { method: "POST" })
+    const sessionId = getSessionId();
+    fetch(`${API_ENDPOINT}?action=click&amount=${amount}&session_id=${sessionId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
+    })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data && typeof data.count === "number") {
-          localStorage.setItem(STORAGE_KEY, String(data.count));
-          window.dispatchEvent(
-            new CustomEvent("gk_visitor_count_updated", { detail: data.count })
-          );
+        if (data) {
+          if (typeof data.count === "number") {
+            const currentLocal = getVisitorCount();
+            const resolved = Math.max(currentLocal, data.count);
+            if (resolved !== currentLocal) {
+              localStorage.setItem(STORAGE_KEY, String(resolved));
+              window.dispatchEvent(
+                new CustomEvent("gk_visitor_count_updated", { detail: resolved })
+              );
+            }
+          }
+          if (typeof data.active_users === "number") {
+            setActiveUsers(data.active_users);
+          }
         }
       })
-      .catch(() => {
-        // Safe offline/local fallback
-      });
+      .catch(() => {});
 
     return next;
   } catch {
@@ -93,7 +125,39 @@ export function incrementVisitorCount(amount = 1) {
 }
 
 /**
- * Subscribes a React component to real-time counter changes (intra-tab and cross-tab).
+ * Sends heartbeat ping to Hostinger backend to refresh active status.
+ */
+export async function sendHeartbeat() {
+  if (typeof window === "undefined") return;
+
+  const sessionId = getSessionId();
+  try {
+    const res = await fetch(`${API_ENDPOINT}?action=heartbeat&session_id=${sessionId}`, {
+      cache: "no-store"
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data) {
+        if (typeof data.active_users === "number") {
+          setActiveUsers(data.active_users);
+        }
+        if (typeof data.count === "number") {
+          const currentLocal = getVisitorCount();
+          const resolved = Math.max(currentLocal, data.count);
+          if (resolved !== currentLocal) {
+            localStorage.setItem(STORAGE_KEY, String(resolved));
+            window.dispatchEvent(
+              new CustomEvent("gk_visitor_count_updated", { detail: resolved })
+            );
+          }
+        }
+      }
+    }
+  } catch {}
+}
+
+/**
+ * Subscribes to total visitor interaction count changes.
  */
 export function subscribeVisitorCount(callback) {
   if (typeof window === "undefined") return () => {};
@@ -122,31 +186,98 @@ export function subscribeVisitorCount(callback) {
 }
 
 /**
- * Sets up global click listener for link and navigation interactions.
- * Every link click increments the counter. Double click counts as 2 clicks.
+ * Subscribes to live active users count updates.
+ */
+export function subscribeActiveUsers(callback) {
+  if (typeof window === "undefined") return () => {};
+
+  const handleUpdate = (e) => {
+    if (e.detail && typeof e.detail === "number") {
+      callback(e.detail);
+    } else {
+      callback(getActiveUsers());
+    }
+  };
+
+  window.addEventListener("gk_active_users_updated", handleUpdate);
+
+  return () => {
+    window.removeEventListener("gk_active_users_updated", handleUpdate);
+  };
+}
+
+/**
+ * Initializes active user tracking, heartbeat loop, tab coordination, and click tracking.
  */
 export function initVisitorClickTracking() {
   if (typeof document === "undefined" || typeof window === "undefined") {
     return () => {};
   }
 
-  // Trigger global sync on initial load
-  syncWithGlobalCounter();
+  const sessionId = getSessionId();
 
+  // 1. Local Cross-Tab Coordination via BroadcastChannel
+  let channel = null;
+  const knownTabs = new Set([sessionId]);
+
+  try {
+    if (typeof BroadcastChannel !== "undefined") {
+      channel = new BroadcastChannel("gk_live_users_channel");
+
+      channel.onmessage = (event) => {
+        const { type, id } = event.data || {};
+        if (!id) return;
+
+        if (type === "join") {
+          knownTabs.add(id);
+          setActiveUsers(knownTabs.size);
+          channel.postMessage({ type: "here", id: sessionId });
+        } else if (type === "here") {
+          knownTabs.add(id);
+          setActiveUsers(knownTabs.size);
+        } else if (type === "leave") {
+          knownTabs.delete(id);
+          setActiveUsers(Math.max(1, knownTabs.size));
+        }
+      };
+
+      // Announce arrival to other tabs
+      channel.postMessage({ type: "join", id: sessionId });
+      setActiveUsers(knownTabs.size);
+    }
+  } catch {}
+
+  // 2. Initial Heartbeat & Recurring Heartbeat (every 20s)
+  sendHeartbeat();
+  const heartbeatInterval = setInterval(sendHeartbeat, 20000);
+
+  // 3. Tab Close / Page Unload Handler
+  const handleUnload = () => {
+    if (channel) {
+      try {
+        channel.postMessage({ type: "leave", id: sessionId });
+      } catch {}
+    }
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(`${API_ENDPOINT}?action=leave&session_id=${sessionId}`);
+    }
+  };
+
+  window.addEventListener("beforeunload", handleUnload);
+  window.addEventListener("pagehide", handleUnload);
+
+  // 4. Global Click Listener for Links, Buttons, Cards, and Badge
   const handleGlobalClick = (e) => {
-    // Exclude clicks inside editable form fields so typing is ignored
-    const isInput = e.target.closest(
-      "input, textarea, select, [contenteditable='true']"
+    const isTextInput = e.target.closest(
+      "input:not([type='button']):not([type='submit']), textarea, select, [contenteditable='true']"
     );
-    if (isInput) return;
+    if (isTextInput) return;
 
-    // Detect if click was on a link, anchor, button, or navigation item
-    const isLinkOrAction = e.target.closest(
-      "a, [role='link'], button, .mega-nav-item, .nav-link, .nav-deck-tab, [data-nav-link]"
+    const isClickable = e.target.closest(
+      "a, [role='link'], button, [role='button'], aside[aria-label*='Visitor'], .navbar-logo-card, .mega-nav-item, .nav-link, .nav-deck-tab, .pro-card, [data-testid], [data-nav-link], .cursor-pointer"
     );
 
-    if (isLinkOrAction) {
-      // Increments count on every link click. Double-clicking naturally fires 2 clicks (+2).
+    if (isClickable) {
       incrementVisitorCount(1);
     }
   };
@@ -157,6 +288,14 @@ export function initVisitorClickTracking() {
   });
 
   return () => {
+    clearInterval(heartbeatInterval);
+    window.removeEventListener("beforeunload", handleUnload);
+    window.removeEventListener("pagehide", handleUnload);
     document.removeEventListener("click", handleGlobalClick, { capture: true });
+    if (channel) {
+      try {
+        channel.close();
+      } catch {}
+    }
   };
 }
