@@ -193,7 +193,7 @@ const Footer = ({ theme }) => {
               {activeUsers}
             </strong>
             <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-              Active Online
+              Active 
             </span>
           </span>
 
