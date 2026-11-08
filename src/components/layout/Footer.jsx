@@ -4,9 +4,7 @@ import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Github } from "lucide-
 import "./Footer.css";
 import { Users, Briefcase, Globe } from "lucide-react";
 import {
-  getVisitorCount,
   getActiveUsers,
-  subscribeVisitorCount,
   subscribeActiveUsers,
 } from "@/utils/visitorTracker";
 
@@ -22,18 +20,13 @@ const Footer = ({ theme }) => {
   const location = useLocation();
   const currentPath = location?.pathname || "";
   const [isDark, setIsDark] = useState(() => theme === "dark" || document.documentElement.classList.contains("dark"));
-  const [visitorCount, setVisitorCount] = useState(() => getVisitorCount());
   const [activeUsers, setActiveUsers] = useState(() => getActiveUsers());
 
   useEffect(() => {
-    const unsubCount = subscribeVisitorCount((updatedCount) => {
-      setVisitorCount(updatedCount);
-    });
     const unsubActive = subscribeActiveUsers((updatedActive) => {
       setActiveUsers(updatedActive);
     });
     return () => {
-      unsubCount();
       unsubActive();
     };
   }, []);
@@ -166,16 +159,10 @@ const Footer = ({ theme }) => {
             © {new Date().getFullYear()} GK Nexergy. All rights reserved.
           </p>
           <span className="hidden sm:inline-block text-slate-300 dark:text-slate-700">•</span>
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-            <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <strong>{activeUsers}</strong> Active Online
-            </span>
-            <span className="text-slate-300 dark:text-slate-700 select-none">•</span>
-            <span className="flex items-center gap-1">
-              <Users className="h-3.5 w-3.5 text-brand dark:text-sky-400" />
-              Visitors: <strong className="text-slate-700 dark:text-slate-200 tabular-nums">{visitorCount.toLocaleString("en-US")}</strong>
-            </span>
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <Users className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Live Visitors: <strong className="text-slate-700 dark:text-slate-200 tabular-nums">{activeUsers}</strong> online</span>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">

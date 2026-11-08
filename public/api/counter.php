@@ -1,7 +1,12 @@
 <?php
 /**
- * GK Nexergy - Hostinger Global Live Visitor & Active User Counter
- * Provides synchronized real-time visitor counting and live concurrent active user tracking across all devices.
+ * GK Nexergy - Hostinger Global Live Active User & Visitor Counter
+ * 
+ * Rules:
+ * 1. Opening the link increases the count (+1).
+ * 2. Closing the link/tab decreases the count (-1).
+ * 3. Clicking anywhere inside the website DOES NOT increase the count.
+ * 4. Automatic pruning of sessions older than 35 seconds.
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -22,12 +27,12 @@ if (!is_writable(__DIR__) && !file_exists($dataFile)) {
 }
 
 $now = time();
-$activeWindow = 45; // Users active within last 45 seconds
+$activeWindow = 35; // Sessions expire if no heartbeat for 35 seconds
 
 // Default data structure
 $data = [
-    'count' => 1,
     'sessions' => [],
+    'total_visits' => 1,
     'updated_at' => date('c')
 ];
 
@@ -35,11 +40,11 @@ if (file_exists($dataFile)) {
     $content = @file_get_contents($dataFile);
     $decoded = json_decode($content, true);
     if (is_array($decoded)) {
-        if (isset($decoded['count']) && is_numeric($decoded['count'])) {
-            $data['count'] = (int)$decoded['count'];
-        }
         if (isset($decoded['sessions']) && is_array($decoded['sessions'])) {
             $data['sessions'] = $decoded['sessions'];
+        }
+        if (isset($decoded['total_visits']) && is_numeric($decoded['total_visits'])) {
+            $data['total_visits'] = (int)$decoded['total_visits'];
         }
     }
 }
@@ -55,26 +60,26 @@ foreach ($data['sessions'] as $sId => $lastSeen) {
     }
 }
 
-// Handle tab leave / close
+// 1. Tab Leave / Close: immediately remove this session to decrease count
 if ($action === 'leave' && $sessionId) {
     unset($validSessions[$sessionId]);
 }
-// Handle heartbeat or active user presence
+// 2. Open link / Heartbeat ping: register or refresh session
 else if ($sessionId) {
+    if (!isset($validSessions[$sessionId])) {
+        // Brand new visitor session
+        $data['total_visits'] = isset($data['total_visits']) ? $data['total_visits'] + 1 : 1;
+    }
     $validSessions[$sessionId] = $now;
 }
 
-// Handle link click increment
-$isClickIncrement = ($action === 'click' || $action === 'increment' || ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'heartbeat' && $action !== 'leave'));
+$activeUsers = count($validSessions);
 
-if ($isClickIncrement) {
-    $rawAmount = isset($_GET['amount']) ? (int)$_GET['amount'] : (isset($_POST['amount']) ? (int)$_POST['amount'] : 1);
-    $amount = max(1, min(10, $rawAmount));
-    $data['count'] += $amount;
+// If an active visitor is currently connected (and not leaving), active count is at least 1
+if ($action !== 'leave' && $activeUsers < 1) {
+    $activeUsers = 1;
 }
 
-// Ensure at least 1 active user for active requests
-$activeUsers = max(1, count($validSessions));
 $data['sessions'] = $validSessions;
 $data['updated_at'] = date('c');
 
@@ -83,5 +88,5 @@ $data['updated_at'] = date('c');
 echo json_encode([
     'success' => true,
     'active_users' => $activeUsers,
-    'count' => (int)$data['count']
+    'total_visits' => isset($data['total_visits']) ? (int)$data['total_visits'] : $activeUsers
 ]);

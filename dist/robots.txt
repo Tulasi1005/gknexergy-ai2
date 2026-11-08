@@ -1,0 +1,20 @@
+# ==============================================================================
+# Robots.txt for GK Nexergy (https://gknexergy.com)
+# Software Development Company in Hyderabad | AI Solutions & Digital Transformation
+# ==============================================================================
+
+User-agent: *
+Allow: /
+
+# Explicitly ensure static assets and scripts are crawlable for JS rendering
+Allow: /images/
+Allow: /fonts/
+Allow: /assets/
+Allow: /src/
+
+# Host Directive
+Host: https://gknexergy.com
+
+# XML Sitemap Directive
+Sitemap: https://gknexergy.com/sitemap.xml
+
