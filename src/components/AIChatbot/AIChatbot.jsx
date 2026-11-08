@@ -141,6 +141,8 @@ export const AIChatbot = ({ theme = "light" }) => {
   const chipsDragStartXRef = useRef(0);
   const chipsDragScrollLeftRef = useRef(0);
   const chipsHasDraggedRef = useRef(false);
+  const chatbotWindowRef = useRef(null);
+  const chatbotToggleRef = useRef(null);
   const isDark = theme === "dark";
 
   // Warm, friendly welcome messages (Multilingual - No emojis)
@@ -672,6 +674,49 @@ What would you like to explore today?`;
     return () => window.removeEventListener("open-gk-chatbot", handleGlobalOpen);
   }, []);
 
+  // Close chatbot when clicking outside the chat window or pressing Escape
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event) => {
+      // If click was inside the chatbot window or on the floating toggle button, do not close
+      if (
+        chatbotWindowRef.current &&
+        chatbotWindowRef.current.contains(event.target)
+      ) {
+        return;
+      }
+      if (
+        chatbotToggleRef.current &&
+        chatbotToggleRef.current.contains(event.target)
+      ) {
+        return;
+      }
+
+      setIsOpen(false);
+      hasManuallyClosedRef.current = true;
+      stopSpeaking();
+    };
+
+    const handleKeyDownEscape = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        hasManuallyClosedRef.current = true;
+        stopSpeaking();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside, { passive: true });
+    document.addEventListener("keydown", handleKeyDownEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDownEscape);
+    };
+  }, [isOpen, stopSpeaking]);
+
   const handleClearHistory = () => {
     stopSpeaking();
     setCurrentlySpeakingId(null);
@@ -699,6 +744,7 @@ What would you like to explore today?`;
       {/* 1. FLOATING CHAT TRIGGER BUTTON                            */}
       {/* ========================================================= */}
       <motion.div
+        ref={chatbotToggleRef}
         initial={{ scale: 0.9, opacity: 0, y: 10 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
@@ -815,6 +861,7 @@ What would you like to explore today?`;
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            ref={chatbotWindowRef}
             initial={{ opacity: 0, y: 14, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}

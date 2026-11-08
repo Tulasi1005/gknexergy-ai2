@@ -7,6 +7,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AIChatbot from "@/components/AIChatbot/AIChatbot";
 import PageSummarizer from "@/components/PageSummarizer/PageSummarizer";
+import VisitorCounter from "@/components/common/VisitorCounter";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Vision from "@/pages/Vision";
@@ -181,6 +182,7 @@ const Shell = ({ theme, onToggleTheme }) => {
                     onOpen={() => setIsSummarizerOpen(true)}
                 />
             )}
+            <VisitorCounter theme={theme} />
         </div>
     );
 };

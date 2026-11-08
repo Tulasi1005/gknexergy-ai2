@@ -103,7 +103,7 @@ export function useReadOnlyProtection() {
   useEffect(() => {
     if (typeof window === "undefined" || typeof document === "undefined") return;
 
-    // 1. Right-Click Context Menu Deterrent
+    // 1. Right-Click Context Menu Deterrent (Silently Disabled)
     const handleContextMenu = (e) => {
       // Allow right-click ONLY inside genuine editable text inputs or explicit opt-ins
       const isEditable = e.target.closest(
@@ -113,13 +113,6 @@ export function useReadOnlyProtection() {
 
       e.preventDefault();
       e.stopPropagation();
-
-      const isImage = e.target.tagName === "IMG" || e.target.closest("img, picture, svg, video, canvas");
-      if (isImage) {
-        showProtectionToast("Image downloading is disabled to protect intellectual property.");
-      } else {
-        showProtectionToast("Right-click is disabled on this website.");
-      }
       return false;
     };
 
@@ -338,14 +331,9 @@ export function useReadOnlyProtection() {
       snippingCurtain.addEventListener("click", handleWindowFocus);
     }
 
-    // Inject Permanent Intellectual Property Watermark Shield
-    let watermarkShield = document.getElementById("gk-security-watermark");
-    if (!watermarkShield) {
-      watermarkShield = document.createElement("div");
-      watermarkShield.id = "gk-security-watermark";
-      watermarkShield.setAttribute("aria-hidden", "true");
-      document.body.appendChild(watermarkShield);
-    }
+    // Ensure any legacy watermark shield is purged from DOM
+    const existingWatermark = document.getElementById("gk-security-watermark");
+    if (existingWatermark) existingWatermark.remove();
 
     // 6. Print Event Interception
     const handleBeforePrint = (e) => {

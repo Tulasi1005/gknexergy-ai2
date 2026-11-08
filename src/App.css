@@ -1533,7 +1533,7 @@ header.glass-header {
     font-size: 11.5px !important;
     font-weight: 600 !important;
     background: #f8fafc !important;
-    color: #334155 !important;
+    color: #0f172a !important;
     border: 1px solid #e2e8f0 !important;
 }
 
@@ -1932,7 +1932,7 @@ header.glass-header,
     }
 }
 
-/* Subtitle Tagline: TRAIN â€¢ BUILD â€¢ TRANSFORM */
+/* Subtitle Tagline: BUILD • TRAIN • TRANSFORM */
 .landing-tagline {
     font-family: var(--font-heading) !important;
     font-size: clamp(0.85rem, 1.3vw, 1.2rem) !important;
@@ -2699,20 +2699,18 @@ iframe[id^=":"] {
         border-radius: 0 !important;
     }
     .navbar-logo {
-        height: 24px !important;
-        max-width: 110px !important;
-        height: 30px !important;
-        max-height: 32px !important;
+        height: 28px !important;
+        max-height: 28px !important;
         width: auto !important;
-        max-width: 140px !important;
+        max-width: 125px !important;
         object-fit: contain !important;
     }
 
     @media (max-width: 295px) {
         .navbar-logo {
-            height: 26px !important;
-            max-height: 28px !important;
-            max-width: 120px !important;
+            height: 24px !important;
+            max-height: 24px !important;
+            max-width: 105px !important;
         }
     }
     header[data-testid="main-navbar"] button[data-testid="nav-language-btn"] {
@@ -3191,7 +3189,7 @@ iframe[id^=":"] {
     font-weight: 700;
     white-space: nowrap;
     text-decoration: none;
-    color: #334155 !important;
+    color: #0f172a !important;
     background-color: #f8fafc;
     border: 1px solid #e2e8f0;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -3262,7 +3260,7 @@ iframe[id^=":"] {
     border-radius: 0.75rem;
     font-size: 0.75rem;
     font-weight: 700;
-    color: #334155 !important;
+    color: #0f172a !important;
     background-color: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -3372,7 +3370,7 @@ iframe[id^=":"] {
     font-weight: 700;
     white-space: nowrap;
     text-decoration: none;
-    color: #475569;
+    color: #0f172a !important;
     background: transparent;
     border: 1px solid transparent;
     padding: 0.38rem 0.8rem;
@@ -3381,8 +3379,10 @@ iframe[id^=":"] {
     cursor: pointer;
 }
 
-.dark .mega-nav-item {
-    color: #94a3b8;
+.dark .mega-nav-item,
+[data-theme="dark"] .mega-nav-item,
+html.dark .mega-nav-item {
+    color: #f1f5f9 !important;
 }
 
 .mega-nav-item:hover {
@@ -3392,7 +3392,9 @@ iframe[id^=":"] {
     transform: translateY(-1px);
 }
 
-.dark .mega-nav-item:hover {
+.dark .mega-nav-item:hover,
+[data-theme="dark"] .mega-nav-item:hover,
+html.dark .mega-nav-item:hover {
     color: #38bdf8 !important;
     background-color: rgba(56, 189, 248, 0.12);
     border-color: rgba(56, 189, 248, 0.25);
@@ -3407,7 +3409,9 @@ iframe[id^=":"] {
     box-shadow: 0 1px 4px rgba(37, 99, 235, 0.12);
 }
 
-.dark .mega-nav-item.active {
+.dark .mega-nav-item.active,
+[data-theme="dark"] .mega-nav-item.active,
+html.dark .mega-nav-item.active {
     color: #38bdf8 !important;
     background: rgba(56, 189, 248, 0.15) !important;
     border-color: rgba(56, 189, 248, 0.35) !important;
@@ -3418,7 +3422,15 @@ iframe[id^=":"] {
 .mega-nav-chevron {
     width: 0.85rem;
     height: 0.85rem;
+    color: #0f172a;
+    stroke: currentColor;
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .mega-nav-chevron,
+[data-theme="dark"] .mega-nav-chevron,
+html.dark .mega-nav-chevron {
+    color: #f1f5f9;
 }
 
 .mega-nav-item.active .mega-nav-chevron {
@@ -3910,21 +3922,22 @@ iframe[id^=":"] {
         padding-left: 8px !important;
         padding-right: 8px !important;
     }
+    #main-navbar-header .flex.h-16 {
+        gap: 6px !important;
+    }
     .navbar-logo {
-        height: 22px !important;
-        max-width: 86px !important;
-        height: 30px !important;
-        max-height: 32px !important;
+        height: 28px !important;
+        max-height: 28px !important;
         width: auto !important;
-        max-width: 140px !important;
+        max-width: 125px !important;
         object-fit: contain !important;
     }
 
     @media (max-width: 295px) {
         .navbar-logo {
-            height: 26px !important;
-            max-height: 28px !important;
-            max-width: 120px !important;
+            height: 24px !important;
+            max-height: 24px !important;
+            max-width: 105px !important;
         }
     }
     .navbar-actions-island {
@@ -4330,6 +4343,32 @@ iframe[id^=":"] {
         max-width: calc(100vw - 12px) !important;
         height: min(520px, calc(100vh - 64px)) !important;
         border-radius: 14px !important;
+    }
+
+    /* Floating Visitor Counter on ultra-compact (280px - 360px) */
+    aside[aria-label="Visitor link click statistics"],
+    aside[aria-label="Visitor statistics"] {
+        left: 8px !important;
+        bottom: 12px !important;
+    }
+    aside[aria-label="Visitor link click statistics"] > div,
+    aside[aria-label="Visitor statistics"] > div {
+        padding: 3px 8px !important;
+        gap: 5px !important;
+        font-size: 11px !important;
+    }
+    @media (max-width: 295px) {
+        aside[aria-label="Visitor link click statistics"],
+        aside[aria-label="Visitor statistics"] {
+            left: 6px !important;
+            bottom: 10px !important;
+        }
+        aside[aria-label="Visitor link click statistics"] > div,
+        aside[aria-label="Visitor statistics"] > div {
+            padding: 2.5px 7px !important;
+            gap: 4px !important;
+            max-width: calc(100vw - 64px) !important;
+        }
     }
 
     /* Footer */

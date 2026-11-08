@@ -8,7 +8,7 @@ const Landing = () => {
     <>
       <SEO
         title="GK Nexergy | Enterprise Digital Transformation & AI Solutions"
-        description="Your technology innovation partner in Hyderabad, India. Train, build, and transform with custom software development, AI automation services, and enterprise solutions."
+        description="Your technology innovation partner in Hyderabad, India. Build, train, and transform with custom software development, AI automation services, and enterprise solutions."
         keywords={[
           "AI Solutions for Businesses",
           "AI Automation Services",
@@ -109,7 +109,7 @@ const Landing = () => {
                 Designed in Blueprint
               </motion.p>
 
-              {/* Subtitle Tagline: TRAIN • BUILD • TRANSFORM - Catchy-Mager font */}
+              {/* Subtitle Tagline: BUILD • TRAIN • TRANSFORM - Catchy-Mager font */}
               <motion.p
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -120,9 +120,9 @@ const Landing = () => {
                 }}
                 className="landing-tagline"
               >
-                TRAIN{" "}
-                <span className="text-electric font-bold mx-2 sm:mx-2.5 drop-shadow-[0_0_8px_rgba(56,189,248,0.7)]">•</span>{" "}
                 BUILD{" "}
+                <span className="text-electric font-bold mx-2 sm:mx-2.5 drop-shadow-[0_0_8px_rgba(56,189,248,0.7)]">•</span>{" "}
+                TRAIN{" "}
                 <span className="text-electric font-bold mx-2 sm:mx-2.5 drop-shadow-[0_0_8px_rgba(56,189,248,0.7)]">•</span>{" "}
                 TRANSFORM
               </motion.p>

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Github } from "lucide-react";
 import "./Footer.css";
 import { Users, Briefcase, Globe } from "lucide-react";
+import { getVisitorCount, subscribeVisitorCount } from "@/utils/visitorTracker";
 
 const FOOTER_NAV_LINKS = [
   { label: "Home", to: "/home", isMatch: (p) => p === "/" || p === "/home" || p === "/landing" },
@@ -16,6 +17,14 @@ const Footer = ({ theme }) => {
   const location = useLocation();
   const currentPath = location?.pathname || "";
   const [isDark, setIsDark] = useState(() => theme === "dark" || document.documentElement.classList.contains("dark"));
+  const [visitorCount, setVisitorCount] = useState(() => getVisitorCount());
+
+  useEffect(() => {
+    const unsubscribe = subscribeVisitorCount((updatedCount) => {
+      setVisitorCount(updatedCount);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (theme) {
@@ -140,9 +149,16 @@ const Footer = ({ theme }) => {
 
       {/* Bottom Bar */}
       <div className="footer-bottom-bar flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="footer-copyright">
-          © {new Date().getFullYear()} GK Nexergy. All rights reserved.
-        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="footer-copyright">
+            © {new Date().getFullYear()} GK Nexergy. All rights reserved.
+          </p>
+          <span className="hidden sm:inline-block text-slate-300 dark:text-slate-700">•</span>
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+            <Users className="h-3.5 w-3.5 text-brand dark:text-sky-400" />
+            <span>Visitors: <strong className="text-slate-700 dark:text-slate-200 tabular-nums">{visitorCount.toLocaleString("en-US")}</strong></span>
+          </div>
+        </div>
         <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
           {FOOTER_NAV_LINKS.map((link) => {
             const isActive = link.isMatch(currentPath);

@@ -375,7 +375,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                                             : isDark
                                                 ? "rgba(15, 28, 56, 0.9)"
                                                 : "rgba(248, 250, 252, 0.95)",
-                                        color: langModalOpen ? "#ffffff" : isDark ? "#f1f5f9" : "#1e293b",
+                                        color: langModalOpen ? "#ffffff" : isDark ? "#f1f5f9" : "#0f172a",
                                         borderColor: langModalOpen
                                             ? "#2563eb"
                                             : isDark
@@ -395,7 +395,7 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                                         <span className="hidden xs:inline">{currentLangObj.flag}</span>
                                         <span>{selectedLang.toUpperCase()}</span>
                                     </span>
-                                    <ChevronDown className={`navbar-chevron-icon transition-transform duration-200 ${langModalOpen ? "rotate-180 text-white" : "text-slate-400"}`} strokeWidth={2} />
+                                    <ChevronDown className={`navbar-chevron-icon transition-transform duration-200 ${langModalOpen ? "rotate-180 text-white" : "text-slate-700 dark:text-slate-400"}`} strokeWidth={2} />
                                 </button>
 
                                 {/* Dropdown Menu */}
