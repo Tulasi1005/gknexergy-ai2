@@ -179,8 +179,8 @@ const Footer = ({ theme }) => {
             className="relative order-1 md:order-2 group cursor-pointer"
             onMouseEnter={() => setIsStatsHovered(true)}
             onMouseLeave={() => setIsStatsHovered(false)}
-            onClick={() => window.open("/api/counter.php", "_blank")}
-            title="Click to open Live Analytics Dashboard"
+            onClick={() => setIsStatsHovered((prev) => !prev)}
+            title={`${stats.active || activeUsers} active users online • ${(stats.totalVisitors || visitorCount).toLocaleString("en-US")} total visits`}
           >
             <div
               className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md transition-all duration-300 shadow-sm hover:scale-[1.02] active:scale-[0.98]"
@@ -273,7 +273,7 @@ const Footer = ({ theme }) => {
                       </strong>
                     </div>
                     <div className="text-[9px] text-sky-300/80 text-center pt-0.5 font-medium">
-                      Click to open Full Live Analytics Dashboard
+                      Real-time live traffic metrics
                     </div>
                   </div>
                 </motion.div>
