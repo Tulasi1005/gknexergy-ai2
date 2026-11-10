@@ -9,6 +9,9 @@
     "preview": "vite preview",
     "train:chatbot": "node scripts/trainChatbot.js"
   },
+  "allowScripts": {
+    "esbuild": true
+  },
   "dependencies": {
     "@tanstack/react-query": "^5.66.0",
     "clsx": "^2.1.1",
