@@ -3,11 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Github } from "lucide-react";
 import "./Footer.css";
 import { Users, Briefcase, Globe } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   getVisitorCount,
   getActiveUsers,
+  getVisitorStats,
   subscribeVisitorCount,
   subscribeActiveUsers,
+  subscribeVisitorStats,
 } from "@/utils/visitorTracker";
 
 const FOOTER_NAV_LINKS = [
@@ -24,6 +27,8 @@ const Footer = ({ theme }) => {
   const [isDark, setIsDark] = useState(() => theme === "dark" || document.documentElement.classList.contains("dark"));
   const [visitorCount, setVisitorCount] = useState(() => getVisitorCount());
   const [activeUsers, setActiveUsers] = useState(() => getActiveUsers());
+  const [stats, setStats] = useState(() => getVisitorStats());
+  const [isStatsHovered, setIsStatsHovered] = useState(false);
 
   useEffect(() => {
     const unsubCount = subscribeVisitorCount((updatedCount) => {
@@ -32,9 +37,13 @@ const Footer = ({ theme }) => {
     const unsubActive = subscribeActiveUsers((updatedActive) => {
       setActiveUsers(updatedActive);
     });
+    const unsubStats = subscribeVisitorStats((updatedStats) => {
+      setStats(updatedStats);
+    });
     return () => {
       unsubCount();
       unsubActive();
+      unsubStats();
     };
   }, []);
 
@@ -178,12 +187,36 @@ const Footer = ({ theme }) => {
               : "1px solid rgba(203, 213, 225, 0.8)",
           }}
           title={`${activeUsers} active user${activeUsers === 1 ? "" : "s"} online now • ${visitorCount.toLocaleString("en-US")} total visits`}
+          className="relative order-1 md:order-2 group cursor-pointer"
+          onMouseEnter={() => setIsStatsHovered(true)}
+          onMouseLeave={() => setIsStatsHovered(false)}
+          onClick={() => window.open("/api/counter.php", "_blank")}
+          title="Click to open Live Analytics Dashboard"
         >
           {/* Pulsing Live Traffic Status Beacon */}
           <span className="relative flex h-2 w-2 shrink-0">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
           </span>
+          <div
+            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md transition-all duration-300 shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+            style={{
+              background: isDark
+                ? "rgba(15, 23, 42, 0.85)"
+                : "rgba(241, 245, 249, 0.95)",
+              border: isDark
+                ? "1px solid rgba(56, 189, 248, 0.28)"
+                : "1px solid rgba(203, 213, 225, 0.9)",
+              boxShadow: isDark
+                ? "0 4px 14px rgba(0, 0, 0, 0.4), 0 0 10px rgba(56, 189, 248, 0.1)"
+                : "0 2px 10px rgba(15, 23, 42, 0.06)",
+            }}
+          >
+            {/* Pulsing Live Traffic Status Beacon */}
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
 
           {/* Active Users */}
           <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
@@ -194,10 +227,85 @@ const Footer = ({ theme }) => {
             </strong>
             <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
               Active 
+            {/* Active Users */}
+            <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+              <strong data-testid="footer-active-users" className="tabular-nums font-bold">
+                {stats.active || activeUsers}
+              </strong>
+              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                Active Online
+              </span>
             </span>
           </span>
 
          
+            {/* Separator */}
+            <span className="text-slate-300 dark:text-slate-700 select-none">•</span>
+
+            {/* Total Visitors */}
+            <span className="flex items-center gap-1.5 text-slate-700 dark:text-slate-200">
+              <Users className="h-3.5 w-3.5 text-blue-600 dark:text-sky-400 shrink-0" />
+              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                Visitors:
+              </span>
+              <strong data-testid="footer-visitor-count" className="tabular-nums font-bold text-slate-900 dark:text-white">
+                {(stats.totalVisitors || visitorCount).toLocaleString("en-US")}
+              </strong>
+            </span>
+          </div>
+
+          {/* Detailed Traffic Hover Tooltip Popover */}
+          <AnimatePresence>
+            {isStatsHovered && (
+              <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                animate={{ opacity: 1, y: -6, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 0.95 }}
+                transition={{ duration: 0.18 }}
+                className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 rounded-xl p-3 text-xs font-medium backdrop-blur-md shadow-2xl z-50"
+                style={{
+                  background: isDark ? "rgba(15, 23, 42, 0.96)" : "#0f172a",
+                  color: "#ffffff",
+                  border: isDark ? "1px solid rgba(56, 189, 248, 0.3)" : "1px solid #1e293b",
+                  boxShadow: "0 12px 30px rgba(0, 0, 0, 0.4)",
+                }}
+              >
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-slate-700/80 text-[11px] font-bold text-sky-400">
+                    <span>GK Nexergy Traffic</span>
+                    <span className="flex items-center gap-1 text-[10px] text-emerald-400">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> LIVE
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-emerald-400">
+                    <span>Active Online Now:</span>
+                    <strong className="font-bold tabular-nums">{stats.active || activeUsers}</strong>
+                  </div>
+                  <div className="flex items-center justify-between text-slate-200">
+                    <span>Total Visitors Visited:</span>
+                    <strong className="font-bold tabular-nums text-white">
+                      {(stats.totalVisitors || visitorCount).toLocaleString("en-US")}
+                    </strong>
+                  </div>
+                  <div className="flex items-center justify-between text-slate-300">
+                    <span>Today's Visitors:</span>
+                    <strong className="font-bold tabular-nums text-white">
+                      {(stats.todayVisitors || 1).toLocaleString("en-US")}
+                    </strong>
+                  </div>
+                  <div className="flex items-center justify-between text-slate-400 text-[10.5px] pt-1 border-t border-slate-800">
+                    <span>Total Interactions:</span>
+                    <strong className="text-slate-300 tabular-nums">
+                      {visitorCount.toLocaleString("en-US")}
+                    </strong>
+                  </div>
+                  <div className="text-[9px] text-sky-300/80 text-center pt-0.5 font-medium">
+                    Click to open Full Live Analytics Dashboard
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Right: Navigation Links */}

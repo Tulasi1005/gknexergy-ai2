@@ -7,10 +7,12 @@
  * 3. Genuine link click counting with double-click support (+2).
  * 4. Automatic tab cleanup on tab close via sendBeacon.
  * 5. Resilient offline and local storage fallbacks.
+ * 6. Full visitor breakdown statistics (Total Visitors, Today's Visitors, Active Online, Total Clicks).
  */
 
 const STORAGE_KEY = "gk_visitor_count";
 const ACTIVE_STORAGE_KEY = "gk_active_users_count";
+const STATS_STORAGE_KEY = "gk_visitor_full_stats";
 const API_ENDPOINT = "/api/counter.php";
 
 /**
@@ -78,6 +80,99 @@ function setActiveUsers(count) {
 }
 
 /**
+ * Gets complete visitor breakdown statistics.
+ */
+export function getVisitorStats() {
+  const defaultStats = {
+    active: getActiveUsers(),
+    count: getVisitorCount(),
+    totalVisitors: getVisitorCount(),
+    todayVisitors: 1,
+    totalClicks: 0,
+    updatedAt: new Date().toISOString()
+  };
+
+  if (typeof window === "undefined") return defaultStats;
+
+  try {
+    const raw = sessionStorage.getItem(STATS_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return { ...defaultStats, ...parsed };
+    }
+  } catch {}
+
+  return defaultStats;
+}
+
+/**
+ * Updates full visitor statistics and broadcasts to subscribers.
+ */
+function setVisitorStats(stats) {
+  try {
+    sessionStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(stats));
+  } catch {}
+
+  window.dispatchEvent(
+    new CustomEvent("gk_visitor_stats_updated", { detail: stats })
+  );
+}
+
+/**
+ * Subscribes to full visitor statistics updates.
+ */
+export function subscribeVisitorStats(callback) {
+  if (typeof window === "undefined") return () => {};
+
+  const handleUpdate = (e) => {
+    if (e.detail) {
+      callback(e.detail);
+    } else {
+      callback(getVisitorStats());
+    }
+  };
+
+  window.addEventListener("gk_visitor_stats_updated", handleUpdate);
+  return () => {
+    window.removeEventListener("gk_visitor_stats_updated", handleUpdate);
+  };
+}
+
+/**
+ * Applies backend response payload to local states and broadcasts.
+ */
+function applyServerData(data) {
+  if (!data) return;
+
+  if (typeof data.active_users === "number") {
+    setActiveUsers(data.active_users);
+  }
+
+  if (typeof data.count === "number") {
+    const currentLocal = getVisitorCount();
+    const resolved = Math.max(currentLocal, data.count);
+    if (resolved !== currentLocal) {
+      localStorage.setItem(STORAGE_KEY, String(resolved));
+      window.dispatchEvent(
+        new CustomEvent("gk_visitor_count_updated", { detail: resolved })
+      );
+    }
+  }
+
+  const currentStats = getVisitorStats();
+  const nextStats = {
+    active: data.active_users || currentStats.active,
+    count: data.count || currentStats.count,
+    totalVisitors: data.total_visitors || data.count || currentStats.totalVisitors,
+    todayVisitors: data.today_visitors || currentStats.todayVisitors,
+    totalClicks: typeof data.total_clicks === "number" ? data.total_clicks : currentStats.totalClicks,
+    updatedAt: data.updated_at || new Date().toISOString()
+  };
+
+  setVisitorStats(nextStats);
+}
+
+/**
  * Increments total visitor click count.
  * Double clicks increment twice (+2).
  */
@@ -101,19 +196,7 @@ export function incrementVisitorCount(amount = 1) {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data) {
-          if (typeof data.count === "number") {
-            const currentLocal = getVisitorCount();
-            const resolved = Math.max(currentLocal, data.count);
-            if (resolved !== currentLocal) {
-              localStorage.setItem(STORAGE_KEY, String(resolved));
-              window.dispatchEvent(
-                new CustomEvent("gk_visitor_count_updated", { detail: resolved })
-              );
-            }
-          }
-          if (typeof data.active_users === "number") {
-            setActiveUsers(data.active_users);
-          }
+          applyServerData(data);
         }
       })
       .catch(() => {});
@@ -138,19 +221,7 @@ export async function sendHeartbeat() {
     if (res.ok) {
       const data = await res.json();
       if (data) {
-        if (typeof data.active_users === "number") {
-          setActiveUsers(data.active_users);
-        }
-        if (typeof data.count === "number") {
-          const currentLocal = getVisitorCount();
-          const resolved = Math.max(currentLocal, data.count);
-          if (resolved !== currentLocal) {
-            localStorage.setItem(STORAGE_KEY, String(resolved));
-            window.dispatchEvent(
-              new CustomEvent("gk_visitor_count_updated", { detail: resolved })
-            );
-          }
-        }
+        applyServerData(data);
       }
     }
   } catch {}
@@ -247,8 +318,27 @@ export function initVisitorClickTracking() {
     }
   } catch {}
 
-  // 2. Initial Heartbeat & Recurring Heartbeat (every 20s)
-  sendHeartbeat();
+  // 2. Register new visitor arrival or send initial heartbeat
+  const visitRegisteredKey = "gk_visit_registered_" + sessionId;
+  if (!sessionStorage.getItem(visitRegisteredKey)) {
+    sessionStorage.setItem(visitRegisteredKey, "1");
+    fetch(`${API_ENDPOINT}?action=visit&session_id=${sessionId}`, {
+      cache: "no-store",
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) {
+          applyServerData(data);
+        }
+      })
+      .catch(() => {
+        sendHeartbeat();
+      });
+  } else {
+    sendHeartbeat();
+  }
+
+  // Recurring Heartbeat (every 20s)
   const heartbeatInterval = setInterval(sendHeartbeat, 20000);
 
   // 3. Tab Close / Page Unload Handler
