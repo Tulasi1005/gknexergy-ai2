@@ -261,8 +261,24 @@ export function useReadOnlyProtection() {
     };
 
     // 5. Anti-Snipping Tool Deterrent (Instant frosted shield & watermark when screen grabbers steal window focus)
+    // Note: Snipping tool focus deterrence is designed for desktop window managers (e.g. Win+Shift+S / Snipping Tool).
+    // On mobile devices, browsers cannot intercept hardware buttons, and window blur occurs naturally from OS screenshots,
+    // notifications, or app switching. We bypass the blur error toast on mobile/touch screens to avoid false error messages.
+    const isTouchOrMobileDevice = () => {
+      if (typeof window === "undefined") return false;
+      return (
+        window.innerWidth <= 768 ||
+        ("ontouchstart" in window) ||
+        (navigator.maxTouchPoints && navigator.maxTouchPoints > 0)
+      );
+    };
+
     let wasBlurred = false;
     const handleWindowBlur = () => {
+      if (isTouchOrMobileDevice()) {
+        return;
+      }
+
       // Allow focus loss if actively typing inside genuine inputs
       if (document.activeElement && ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
         return;
@@ -280,6 +296,10 @@ export function useReadOnlyProtection() {
 
     const handleWindowFocus = () => {
       document.body.classList.remove("gk-window-unfocused");
+      if (isTouchOrMobileDevice()) {
+        wasBlurred = false;
+        return;
+      }
       if (wasBlurred) {
         wasBlurred = false;
         // Show prominent warning on screen when returning from screen clip attempt
@@ -295,6 +315,10 @@ export function useReadOnlyProtection() {
     };
 
     const handleVisibilityChange = () => {
+      if (isTouchOrMobileDevice()) {
+        wasBlurred = false;
+        return;
+      }
       if (document.hidden) {
         document.body.classList.add("gk-window-unfocused");
       } else {
