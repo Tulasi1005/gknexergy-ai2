@@ -176,14 +176,14 @@ const Footer = ({ theme }) => {
 
           {/* Center: Live Real-Time Active Users & Visitor Count */}
           <div
-            className="relative order-1 md:order-2 group cursor-pointer"
+            className="relative order-1 md:order-2 group cursor-pointer max-w-full"
             onMouseEnter={() => setIsStatsHovered(true)}
             onMouseLeave={() => setIsStatsHovered(false)}
             onClick={() => setIsStatsHovered((prev) => !prev)}
             title={`${stats.active || activeUsers} active users online • ${(stats.totalVisitors || visitorCount).toLocaleString("en-US")} total visits`}
           >
             <div
-              className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md transition-all duration-300 shadow-sm hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-semibold backdrop-blur-md transition-all duration-300 shadow-sm hover:scale-[1.02] active:scale-[0.98] max-w-full"
               style={{
                 background: isDark
                   ? "rgba(15, 23, 42, 0.85)"
@@ -207,7 +207,7 @@ const Footer = ({ theme }) => {
                 <strong data-testid="footer-active-users" className="tabular-nums font-bold">
                   {stats.active || activeUsers}
                 </strong>
-                <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                <span className="text-[10.5px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400">
                   Active Online
                 </span>
               </span>
@@ -218,7 +218,7 @@ const Footer = ({ theme }) => {
               {/* Total Visitors */}
               <span className="flex items-center gap-1.5 text-slate-700 dark:text-slate-200">
                 <Users className="h-3.5 w-3.5 text-blue-600 dark:text-sky-400 shrink-0" />
-                <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                <span className="text-[10.5px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400">
                   Visitors:
                 </span>
                 <strong data-testid="footer-visitor-count" className="tabular-nums font-bold text-slate-900 dark:text-white">
@@ -235,7 +235,7 @@ const Footer = ({ theme }) => {
                   animate={{ opacity: 1, y: -6, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.95 }}
                   transition={{ duration: 0.18 }}
-                  className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 rounded-xl p-3 text-xs font-medium backdrop-blur-md shadow-2xl z-50"
+                  className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 max-w-[calc(100vw-20px)] rounded-xl p-2.5 sm:p-3 text-[11px] sm:text-xs font-medium backdrop-blur-md shadow-2xl z-50"
                   style={{
                     background: isDark ? "rgba(15, 23, 42, 0.96)" : "#0f172a",
                     color: "#ffffff",
@@ -244,7 +244,7 @@ const Footer = ({ theme }) => {
                   }}
                 >
                   <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center justify-between pb-1.5 border-b border-slate-700/80 text-[11px] font-bold text-sky-400">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-slate-700/80 text-[10.5px] sm:text-[11px] font-bold text-sky-400">
                       <span>GK Nexergy Traffic</span>
                       <span className="flex items-center gap-1 text-[10px] text-emerald-400">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> LIVE
@@ -266,7 +266,7 @@ const Footer = ({ theme }) => {
                         {(stats.todayVisitors || 1).toLocaleString("en-US")}
                       </strong>
                     </div>
-                    <div className="flex items-center justify-between text-slate-400 text-[10.5px] pt-1 border-t border-slate-800">
+                    <div className="flex items-center justify-between text-slate-400 text-[10px] sm:text-[10.5px] pt-1 border-t border-slate-800">
                       <span>Total Interactions:</span>
                       <strong className="text-slate-300 tabular-nums">
                         {visitorCount.toLocaleString("en-US")}
@@ -282,7 +282,7 @@ const Footer = ({ theme }) => {
           </div>
 
           {/* Right: Navigation Links */}
-          <div className="order-3 flex flex-wrap items-center justify-center md:justify-end gap-4 text-xs font-semibold">
+          <div className="order-3 flex flex-wrap items-center justify-center md:justify-end gap-2.5 sm:gap-4 text-xs font-semibold">
             {FOOTER_NAV_LINKS.map((link) => {
               const isActive = link.isMatch(currentPath);
               return (

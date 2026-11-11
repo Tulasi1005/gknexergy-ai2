@@ -178,8 +178,14 @@ body.no-scroll {
   justify-content: center;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  z-index: 2;
   overflow: hidden;
   min-height: 280px;
+}
+
+.spotlight-lead-card .global-back-to-stack-btn {
+  position: relative;
+  z-index: 10;
 }
 
 .spotlight-lead-card::before {
@@ -1690,17 +1696,6 @@ body.no-scroll {
    9. DARK MODE SPACING FIXES
    ========================================================================== */
 
-/* Add top padding to the executive spotlight section in dark mode */
-.dark .executive-spotlight-box {
-  padding-top: 2.5rem;
-  margin-top: 0.5rem;
-}
-
-/* Add top padding to the content container in dark mode for extra breathing room */
-.dark .projects-content-container {
-  padding-top: 4.5rem;
-}
-
 /* Ensure the ambient layer doesn't interfere with the spacing */
 .dark .ambient-layer {
   top: 0;
@@ -1739,33 +1734,17 @@ body.no-scroll {
   .filler-panel {
     min-height: 360px;
   }
-
-  .dark .executive-spotlight-box {
-    padding-top: 2rem;
-  }
-
-  .dark .projects-content-container {
-    padding-top: 4rem;
-  }
 }
 
 @media (max-width: 768px) {
   .pro-cards-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .dark .executive-spotlight-box {
-    padding-top: 1.75rem;
-  }
-
-  .dark .projects-content-container {
-    padding-top: 3.5rem;
-  }
 }
 
 @media (max-width: 640px) {
   .projects-content-container {
-    padding: 2rem 1rem 3.5rem;
+    padding: 5.5rem 1rem 3.5rem;
   }
 
   .pro-cards-grid {
@@ -1827,17 +1806,6 @@ body.no-scroll {
     font-size: 0.75rem;
     max-width: 100%;
   }
-
-  .dark .executive-spotlight-box {
-    padding-top: 1.5rem;
-    margin-top: 0.25rem;
-  }
-
-  .dark .projects-content-container {
-    padding-top: 3rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1855,19 +1823,11 @@ body.no-scroll {
     font-size: 0.7rem;
     padding: 0.2rem 0.6rem;
   }
-
-  .dark .executive-spotlight-box {
-    padding-top: 1.25rem;
-  }
-
-  .dark .projects-content-container {
-    padding-top: 2.5rem;
-  }
 }
 
 @media (max-width: 380px) {
   .projects-content-container {
-    padding: 1.5rem 0.75rem 3rem;
+    padding: 5rem 0.75rem 3rem;
   }
 
   .spotlight-lead-card {
