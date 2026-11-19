@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    <!-- Core Root & Home -->
+    <url>
+        <loc>https://gknexergy.com/</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/home</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Company & Why Pages -->
+    <url>
+        <loc>https://gknexergy.com/about</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/why-gk-nexergy</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/vision</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+
+    <!-- Solutions & Services -->
+    <url>
+        <loc>https://gknexergy.com/solutions</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.95</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/solutions/software-development</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/solutions/mobile-development</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/solutions/digital-transformation</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/solutions/ai-automation</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.95</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/solutions/data-analytics</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/solutions/digital-growth</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+    </url>
+
+    <!-- Pricing & Retainers -->
+    <url>
+        <loc>https://gknexergy.com/pricing</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+    </url>
+
+    <!-- Industries -->
+    <url>
+        <loc>https://gknexergy.com/industries</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+    </url>
+
+    <!-- Academy & Courses -->
+    <url>
+        <loc>https://gknexergy.com/academy</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/academy/courses</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/academy/cyber-security</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/academy/ai-digital-marketing</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/academy/databases</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/academy/foundation-program</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+
+    <!-- Case Studies, Careers & Contact -->
+    <url>
+        <loc>https://gknexergy.com/projects</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/careers</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://gknexergy.com/contact</loc>
+        <lastmod>2026-10-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.90</priority>
+    </url>
+</urlset>
+
