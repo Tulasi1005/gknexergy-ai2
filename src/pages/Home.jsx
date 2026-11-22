@@ -45,7 +45,7 @@ const HERO_BG_NODES = [
 const FEATURED_HIGHLIGHTS = [
     {
         title: "Scalable Platforms & Web Apps",
-        description: "Custom software, high-performance web applications, and business platforms built for real-world reliability.",
+        description: "Custom software, high-performance web applications, and mobile applications built for real-world reliability.",
         image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop",
         icon: Code2,
         to: "/solutions/software-development",
