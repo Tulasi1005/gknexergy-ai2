@@ -124,12 +124,12 @@ export const EnterpriseTransformation = () => {
 
             <div className="et-container">
                 <div className="et-layout-grid">
-                    
+
                     {/* ========================================================
                         LEFT COLUMN: Headlines, Description, 2x2 Grid & CTAs
                         ======================================================== */}
                     <div className="et-left-col">
-                        
+
                         {/* Top Pill Status Badge */}
                         <Reveal delay={0.05}>
                             <div className="et-status-pill">
@@ -167,7 +167,7 @@ export const EnterpriseTransformation = () => {
                         {/* 2x2 Feature Cards Grid */}
                         <Reveal delay={0.35} className="w-full">
                             <div className="et-features-grid">
-                                
+
                                 {/* Feature 1 */}
                                 <div className="et-feature-card">
                                     <div className="et-feature-icon-box">
@@ -240,7 +240,7 @@ export const EnterpriseTransformation = () => {
                     <div className="et-right-col">
                         <Reveal delay={0.2}>
                             <div className="et-card">
-                                
+
                                 {/* Card Top Header Bar */}
                                 <div className="et-card-header">
                                     <div className="et-card-header-left">
@@ -255,7 +255,7 @@ export const EnterpriseTransformation = () => {
                                             LIVE ENGINE
                                         </span>
                                     </div>
-                                    
+
                                     <span className="et-card-step-counter">
                                         Step 0{activeIdx + 1} / 04
                                     </span>
@@ -298,7 +298,7 @@ export const EnterpriseTransformation = () => {
 
                                 {/* Dark Enterprise Pipeline Strip (ENTERPRISE PIPELINE) */}
                                 <div className="et-pipeline-strip">
-                                    
+
                                     {/* Header inside pipeline strip */}
                                     <div className="et-pipeline-header">
                                         <span className="et-pipeline-title">
@@ -312,12 +312,12 @@ export const EnterpriseTransformation = () => {
 
                                     {/* Flow Steps with Connecting Line */}
                                     <div className="et-pipeline-track">
-                                        
+
                                         {/* Background Connecting Line */}
                                         <div className="et-track-line-bg" />
-                                        
+
                                         {/* Animated Glowing Active Progress Line */}
-                                        <div 
+                                        <div
                                             className="et-track-line-active"
                                             style={{
                                                 width: `${(activeIdx / (PIPELINE_PHASES.length - 1)) * 82}%`
@@ -336,17 +336,15 @@ export const EnterpriseTransformation = () => {
                                                     className="et-pipeline-node"
                                                 >
                                                     <div
-                                                        className={`et-node-box ${
-                                                            isSelected ? "selected" : isPassed ? "passed" : ""
-                                                        }`}
+                                                        className={`et-node-box ${isSelected ? "selected" : isPassed ? "passed" : ""
+                                                            }`}
                                                     >
                                                         <StepIcon size={isSelected ? 18 : 14} strokeWidth={isSelected ? 2.5 : 2} />
                                                     </div>
 
                                                     <span
-                                                        className={`et-node-label ${
-                                                            isSelected ? "selected" : ""
-                                                        }`}
+                                                        className={`et-node-label ${isSelected ? "selected" : ""
+                                                            }`}
                                                     >
                                                         {phase.pipelineLabel}
                                                     </span>

@@ -401,124 +401,132 @@ const Navbar = ({ theme, onToggleTheme, onOpenSummarizer }) => {
                                 {/* Dropdown Menu */}
                                 <AnimatePresence>
                                     {langModalOpen && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 6, scale: 0.97 }}
-                                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                                            exit={{ opacity: 0, y: 4, scale: 0.97 }}
-                                            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                                            className="nav-lang-dropdown-panel absolute right-0 top-full mt-2 rounded-2xl border p-2.5 sm:p-3 shadow-2xl"
-                                            style={{
-                                                width: "280px",
-                                                maxWidth: "calc(100vw - 20px)",
-                                                zIndex: 10002,
-                                                backgroundColor: isDark ? "#0c1e3d" : "#ffffff",
-                                                borderColor: isDark ? "rgba(56, 189, 248, 0.4)" : "#cbd5e1",
-                                                boxShadow: isDark
-                                                    ? "0 20px 50px -10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(56, 189, 248, 0.22)"
-                                                    : "0 16px 36px -10px rgba(15, 23, 42, 0.15), 0 3px 12px rgba(0, 0, 0, 0.05)",
-                                                backdropFilter: "blur(20px)",
-                                            }}
-                                        >
-                                            {/* Header */}
+                                        <>
+                                            {/* Mobile Dimmed Backdrop Overlay (Click to close on touch devices) */}
                                             <div
-                                                className="flex items-center justify-between pb-2 mb-1.5 border-b relative z-10"
+                                                className="fixed inset-0 bg-black/40 backdrop-blur-xs z-[10001] sm:hidden"
+                                                onClick={() => setLangModalOpen(false)}
+                                                aria-hidden="true"
+                                            />
+
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: 4, scale: 0.96 }}
+                                                transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                                                className="nav-lang-dropdown-panel fixed left-1/2 -translate-x-1/2 top-[62px] xs:top-[66px] w-[calc(100vw-20px)] max-w-[315px] sm:absolute sm:left-auto sm:right-0 sm:translate-x-0 sm:top-full sm:mt-2 sm:w-[280px] rounded-2xl border p-2.5 sm:p-3 shadow-2xl"
                                                 style={{
-                                                    borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "#f1f5f9",
+                                                    maxWidth: "calc(100vw - 16px)",
+                                                    zIndex: 10002,
+                                                    backgroundColor: isDark ? "#0c1e3d" : "#ffffff",
+                                                    borderColor: isDark ? "rgba(56, 189, 248, 0.4)" : "#cbd5e1",
+                                                    boxShadow: isDark
+                                                        ? "0 20px 50px -10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(56, 189, 248, 0.22)"
+                                                        : "0 16px 36px -10px rgba(15, 23, 42, 0.15), 0 3px 12px rgba(0, 0, 0, 0.05)",
+                                                    backdropFilter: "blur(20px)",
                                                 }}
                                             >
-                                                <div className="flex items-center gap-2">
-                                                    <div
-                                                        className="flex h-6 w-6 items-center justify-center rounded-lg"
-                                                        style={{
-                                                            backgroundColor: isDark ? "rgba(56, 189, 248, 0.2)" : "rgba(37, 99, 235, 0.1)",
-                                                            color: isDark ? "#38bdf8" : "#2563eb",
-                                                        }}
-                                                    >
-                                                        <Globe className="h-3.5 w-3.5" />
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="font-display text-xs font-bold leading-tight text-slate-900 dark:text-white">
-                                                            Translate Website
-                                                        </h4>
-                                                    </div>
-                                                </div>
-                                                <button
-                                                    onClick={() => setLangModalOpen(false)}
-                                                    className="p-1 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
-                                                    aria-label="Close language selector"
+                                                {/* Header */}
+                                                <div
+                                                    className="flex items-center justify-between pb-2 mb-1.5 border-b relative z-10"
+                                                    style={{
+                                                        borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "#f1f5f9",
+                                                    }}
                                                 >
-                                                    <X className="h-3.5 w-3.5" />
-                                                </button>
-                                            </div>
-
-                                            {/* Clean, perfectly formatted language list */}
-                                            <div className="flex flex-col gap-1 max-h-[270px] overflow-y-auto pt-1 pb-1 pr-0.5 custom-nav-scrollbar">
-                                                {SUPPORTED_LANGUAGES.map((lang) => {
-                                                    const isSelected = selectedLang === lang.code;
-                                                    return (
-                                                        <button
-                                                            key={lang.code}
-                                                            type="button"
-                                                            onClick={() => handleSelectLanguage(lang.code)}
-                                                            className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer ${isSelected
-                                                                    ? "bg-brand text-white font-bold shadow-sm shadow-brand/30"
-                                                                    : isDark
-                                                                        ? "text-white hover:bg-slate-800/90 hover:text-sky-300"
-                                                                        : "text-slate-900 hover:bg-slate-100 hover:text-brand"
-                                                                }`}
+                                                    <div className="flex items-center gap-2">
+                                                        <div
+                                                            className="flex h-6 w-6 items-center justify-center rounded-lg"
+                                                            style={{
+                                                                backgroundColor: isDark ? "rgba(56, 189, 248, 0.2)" : "rgba(37, 99, 235, 0.1)",
+                                                                color: isDark ? "#38bdf8" : "#2563eb",
+                                                            }}
                                                         >
-                                                            <div className="flex items-center gap-2 min-w-0">
-                                                                <span className="text-sm leading-none shrink-0 select-none">
-                                                                    {lang.flag}
-                                                                </span>
-                                                                <span
-                                                                    className={`w-7 h-5 flex items-center justify-center text-[10px] font-extrabold uppercase rounded tracking-wider shrink-0 border ${isSelected
-                                                                            ? "bg-white/20 text-white border-white/40"
-                                                                            : isDark
-                                                                                ? "bg-slate-800 text-sky-300 border-sky-400/40"
-                                                                                : "bg-blue-50 text-blue-700 border-blue-200"
-                                                                        }`}
-                                                                >
-                                                                    {lang.code.split('-')[0].toUpperCase()}
-                                                                </span>
-                                                                <span className={`font-bold text-xs truncate ${isSelected ? "text-white" : isDark ? "text-white" : "text-slate-900"}`}>
-                                                                    {lang.label || lang.name}
-                                                                </span>
-                                                                {lang.native && lang.native !== (lang.label || lang.name) ? (
-                                                                    <span
-                                                                        className={`text-[11px] font-semibold truncate ${isSelected ? "text-blue-100" : isDark ? "text-sky-300" : "text-blue-700"
-                                                                            }`}
-                                                                    >
-                                                                        ({lang.native})
-                                                                    </span>
-                                                                ) : (
-                                                                    <span
-                                                                        className={`text-[11px] font-semibold truncate ${isSelected ? "text-blue-100" : isDark ? "text-sky-300" : "text-blue-700"
-                                                                            }`}
-                                                                    >
-                                                                        (US)
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                            {isSelected && (
-                                                                <Check className="h-4 w-4 shrink-0 text-white ml-2" strokeWidth={2.8} />
-                                                            )}
-                                                        </button>
-                                                    );
-                                                })}
-                                            </div>
+                                                            <Globe className="h-3.5 w-3.5" />
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-display text-xs font-bold leading-tight text-slate-900 dark:text-white">
+                                                                Translate Website
+                                                            </h4>
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => setLangModalOpen(false)}
+                                                        className="p-1 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                                                        aria-label="Close language selector"
+                                                    >
+                                                        <X className="h-3.5 w-3.5" />
+                                                    </button>
+                                                </div>
 
-                                            {/* Reset to English Footer */}
-                                            <div className="pt-2 mt-1 border-t border-slate-100 dark:border-slate-800/80">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleSelectLanguage("en")}
-                                                    className="w-full py-1 text-center text-xs text-blue-600 hover:text-blue-700 dark:text-sky-400 dark:hover:text-sky-200 font-bold cursor-pointer transition-colors"
-                                                >
-                                                    Reset to English
-                                                </button>
-                                            </div>
-                                        </motion.div>
+                                                {/* Clean, perfectly formatted language list */}
+                                                <div className="flex flex-col gap-1 max-h-[min(300px,58vh)] overflow-y-auto pt-1 pb-1 pr-0.5 custom-nav-scrollbar overscroll-contain">
+                                                    {SUPPORTED_LANGUAGES.map((lang) => {
+                                                        const isSelected = selectedLang === lang.code;
+                                                        return (
+                                                            <button
+                                                                key={lang.code}
+                                                                type="button"
+                                                                onClick={() => handleSelectLanguage(lang.code)}
+                                                                className={`flex items-center justify-between px-2 sm:px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer ${isSelected
+                                                                        ? "bg-brand text-white font-bold shadow-sm shadow-brand/30"
+                                                                        : isDark
+                                                                            ? "text-white hover:bg-slate-800/90 hover:text-sky-300"
+                                                                            : "text-slate-900 hover:bg-slate-100 hover:text-brand"
+                                                                    }`}
+                                                            >
+                                                                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                                                                    <span className="text-sm leading-none shrink-0 select-none">
+                                                                        {lang.flag}
+                                                                    </span>
+                                                                    <span
+                                                                        className={`w-6 sm:w-7 h-5 flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold uppercase rounded tracking-wider shrink-0 border ${isSelected
+                                                                                ? "bg-white/20 text-white border-white/40"
+                                                                                : isDark
+                                                                                    ? "bg-slate-800 text-sky-300 border-sky-400/40"
+                                                                                    : "bg-blue-50 text-blue-700 border-blue-200"
+                                                                            }`}
+                                                                    >
+                                                                        {lang.code.split('-')[0].toUpperCase()}
+                                                                    </span>
+                                                                    <span className={`font-bold text-xs truncate ${isSelected ? "text-white" : isDark ? "text-white" : "text-slate-900"}`}>
+                                                                        {lang.label || lang.name}
+                                                                    </span>
+                                                                    {lang.native && lang.native !== (lang.label || lang.name) ? (
+                                                                        <span
+                                                                            className={`text-[10px] sm:text-[11px] font-semibold truncate ${isSelected ? "text-blue-100" : isDark ? "text-sky-300" : "text-blue-700"
+                                                                                }`}
+                                                                        >
+                                                                            ({lang.native})
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span
+                                                                            className={`text-[10px] sm:text-[11px] font-semibold truncate ${isSelected ? "text-blue-100" : isDark ? "text-sky-300" : "text-blue-700"
+                                                                                }`}
+                                                                        >
+                                                                            (US)
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                                {isSelected && (
+                                                                    <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-white ml-1.5" strokeWidth={2.8} />
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+
+                                                {/* Reset to English Footer */}
+                                                <div className="pt-2 mt-1 border-t border-slate-100 dark:border-slate-800/80">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleSelectLanguage("en")}
+                                                        className="w-full py-1 text-center text-xs text-blue-600 hover:text-blue-700 dark:text-sky-400 dark:hover:text-sky-200 font-bold cursor-pointer transition-colors"
+                                                    >
+                                                        Reset to English
+                                                    </button>
+                                                </div>
+                                            </motion.div>
+                                        </>
                                     )}
                                 </AnimatePresence>
                             </div>

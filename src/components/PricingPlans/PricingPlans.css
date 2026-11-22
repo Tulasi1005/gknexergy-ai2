@@ -15,7 +15,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 2rem auto 2.25rem auto;
+  margin: 1rem auto 1.5rem auto;
   width: 100%;
   max-width: 860px;
   padding: 0 0.5rem;
@@ -1657,17 +1657,9 @@
     word-break: break-word !important;
   }
 
-  /* Platform Switcher (Mobile vs Web) */
+  /* Platform Switcher (Mobile vs Web) - Hidden on Mobile Screens */
   .platform-toggle-container {
-    margin: 1rem auto 0.75rem auto !important;
-  }
-  .platform-toggle-track {
-    padding: 3px !important;
-  }
-  .platform-toggle-btn {
-    padding: 0.45rem 1rem !important;
-    font-size: 0.82rem !important;
-    gap: 0.35rem !important;
+    display: none !important;
   }
 
   /* 3-Segment Tab Bar */
@@ -2076,14 +2068,21 @@
 
 /* ==========================================================================
    PLATFORM TOGGLE (LIKE ON & OFF BUTTONS: MOBILE vs WEB)
+   Removed on mobile screens per user request: "In mobile screens remove above tab"
    ========================================================================== */
 .platform-toggle-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 1.5rem auto 1.25rem auto;
+  margin: 0.5rem auto 0.75rem auto;
   width: 100%;
+}
+
+@media (max-width: 768px) {
+  .platform-toggle-container {
+    display: none !important;
+  }
 }
 
 .platform-toggle-track {

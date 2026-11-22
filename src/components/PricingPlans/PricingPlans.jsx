@@ -660,13 +660,14 @@ export const FAQS = [
 
 export const PricingPlans = ({
     showHeader = true,
+    showPlatformToggle = true,
     showComparison = false,
     showFaqs = true,
     showAdCostGuide = false,
     initialPlan = "growth",
-    initialPlatform = "mobile"
+    initialPlatform = "web"
 }) => {
-    const [platform, setPlatform] = useState(initialPlatform || "mobile");
+    const [platform, setPlatform] = useState(initialPlatform || "web");
 
     const normalizePlan = (id) => {
         if (!id) return "growth";
@@ -745,7 +746,7 @@ export const PricingPlans = ({
     };
 
     return (
-        <section className="pricing-section py-16 sm:py-24" id="pricing-plans" data-testid="pricing-section">
+        <section className={`pricing-section ${showHeader ? "py-16 sm:py-24" : "pt-0 pb-10 sm:pb-16"}`} id="pricing-plans" data-testid="pricing-section">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 {/* SECTION HEADER */}
                 {showHeader && (
@@ -768,37 +769,39 @@ export const PricingPlans = ({
                 {/* ========================================================================= */}
                 {/* PLATFORM SWITCHER (LIKE ON & OFF BUTTONS: MOBILE vs WEB)                  */}
                 {/* ========================================================================= */}
-                <Reveal delay={0.06}>
-                    <div className="platform-toggle-container" data-testid="platform-toggle-container">
-                        <div className="platform-toggle-track" role="tablist" aria-label="Target Platform Selector">
-                            <button
-                                type="button"
-                                role="tab"
-                                aria-selected={platform === "mobile"}
-                                onClick={() => setPlatform("mobile")}
-                                data-testid="toggle-platform-mobile"
-                                className={`platform-toggle-btn ${platform === "mobile" ? "active" : ""}`}
-                            >
-                                <Smartphone className="w-4 h-4" />
-                                <span>Mobile</span>
-                                {platform === "mobile" && <span className="platform-toggle-indicator" />}
-                            </button>
+                {showPlatformToggle && (
+                    <Reveal delay={0.06}>
+                        <div className="platform-toggle-container" data-testid="platform-toggle-container">
+                            <div className="platform-toggle-track" role="tablist" aria-label="Target Platform Selector">
+                                <button
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={platform === "mobile"}
+                                    onClick={() => setPlatform("mobile")}
+                                    data-testid="toggle-platform-mobile"
+                                    className={`platform-toggle-btn ${platform === "mobile" ? "active" : ""}`}
+                                >
+                                    <Smartphone className="w-4 h-4" />
+                                    <span>Mobile</span>
+                                    {platform === "mobile" && <span className="platform-toggle-indicator" />}
+                                </button>
 
-                            <button
-                                type="button"
-                                role="tab"
-                                aria-selected={platform === "web"}
-                                onClick={() => setPlatform("web")}
-                                data-testid="toggle-platform-web"
-                                className={`platform-toggle-btn ${platform === "web" ? "active" : ""}`}
-                            >
-                                <Globe className="w-4 h-4" />
-                                <span>Web</span>
-                                {platform === "web" && <span className="platform-toggle-indicator" />}
-                            </button>
+                                <button
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={platform === "web"}
+                                    onClick={() => setPlatform("web")}
+                                    data-testid="toggle-platform-web"
+                                    className={`platform-toggle-btn ${platform === "web" ? "active" : ""}`}
+                                >
+                                    <Globe className="w-4 h-4" />
+                                    <span>Web</span>
+                                    {platform === "web" && <span className="platform-toggle-indicator" />}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </Reveal>
+                    </Reveal>
+                )}
 
                 {/* ========================================================================= */}
                 {/* 3-SEGMENT BOX: [ Starter >> | Growth >> | Scale >> ]                      */}
@@ -894,9 +897,6 @@ export const PricingPlans = ({
                                             <span>{selectedPlan.ctaText}</span>
                                             <ArrowRight className="w-4 h-4 ml-1.5 transition-transform group-hover:translate-x-1" />
                                         </Link>
-                                        <p className="pillar-footer-note">
-                                            Direct kickoff • Dedicated growth partner • Zero lock-in
-                                        </p>
                                     </div>
                                 </div>
                             </motion.div>

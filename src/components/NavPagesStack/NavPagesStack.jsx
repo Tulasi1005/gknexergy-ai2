@@ -1417,13 +1417,13 @@ export const NavPagesStack = () => {
               <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 
                 {/* Language Selectors */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', backgroundColor: 'rgba(255,255,255,0.03)', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap', backgroundColor: 'rgba(255,255,255,0.03)', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Globe2 style={{ width: 16, height: 16, color: '#60A5FA' }} />
                     <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#ffffff' }}>Source: English</span>
                   </div>
                   
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>Translate To:</span>
                     <select
                       value={targetLang}
@@ -1458,7 +1458,7 @@ export const NavPagesStack = () => {
                 </div>
 
                 {/* Action Row */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                   <div style={{ display: 'flex', gap: '0.35rem', overflowX: 'auto' }}>
                     {[
                       'Train. Build. Transform.',

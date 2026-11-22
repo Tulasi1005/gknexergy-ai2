@@ -45,7 +45,7 @@ const Solutions = () => (
                                     loading="lazy"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
-                                
+
                                 {/* Floating Category Icon */}
                                 <div className="absolute bottom-3 left-4 flex items-center gap-2">
                                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/95 text-brand shadow-md backdrop-blur dark:bg-ink/90 dark:text-electric">
@@ -59,13 +59,10 @@ const Solutions = () => (
                                 </span>
                             </div>
 
-                            {/* Card Body */}
+                            {/* Card Body - Single Clear Title Heading */}
                             <div className="pro-card-body">
-                                <p className="pro-card-eyebrow">
-                                    {s.tagline}
-                                </p>
-                                <h2 className="pro-card-title">
-                                    {s.title}
+                                <h2 className="pro-card-title text-xl font-extrabold text-ink dark:text-white group-hover:text-brand dark:group-hover:text-electric transition-colors mb-2.5">
+                                    {s.tagline ? s.tagline.replace(/\.$/, "") : s.title}
                                 </h2>
                                 <p className="pro-card-desc">
                                     {s.description}

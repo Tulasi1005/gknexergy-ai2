@@ -44,8 +44,7 @@ const HERO_BG_NODES = [
 
 const FEATURED_HIGHLIGHTS = [
     {
-        title: "Software & Application Engineering",
-        tagline: "Scalable Platforms & Web Apps",
+        title: "Scalable Platforms & Web Apps",
         description: "Custom software, high-performance web applications, and business platforms built for real-world reliability.",
         image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop",
         icon: Code2,
@@ -53,8 +52,7 @@ const FEATURED_HIGHLIGHTS = [
         tags: ["Web Apps", "Custom APIs", "Cloud Ready"],
     },
     {
-        title: "Mobile App Development",
-        tagline: "iOS & Android Experiences",
+        title: "iOS & Android Experiences",
         description: "Native and cross-platform mobile apps engineered for seamless performance and delightful user experience.",
         image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1000&auto=format&fit=crop",
         icon: Smartphone,
@@ -62,8 +60,7 @@ const FEATURED_HIGHLIGHTS = [
         tags: ["iOS & Android", "Cross-Platform", "Fast UI"],
     },
     {
-        title: "AI & Process Automation",
-        tagline: "Intelligent Workflows",
+        title: "Intelligent Workflows",
         description: "Transform operations with generative AI, machine learning pipelines, and predictive automation.",
         image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1000&auto=format&fit=crop",
         icon: BrainCircuit,
@@ -291,7 +288,7 @@ const Home = () => {
                                         AI & Automation
                                     </span>
                                     <span className="rounded-full bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 text-xs font-medium text-slate-600 dark:text-slate-300">
-                                        Cloud Systems
+                                        web & mobile apps
                                     </span>
                                 </div>
 
@@ -403,25 +400,20 @@ const Home = () => {
                                             />
                                         </div>
 
-                                        {/* Card Content */}
+                                        {/* Card Content - Single Clear Heading */}
                                         <div className="pro-card-body">
-                                            <div className="flex items-center justify-between gap-3 mb-2.5">
-                                                <p className="pro-card-eyebrow !mb-0">
-                                                    {item.tagline}
-                                                </p>
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-brand dark:bg-slate-800 dark:text-electric shrink-0">
-                                                    <Icon className="h-4 w-4" strokeWidth={1.8} />
+                                            <div className="flex items-center justify-between gap-3 mb-3">
+                                                <h3 className="pro-card-title !mb-0 text-xl font-extrabold text-ink dark:text-white group-hover:text-brand dark:group-hover:text-electric transition-colors">
+                                                    {item.title}
+                                                </h3>
+                                                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-brand dark:bg-slate-800 dark:text-electric shrink-0 shadow-xs">
+                                                    <Icon className="h-4.5 w-4.5" strokeWidth={1.8} />
                                                 </div>
                                             </div>
 
-                                            <h3 className="pro-card-title">
-                                                {item.title}
-                                            </h3>
                                             <p className="pro-card-desc">
                                                 {item.description}
                                             </p>
-
-
 
                                             <div className="pro-card-footer">
                                                 <span className="pro-card-action">
